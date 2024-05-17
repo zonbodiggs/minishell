@@ -6,7 +6,7 @@
 /*   By: endoliam <endoliam@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/14 13:20:55 by endoliam          #+#    #+#             */
-/*   Updated: 2024/05/16 15:31:08 by endoliam         ###   ########lyon.fr   */
+/*   Updated: 2024/05/17 03:36:38 by endoliam         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ extern int			g_signal;
 
 typedef enum e_enum
 {
-	HEREDOC,
+	HEREDOC = 1,
 	APPEND,
 	TRUNC,
 	IN,
@@ -34,7 +34,7 @@ typedef enum e_enum
 
 typedef enum e_lexer_type
 {
-	PIPES,
+	PIPES = 1,
 	WORD,
 	INPUT,
 	OUTPUT,
@@ -45,21 +45,21 @@ typedef enum e_lexer_type
 	SINGLE_ENV,
 }		t_lexer_type;
 
-typedef	struct s_lexer // for pars
+typedef struct s_lexer // for pars
 {
-	t_lexer_type		lex; 		// enum of lex word ?? pipes ?? input ?? output ??
+	t_lexer_type		lex;		// enum of lex word ?? pipes ?? input ?? output ??
 	char				*contain;	// part of prompt
 	bool				spaces; 	// spaces after word ??
-	struct s_lexer 		*next;
-	struct s_lexer 		*prev;
+	struct s_lexer		*next;
+	struct s_lexer		*prev;
 }		t_lexer;
 
 typedef struct s_cmd // for exec
 {
-	char			**cmd;			// cmd
-	char			**t_env;		// env
-	t_enum			redir;			// enum of fd
-	struct s_input 		*next;
+	char				**cmd;			// cmd
+	char				**t_env;		// env
+	t_enum				redir;			// enum of fd
+	struct s_input		*next;
 }		t_cmd;
 
 typedef struct s_minishell
@@ -69,9 +69,10 @@ typedef struct s_minishell
 	char		**path;				// path
 }		t_minishell;
 
-int			main(void);
+int			main(int ac, char **av, char **env);
 
 // parsing
+
 void		create_lexer(char *s);
 
 #endif
