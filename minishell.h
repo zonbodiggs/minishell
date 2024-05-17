@@ -6,7 +6,7 @@
 /*   By: endoliam <endoliam@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/14 13:20:55 by endoliam          #+#    #+#             */
-/*   Updated: 2024/05/17 03:36:38 by endoliam         ###   ########lyon.fr   */
+/*   Updated: 2024/05/17 17:22:11 by endoliam         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,8 +71,28 @@ typedef struct s_minishell
 
 int			main(int ac, char **av, char **env);
 
-// parsing
+/* 					parsing					*/ 
 
+// init lexer
 void		create_lexer(char *s);
+int			init_operator(t_lexer *lexer, char *s, int start);
+void		init_lexer_type(t_lexer *data);
+void		init_redirection(t_lexer *lexer, char c, int flag);
+
+// tools lexer
+int			lst_init_lexer(t_lexer **lexer, char *s, int start);
+void		add_lexer(t_lexer **lexer, t_lexer *element);
+int			word_len(char *s);
+
+// bool lexer
+bool		isword(char *s, int start);
+bool		final_space(char *s);
+bool		isoperator(char c);
+
+// utils
+int			exit_failure(char *msg);
+int			zap_quote(char *s, char quote, int i);
+
+/*					end parsing				*/
 
 #endif

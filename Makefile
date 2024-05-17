@@ -7,7 +7,9 @@ LIBFTFLAGS	= -Llibft -lft -L/usr/local/lib -I/usr/local/include -lreadline
 
 NAME		= minishell
 #-----------------------------------------------------------------#
-SRCS		= parsing/parsing.c\
+SRCS		= parsing/tokenize/bool_lexer.c\
+			  parsing/tokenize/init_lexer.c\
+			  parsing/tokenize/lexer_tools.c\
 			  parsing/pars_utils.c\
 			  main.c
 

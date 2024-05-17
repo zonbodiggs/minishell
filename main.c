@@ -6,7 +6,7 @@
 /*   By: endoliam <endoliam@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/14 16:09:41 by endoliam          #+#    #+#             */
-/*   Updated: 2024/05/17 04:11:15 by endoliam         ###   ########lyon.fr   */
+/*   Updated: 2024/05/17 17:00:57 by endoliam         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,9 +16,8 @@ int		main(int ac, char **av, char **env)
 {
 	char *buffer;
 	
-	if (!*env)
+	if (!*env || ac != 1)
 		return (0);
-	(void)ac;
 	(void)av;
 	while(1)
 	{
