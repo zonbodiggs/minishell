@@ -10,6 +10,7 @@ NAME		= minishell
 SRCS		= parsing/tokenize/bool_lexer.c\
 			  parsing/tokenize/init_lexer.c\
 			  parsing/tokenize/lexer_tools.c\
+			  parsing/pars_cmd/init_cmd.c\
 			  parsing/pars_utils.c\
 			  main.c
 

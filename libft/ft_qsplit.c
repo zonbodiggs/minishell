@@ -6,7 +6,7 @@
 /*   By: endoliam <endoliam@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/16 11:12:55 by endoliam          #+#    #+#             */
-/*   Updated: 2024/05/16 11:33:48 by endoliam         ###   ########lyon.fr   */
+/*   Updated: 2024/05/20 12:49:41 by endoliam         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,10 +39,10 @@ static char	*copy_str(const char *s, char c)
 	char	*str;
 
 	len = 0;
-	if (*s == 39)
+	if (*s == 39 || *s == '"')
 	{
 		s++;
-		while (s[len] && s[len] != 39)
+		while (s[len] && s[len] != 39 && s[len] != '"')
 			len++;
 	}
 	else
@@ -81,12 +81,12 @@ static	char	**ft_pars_and_copy(const char *s, char **res, char c, int i)
 				freestr(res, i);
 				return (NULL);
 			}
-			while (*s && ((*s != c) || (*(s - 1) == 39)))
+			while (*s && ((*s != c) || (*(s - 1) == 39) || (*(s - 1) == '"')))
 			{
-				if (*s == 39)
+				if (*s == 39 || *s == '"')
 				{
 					s++;
-					while (*s && *s != 39)
+					while (*s && *s != 39 && *s != '"')
 						s++;
 				}
 				s++;

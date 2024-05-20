@@ -42,6 +42,7 @@ SRCS		= \
 	ft_putendl_fd.c\
 	ft_putnbr_fd.c\
 	ft_qsplit.c\
+	ft_qstrdup.c\
 	get_next_line.c\
 	get_next_line_utils.c\
 	ft_lstnew_bonus.c\

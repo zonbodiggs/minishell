@@ -6,7 +6,7 @@
 /*   By: endoliam <endoliam@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/17 17:20:55 by endoliam          #+#    #+#             */
-/*   Updated: 2024/05/17 17:28:23 by endoliam         ###   ########lyon.fr   */
+/*   Updated: 2024/05/20 11:34:55 by endoliam         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,15 +16,12 @@ bool	isword(char *s, int start)
 {
 	if (isoperator(s[start]) == false)
 	{
-		if ((start > 0 && s[start - 1] == '|' )
-			|| (start > 0 && s[start - 1] == '<')
-			|| (start > 0 && s[start - 1] == '>')
-			|| (start > 0 && s[start - 1] == '"')
-			|| (start > 0 && s[start - 1] == 39)
+		if ((start > 0 && isoperator(s[start]) == false
+				&& isoperator(s[start - 1]) == true)
 			|| (start == 0 && s[start] != ' ')
 			|| (start > 0 && s[start] != ' ' && s[start] != '|'
 				&& s[start - 1] == ' ' ))
-			return (true);
+		return (true);	
 	}
 	return (false);
 }
@@ -46,7 +43,7 @@ bool	isoperator(char c)
 	if ((c == '|')
 		|| (c == '>')
 		|| (c == '<')
-		|| (c == (char)39)
+		|| (c == 39)
 		|| (c == '"'))
 		return (true);
 	return (false);

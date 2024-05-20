@@ -6,22 +6,22 @@
 /*   By: endoliam <endoliam@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/17 16:56:51 by endoliam          #+#    #+#             */
-/*   Updated: 2024/05/17 17:25:51 by endoliam         ###   ########lyon.fr   */
+/*   Updated: 2024/05/20 17:31:28 by endoliam         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../minishell.h"
 
-void	init_redirection(t_lexer *lexer, char c, int flag)
+void	init_redirection(t_lexer **lexer, char c, int flag)
 {
 	if (c == '<' && flag == 1)
-		lst_init_lexer(&lexer, "<", 0);
+		lst_init_lexer(lexer, "<", 0);
 	else if (c == '>' && flag == 1)
-		lst_init_lexer(&lexer, ">", 0);
+		lst_init_lexer(lexer, ">", 0);
 	else if (c == '<' && flag == 2)
-		lst_init_lexer(&lexer, "<<", 0);
+		lst_init_lexer(lexer, "<<", 0);
 	else if (c == '>' && flag == 2)
-		lst_init_lexer(&lexer, ">>", 0);
+		lst_init_lexer(lexer, ">>", 0);
 }
 
 void	init_lexer_type(t_lexer *data)
@@ -46,19 +46,19 @@ void	init_lexer_type(t_lexer *data)
 		data->lex = WORD;
 }
 
-int	init_operator(t_lexer *lexer, char *s, int start)
+int	init_operator(t_lexer **lexer, char *s, int start)
 {
 	if (s[start] == '|')
 	{
-		if (s[start + 1] == '|')
+		if (s[start + 1] && s[start + 1] == '|')
 			return (exit_failure("syntax error near unexpected symbol\n"));
-		lst_init_lexer(&lexer, "|", 0);
+		lst_init_lexer(lexer, "|", 0);
 	}
 	else if (s[start] == '<' || s[start] == '>')
 	{
-		if (s[start + 1] != s[start])
+		if ((s[start + 1] && s[start + 1] != s[start]) || !s[start + 1])
 			init_redirection(lexer, s[start], 1);
-		else
+		else if (s[start + 1] && s[start + 1] == s[start])
 		{
 			if (s[start + 2] && s[start + 2] == s[start])
 				return (exit_failure("syntax error near unexpected symbol\n"));
@@ -68,13 +68,13 @@ int	init_operator(t_lexer *lexer, char *s, int start)
 		}
 	}
 	else
-		start = lst_init_lexer(&lexer, s, start) - 1;
-	if (start <= 0)
+		start = lst_init_lexer(lexer, s, start) - 1;
+	if (start < 0)
 		return (exit_failure("error : quote don't closed\n"));
 	return (start);
 }
 
-void	create_lexer(char *s)
+t_lexer		*create_lexer(char *s)
 {
 	int			i;
 	t_lexer		*lexer;
@@ -84,20 +84,21 @@ void	create_lexer(char *s)
 	while (s && s[i])
 	{
 		if (isword(s, i) == true)
-		{
 			i = lst_init_lexer(&lexer, s, i); // allocation
-			if (i < 0)
-				break ;
-		}
+		if (i < 0)
+			break ; // free and break
 		if (isoperator(s[i]) == true)
 		{
-			i = init_operator(lexer, s, i);
+			i = init_operator(&lexer, s, i);
 			if (i < 0)
-				break ;
-			if (s[i + 1] == ' ')
+				break ; // free and break
+			while (s[i] && s[i + 1] && s[i + 1] == ' ')
 				i++;
 		}
 		if (s[i])
 			i++;
 	}
+	while (lexer && lexer->prev)
+		lexer = lexer->prev;
+	return (lexer);
 }

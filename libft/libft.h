@@ -47,6 +47,7 @@ void	ft_swap(char **a, char **b);
 
 char	*ft_strchr(const char *str, int c);
 char	*ft_strdup(const char *str);
+char	*ft_qstrdup(const char *str);
 char	*ft_substr(char const *s, unsigned int start, size_t len);
 char	*ft_strmapi(char const *s, char (*f)(unsigned int, char));
 char	*ft_strnstr(const char *str, const char *to_find, size_t len);

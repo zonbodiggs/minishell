@@ -6,7 +6,7 @@
 /*   By: endoliam <endoliam@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/14 13:20:55 by endoliam          #+#    #+#             */
-/*   Updated: 2024/05/17 17:22:11 by endoliam         ###   ########lyon.fr   */
+/*   Updated: 2024/05/20 20:23:45 by endoliam         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,7 @@
 # include <readline/readline.h>
 # include <readline/history.h>
 # include <stdlib.h>
+# include <fcntl.h>
 
 extern int			g_signal;
 
@@ -54,12 +55,20 @@ typedef struct s_lexer // for pars
 	struct s_lexer		*prev;
 }		t_lexer;
 
+typedef struct s_files
+{
+	int			fd[2];
+	char		**files;
+	
+}	t_files;
+
 typedef struct s_cmd // for exec
 {
 	char				**cmd;			// cmd
 	char				**t_env;		// env
+	t_files				files;
 	t_enum				redir;			// enum of fd
-	struct s_input		*next;
+	struct s_cmd		*next;
 }		t_cmd;
 
 typedef struct s_minishell
@@ -74,10 +83,10 @@ int			main(int ac, char **av, char **env);
 /* 					parsing					*/ 
 
 // init lexer
-void		create_lexer(char *s);
-int			init_operator(t_lexer *lexer, char *s, int start);
+t_lexer		*create_lexer(char *s);
+int			init_operator(t_lexer **lexer, char *s, int start);
 void		init_lexer_type(t_lexer *data);
-void		init_redirection(t_lexer *lexer, char c, int flag);
+void		init_redirection(t_lexer **lexer, char c, int flag);
 
 // tools lexer
 int			lst_init_lexer(t_lexer **lexer, char *s, int start);
@@ -92,6 +101,10 @@ bool		isoperator(char c);
 // utils
 int			exit_failure(char *msg);
 int			zap_quote(char *s, char quote, int i);
+
+// init cmd
+t_cmd		*init_cmd(char **env, t_lexer *lex);
+void		cpy_env(char **env, t_cmd *command);
 
 /*					end parsing				*/
 
