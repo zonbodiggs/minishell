@@ -1,18 +1,18 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_strjoin.c                                       :+:      :+:    :+:   */
+/*   ft_slash_strjoin.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: endoliam <endoliam@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/16 19:48:39 by endoliam          #+#    #+#             */
-/*   Updated: 2024/04/06 10:03:16 by endoliam         ###   ########lyon.fr   */
+/*   Updated: 2024/05/21 18:31:16 by endoliam         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-char	*ft_strjoin(const char *s1, char const *s2)
+char	*ft_slash_strjoin(const char *s1, char const *s2)
 {
 	char	*result;
 	size_t	i;

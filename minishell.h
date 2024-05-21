@@ -6,7 +6,7 @@
 /*   By: endoliam <endoliam@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/14 13:20:55 by endoliam          #+#    #+#             */
-/*   Updated: 2024/05/20 20:23:45 by endoliam         ###   ########lyon.fr   */
+/*   Updated: 2024/05/21 17:29:55 by endoliam         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,18 +55,19 @@ typedef struct s_lexer // for pars
 	struct s_lexer		*prev;
 }		t_lexer;
 
-typedef struct s_files
+typedef	struct s_error
 {
-	int			fd[2];
-	char		**files;
-	
-}	t_files;
+	char	*msg_file;
+	char	*msg_cmd;
+
+}	t_error;
 
 typedef struct s_cmd // for exec
 {
 	char				**cmd;			// cmd
 	char				**t_env;		// env
-	t_files				files;
+	char				**files;
+	t_error				err;
 	t_enum				redir;			// enum of fd
 	struct s_cmd		*next;
 }		t_cmd;
