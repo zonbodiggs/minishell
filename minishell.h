@@ -6,7 +6,7 @@
 /*   By: endoliam <endoliam@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/14 13:20:55 by endoliam          #+#    #+#             */
-/*   Updated: 2024/05/21 17:29:55 by endoliam         ###   ########lyon.fr   */
+/*   Updated: 2024/05/21 18:42:17 by endoliam         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,6 +83,8 @@ int			main(int ac, char **av, char **env);
 
 /* 					parsing					*/ 
 
+// tokenize
+
 // init lexer
 t_lexer		*create_lexer(char *s);
 int			init_operator(t_lexer **lexer, char *s, int start);
@@ -99,13 +101,23 @@ bool		isword(char *s, int start);
 bool		final_space(char *s);
 bool		isoperator(char c);
 
-// utils
+// utils cmd
 int			exit_failure(char *msg);
 int			zap_quote(char *s, char quote, int i);
 
 // init cmd
 t_cmd		*init_cmd(char **env, t_lexer *lex);
 void		cpy_env(char **env, t_cmd *command);
+
+//parsing cmd for execution
+
+// init cmd
+
+// pars cmd
+
+// bool cmd
+
+// utils cmd
 
 /*					end parsing				*/
 
