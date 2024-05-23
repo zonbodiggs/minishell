@@ -6,7 +6,7 @@
 /*   By: endoliam <endoliam@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/20 11:36:33 by endoliam          #+#    #+#             */
-/*   Updated: 2024/05/21 18:35:52 by endoliam         ###   ########lyon.fr   */
+/*   Updated: 2024/05/23 15:06:10 by endoliam         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -340,7 +340,7 @@ t_cmd	*init_cmd(char **env, t_lexer *lex)
 			lex = lex->next;
 	}
 	command = start;
-	pars_cmd(command);
+	//pars_cmd(command);
 	return (command);
 }
 

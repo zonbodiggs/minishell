@@ -6,7 +6,7 @@
 /*   By: endoliam <endoliam@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/17 16:56:51 by endoliam          #+#    #+#             */
-/*   Updated: 2024/05/20 17:31:28 by endoliam         ###   ########lyon.fr   */
+/*   Updated: 2024/05/21 18:50:37 by endoliam         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,12 +86,12 @@ t_lexer		*create_lexer(char *s)
 		if (isword(s, i) == true)
 			i = lst_init_lexer(&lexer, s, i); // allocation
 		if (i < 0)
-			break ; // free and break
+			break ; // free exit and break
 		if (isoperator(s[i]) == true)
 		{
 			i = init_operator(&lexer, s, i);
 			if (i < 0)
-				break ; // free and break
+				break ; // free exit and break
 			while (s[i] && s[i + 1] && s[i + 1] == ' ')
 				i++;
 		}

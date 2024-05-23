@@ -6,7 +6,7 @@
 /*   By: endoliam <endoliam@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/14 13:20:55 by endoliam          #+#    #+#             */
-/*   Updated: 2024/05/21 18:42:17 by endoliam         ###   ########lyon.fr   */
+/*   Updated: 2024/05/23 13:10:55 by endoliam         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,19 +55,12 @@ typedef struct s_lexer // for pars
 	struct s_lexer		*prev;
 }		t_lexer;
 
-typedef	struct s_error
-{
-	char	*msg_file;
-	char	*msg_cmd;
-
-}	t_error;
 
 typedef struct s_cmd // for exec
 {
 	char				**cmd;			// cmd
 	char				**t_env;		// env
 	char				**files;
-	t_error				err;
 	t_enum				redir;			// enum of fd
 	struct s_cmd		*next;
 }		t_cmd;
@@ -106,6 +99,7 @@ int			exit_failure(char *msg);
 int			zap_quote(char *s, char quote, int i);
 
 // init cmd
+
 t_cmd		*init_cmd(char **env, t_lexer *lex);
 void		cpy_env(char **env, t_cmd *command);
 
