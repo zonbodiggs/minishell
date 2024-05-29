@@ -6,7 +6,7 @@
 /*   By: endoliam <endoliam@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/20 11:36:33 by endoliam          #+#    #+#             */
-/*   Updated: 2024/05/23 15:06:10 by endoliam         ###   ########lyon.fr   */
+/*   Updated: 2024/05/29 08:48:26 by endoliam         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,11 +25,18 @@
 //	}
 //	return (false);
 //}
+bool	isredirection(t_lexer_type lex_type)
+{
+	if (lex_type == INPUT
+		|| lex_type == OUTPUT)
+		return (true);
+	return (false);
+}
 
 void	exit_cmd(char *msg)
 {
 	ft_putstr_fd(msg, 2);
-	exit (0);
+	exit (47);
 }
 
 void	add_cmd(t_cmd **command, t_cmd *element)
@@ -100,6 +107,8 @@ char	**init_command(t_lexer *lex)
 		len++;
 		tmp = tmp->next;
 	}
+	if (lex->prev && isredirection(lex->prev->lex) && (!lex->prev->prev || lex->prev->prev->lex == PIPES))
+		len = 1;
 	cmd = ft_calloc(len + 1, sizeof(char *));
 	if (!cmd)
 		exit_cmd("allocation t_cmd failed\n"); ; // free and exit 
@@ -233,6 +242,17 @@ void	pars_files(t_cmd *command)
 			set_file(cmd->files, 4);
 	}
 }
+void	free_array(char **array)
+{
+	int	i;
+
+	i = 0;
+	while(array[i])
+	{
+		free(array[i]);
+		i++;
+	}
+}
 //watch access to cmd
 
 void	pars_cmd(char **cmd)
@@ -248,19 +268,18 @@ void	pars_cmd(char **cmd)
 		cmd_path = ft_slash_strjoin(path[i], cmd[0]);
 		if (access(cmd_path, F_OK) == 0) // check also if cmd[0] is builtin
 		{
-			// set cmd_path to cmd[0]
-			// free cmd_path
-			// free path
-			// return fonction
+			cmd[0] = ft_strdup(cmd_path); // set cmd_path to cmd[0]
+			free(cmd_path); // free cmd_path
+			free_array(path); // free path
+			printf("path cmd %s\n", cmd[0]);
 			return ;
 		}
 		i++;
 	}
-	// free path
-	// free cmd path
-	// error message 
-	// return fonction
-	return ;
+	free(cmd_path); // free cmd_path
+	free_array(path); // free path
+	printf("cmd not found\n"); // error message
+	return ;  // return fonction
 }
 // parsing files and cmd of any commad list
 
@@ -288,15 +307,6 @@ void	pars_cmd_list(t_cmd	*command)
 }
 
 // init struct list cmd
-
-bool	isoperator_cmd(t_lexer_type lex_type)
-{
-	if (lex_type == PIPES
-		|| lex_type == INPUT
-		|| lex_type == OUTPUT)
-		return (true);
-	return (false);
-}
 
 t_cmd	*init_cmd(char **env, t_lexer *lex)
 {
@@ -327,9 +337,12 @@ t_cmd	*init_cmd(char **env, t_lexer *lex)
 			{
 				lex = lex->next;
 				command->files = init_command(lex);
-				while (lex && lex->lex != PIPES
+				if (lex->prev->prev && lex->prev->prev->lex != PIPES)
+				{
+					while (lex && lex->lex != PIPES
 					&& lex->lex != INPUT && lex->lex != OUTPUT)
 					lex = lex->next;
+				}
 			}
 			else
 				lex = lex->next;
@@ -340,7 +353,7 @@ t_cmd	*init_cmd(char **env, t_lexer *lex)
 			lex = lex->next;
 	}
 	command = start;
-	//pars_cmd(command);
+	pars_cmd_list(command);
 	return (command);
 }
 
