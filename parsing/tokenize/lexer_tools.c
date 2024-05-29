@@ -6,7 +6,7 @@
 /*   By: endoliam <endoliam@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/17 17:09:59 by endoliam          #+#    #+#             */
-/*   Updated: 2024/05/20 16:11:57 by endoliam         ###   ########lyon.fr   */
+/*   Updated: 2024/05/29 11:30:32 by endoliam         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,7 @@ int	lst_init_lexer(t_lexer **lexer, char *s, int start)
 		data->spaces = true;
 	data->contain = ft_substr(s, start, len);	//allocation
 	init_lexer_type(data);
-	printf("%s %d %d\n", data->contain, data->spaces, data->lex);
+	// printf("%s %d %d\n", data->contain, data->spaces, data->lex);
 	if (!data->contain)
 		exit_failure("malloc allocation failed\n");
 	add_lexer(lexer, data);

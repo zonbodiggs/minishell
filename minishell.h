@@ -6,7 +6,7 @@
 /*   By: endoliam <endoliam@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/14 13:20:55 by endoliam          #+#    #+#             */
-/*   Updated: 2024/05/23 13:10:55 by endoliam         ###   ########lyon.fr   */
+/*   Updated: 2024/05/29 15:15:59 by endoliam         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,6 @@
 # include <stdlib.h>
 # include <readline/readline.h>
 # include <readline/history.h>
-# include <stdlib.h>
 # include <fcntl.h>
 
 extern int			g_signal;
@@ -97,6 +96,8 @@ bool		isoperator(char c);
 // utils cmd
 int			exit_failure(char *msg);
 int			zap_quote(char *s, char quote, int i);
+void		free_array(char **array);
+void		exit_cmd(char *msg);
 
 // init cmd
 
@@ -106,12 +107,31 @@ void		cpy_env(char **env, t_cmd *command);
 //parsing cmd for execution
 
 // init cmd
+t_cmd		*init_cmd(char **env, t_lexer *lex);
+char		**init_tab(t_lexer *lex);
+char		*dup_cmd(t_lexer *lex);
 
 // pars cmd
+int			set_file(char **files, int flag);
+void		pars_files(t_cmd *command);
 
-// bool cmd
+// lst cmd
+void		lst_init_cmd(char **env, t_cmd **command);
+void		add_cmd(t_cmd **command, t_cmd *element);
+void		pars_cmd(char **cmd);
+void		pars_cmd_list(t_cmd	*command);
+int			error_files(int flag);
 
 // utils cmd
+void		cpy_env(char **env, t_cmd *command);
+int			size_tab_cmd(t_lexer *lex);
+bool		isoperator_cmd(t_lexer_type lex_type);
+bool		isredirection(t_lexer_type lex_type);
+
+// files utils 
+void		set_input(t_cmd *command, t_lexer *lex);
+int			isfilevalid_in(char *file);
+int			isfilevalid_out(char *file);
 
 /*					end parsing				*/
 
