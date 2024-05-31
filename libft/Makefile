@@ -6,6 +6,8 @@ CFLAGS 		= -g3 -Wall -Wextra -Werror
 NAME 		= libft.a
 #---------------------------------------------------#
 SRCS		= \
+	ft_printf_fd.c\
+	ft_printf_fd_utils.c\
 	ft_atoi.c\
 	ft_calloc.c\
 	ft_strnstr.c\

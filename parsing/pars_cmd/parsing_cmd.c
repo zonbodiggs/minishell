@@ -6,7 +6,7 @@
 /*   By: endoliam <endoliam@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/29 12:32:33 by endoliam          #+#    #+#             */
-/*   Updated: 2024/05/29 12:41:45 by endoliam         ###   ########lyon.fr   */
+/*   Updated: 2024/05/31 14:09:50 by endoliam         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,23 +21,22 @@ int		set_file(char **files, int flag)
 	i = 0;
 	if (!files)
 		return (0);
-	printf("FILES SET %s\n", files[0]);
 	while(files[i])
 	{
 		if (flag == 1)
 		{
 			if (isfilevalid_in(files[i]) != 0)
-				return(error_files(isfilevalid_in(files[i])));
+				return(error_files(isfilevalid_in(files[i]), files[i]));
 		}
 		else if (flag == 2)
 		{
 			if (i > 0 && isfilevalid_in(files[i]) != 0)
-				return(error_files(isfilevalid_in(files[i])));
+				return(error_files(isfilevalid_in(files[i]), files[i]));
 		}
 		else if (flag == 3)
 		{
 			if (isfilevalid_out(files[i]) != 0)
-				return(error_files(isfilevalid_out(files[i])));
+				return(error_files(isfilevalid_out(files[i]), files[i]));
 		}
 		i++;
 	}
@@ -89,9 +88,9 @@ void	pars_cmd(char **cmd)
 		}
 		i++;
 	}
+	ft_printf_fd(2, "minishell : command '%s' not found\n", cmd[0]); // error message
 	free(cmd_path); // free cmd_path
 	free_array(path); // free path
-	printf("cmd not found\n"); // error message
 	return ;  // return fonction
 }
 // parsing files and cmd of any commad list
@@ -102,7 +101,7 @@ void	pars_cmd_list(t_cmd	*command)
 
 	cmd = command;
 	if (!command)
-		exit(8);
+		return ;
 	int j = 1;
 	while (cmd)
 	{
@@ -119,12 +118,12 @@ void	pars_cmd_list(t_cmd	*command)
 	}
 }
 
-int	error_files(int flag)
+int	error_files(int flag, char *file)
 {
 	if (flag == -2)
-		ft_putstr_fd("can't found file\n", 2); // put name of file
+		ft_printf_fd(2, "minishell : can't found file '%s'\n", file); // put name of file
 	else if (flag == -3)
-		ft_putstr_fd("permision to file denied\n", 2); // put name of file
+		ft_printf_fd(2, "minishell : permision to file denied '%s'\n", file);
 	return (-2);
 }
 

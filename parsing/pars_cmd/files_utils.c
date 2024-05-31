@@ -6,7 +6,7 @@
 /*   By: endoliam <endoliam@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/29 14:42:36 by endoliam          #+#    #+#             */
-/*   Updated: 2024/05/29 14:43:22 by endoliam         ###   ########lyon.fr   */
+/*   Updated: 2024/05/31 11:54:16 by endoliam         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,9 +42,7 @@ int		isfilevalid_in(char *file)
 
 int		isfilevalid_out(char *file)
 {
-	if (access(file, F_OK) == -1)
-		return (-2);
-	if (access(file, W_OK) == -1)
+	if (access(file, F_OK) == 0 && access(file, W_OK) == -1)
 		return (-3);
 	return (0);
 }

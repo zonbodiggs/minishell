@@ -6,7 +6,7 @@
 /*   By: endoliam <endoliam@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/17 16:56:51 by endoliam          #+#    #+#             */
-/*   Updated: 2024/05/21 18:50:37 by endoliam         ###   ########lyon.fr   */
+/*   Updated: 2024/05/31 16:07:49 by endoliam         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,20 +48,23 @@ void	init_lexer_type(t_lexer *data)
 
 int	init_operator(t_lexer **lexer, char *s, int start)
 {
-	if (s[start] == '|')
+	char	c;
+
+	c = s[start];
+	if (c == '|')
 	{
 		if (s[start + 1] && s[start + 1] == '|')
-			return (exit_failure("syntax error near unexpected symbol\n"));
+			return (exit_failure("syntax error near unexpected symbol", c));
 		lst_init_lexer(lexer, "|", 0);
 	}
-	else if (s[start] == '<' || s[start] == '>')
+	else if (c == '<' || c == '>')
 	{
-		if ((s[start + 1] && s[start + 1] != s[start]) || !s[start + 1])
-			init_redirection(lexer, s[start], 1);
-		else if (s[start + 1] && s[start + 1] == s[start])
+		if ((s[start + 1] && s[start + 1] != c) || !s[start + 1])
+			init_redirection(lexer, c, 1);
+		else if (s[start + 1] && s[start + 1] == c)
 		{
 			if (s[start + 2] && s[start + 2] == s[start])
-				return (exit_failure("syntax error near unexpected symbol\n"));
+				return (exit_failure("syntax error near unexpected symbol", c));
 			else
 				init_redirection(lexer, s[start], 2);
 			start++;
@@ -70,8 +73,29 @@ int	init_operator(t_lexer **lexer, char *s, int start)
 	else
 		start = lst_init_lexer(lexer, s, start) - 1;
 	if (start < 0)
-		return (exit_failure("error : quote don't closed\n"));
+		return (exit_failure("error : quote don't closed", c));
 	return (start);
+}
+t_lexer *get_start(t_lexer *lexer)
+{
+	while (lexer && lexer->prev)
+		lexer = lexer->prev;
+	return (lexer);
+}
+t_lexer		*free_lexer(t_lexer *lex)
+{
+	t_lexer	*tmp;
+
+	lex = get_start(lex);
+	while (lex)
+	{
+		tmp = lex;
+		if (lex->contain)
+			free(lex->contain);
+		lex = lex->next;
+		free(tmp);
+	}
+	return (NULL);
 }
 
 t_lexer		*create_lexer(char *s)
@@ -86,19 +110,18 @@ t_lexer		*create_lexer(char *s)
 		if (isword(s, i) == true)
 			i = lst_init_lexer(&lexer, s, i); // allocation
 		if (i < 0)
-			break ; // free exit and break
+			return (free_lexer(lexer)); // free exit and break
 		if (isoperator(s[i]) == true)
 		{
 			i = init_operator(&lexer, s, i);
 			if (i < 0)
-				break ; // free exit and break
+				return (free_lexer(lexer)); // free exit and break
 			while (s[i] && s[i + 1] && s[i + 1] == ' ')
 				i++;
 		}
 		if (s[i])
 			i++;
 	}
-	while (lexer && lexer->prev)
-		lexer = lexer->prev;
+	lexer = get_start(lexer);
 	return (lexer);
 }

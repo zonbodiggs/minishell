@@ -6,7 +6,7 @@
 /*   By: endoliam <endoliam@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/16 15:05:05 by endoliam          #+#    #+#             */
-/*   Updated: 2024/05/20 14:20:05 by endoliam         ###   ########lyon.fr   */
+/*   Updated: 2024/05/31 14:53:08 by endoliam         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,4 +24,3 @@ char	*ft_strdup(const char *str)
 	ft_memcpy(dest, str, len);
 	return (dest);
 }
-

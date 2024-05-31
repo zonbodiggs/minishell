@@ -6,7 +6,7 @@
 /*   By: endoliam <endoliam@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/20 11:36:33 by endoliam          #+#    #+#             */
-/*   Updated: 2024/05/29 15:22:08 by endoliam         ###   ########lyon.fr   */
+/*   Updated: 2024/05/31 14:12:29 by endoliam         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,38 @@ char	**init_tab(t_lexer *lex)
 	}
 	return (cmd);
 }
+t_lexer		*zap_lex(t_lexer *lex)
+{	
+	while (lex && isoperator_cmd(lex->lex) == false)
+				lex = lex->next;
+	return (lex);
+}
 
+t_lexer		*get_cmd(t_cmd *command, t_lexer *lex)
+{
+	if (lex && isoperator_cmd(lex->lex) == false)
+	{
+		command->cmd = init_tab(lex);
+		lex = zap_lex(lex);
+	}
+	if (lex && isredirection(lex->lex) == true)
+	{
+		set_input(command, lex);
+		if (lex->next && isoperator_cmd(lex->next->lex) == false)
+		{
+			lex = lex->next;
+			command->files = init_tab(lex);
+			if (lex->prev->prev && lex->prev->prev->lex != PIPES)
+				lex = zap_lex(lex);
+		}
+		else
+		{
+			ft_printf_fd(2, "syntax error near unexpected token '%s'\n", lex->contain); 
+			return (NULL); // free and exit correctly
+		}
+	}
+	return (lex);
+}
 // init struct list cmd
 
 t_cmd	*init_cmd(char **env, t_lexer *lex)
@@ -67,31 +98,10 @@ t_cmd	*init_cmd(char **env, t_lexer *lex)
 	{
 		i++;
 		lst_init_cmd(env, &command);
-		if (lex && isoperator_cmd(lex->lex) == false)
-		{
-			command->cmd = init_tab(lex);
-			while (lex && isoperator_cmd(lex->lex) == false)
-				lex = lex->next;
-		}
-		if (lex && isredirection(lex->lex) == true)
-		{
-			set_input(command, lex);
-			if (lex->next)
-			{
-				lex = lex->next;
-				command->files = init_tab(lex);
-				if (lex->prev->prev && lex->prev->prev->lex != PIPES)
-				{
-					while (lex && isoperator_cmd(lex->lex) == false)
-						lex = lex->next;
-				}
-			}
-			else
-				lex = lex->next;
-		}
+		lex = get_cmd(command, lex);
 		if (i == 1)
 			start = command;
-		if (lex && lex->next && isredirection(lex->lex) == false)
+		if (lex && isredirection(lex->lex) == false)
 			lex = lex->next;
 	}
 	command = start;
@@ -100,5 +110,4 @@ t_cmd	*init_cmd(char **env, t_lexer *lex)
 	return (command);
 }
 
-// test "ls |" sigint error
-// don't work if the input start
+// test < Makefile (send Makefile in cmd)

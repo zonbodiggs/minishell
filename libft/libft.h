@@ -99,4 +99,13 @@ void	*ft_memmovegnl(void *dest, const void *src, size_t n);
 void	*ft_free(char **str);
 char	*ft_substr(char const *s, unsigned int start, size_t len);
 
+// printf fd
+void	ft_putcharft(int fd, char c, int *addrcheck);
+size_t	ft_strlenft(const char *str);
+void	ft_putstrft(int fd, const char *str, int *addrcheck);
+void	ft_putnbrft(int fd, long long n, int *addrcheck);
+void	ft_putnbr_hexaft(int fd, unsigned long n, int *addrcheck, int c);
+int		ft_check_error(va_list arg);
+int		ft_printf_fd(int fd, const char *str, ...);
+
 #endif

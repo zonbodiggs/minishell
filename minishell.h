@@ -6,7 +6,7 @@
 /*   By: endoliam <endoliam@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/14 13:20:55 by endoliam          #+#    #+#             */
-/*   Updated: 2024/05/29 15:15:59 by endoliam         ###   ########lyon.fr   */
+/*   Updated: 2024/05/31 16:22:35 by endoliam         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,13 +94,12 @@ bool		final_space(char *s);
 bool		isoperator(char c);
 
 // utils cmd
-int			exit_failure(char *msg);
+int			exit_failure(char *msg, char c);
 int			zap_quote(char *s, char quote, int i);
 void		free_array(char **array);
 void		exit_cmd(char *msg);
 
 // init cmd
-
 t_cmd		*init_cmd(char **env, t_lexer *lex);
 void		cpy_env(char **env, t_cmd *command);
 
@@ -120,7 +119,7 @@ void		lst_init_cmd(char **env, t_cmd **command);
 void		add_cmd(t_cmd **command, t_cmd *element);
 void		pars_cmd(char **cmd);
 void		pars_cmd_list(t_cmd	*command);
-int			error_files(int flag);
+int			error_files(int flag, char *file);
 
 // utils cmd
 void		cpy_env(char **env, t_cmd *command);

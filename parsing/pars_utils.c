@@ -6,15 +6,18 @@
 /*   By: endoliam <endoliam@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/17 17:04:15 by endoliam          #+#    #+#             */
-/*   Updated: 2024/05/29 13:55:06 by endoliam         ###   ########lyon.fr   */
+/*   Updated: 2024/05/31 15:57:10 by endoliam         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-int	exit_failure(char *msg)
+int	exit_failure(char *msg, char c)
 {
-	ft_putstr_fd(msg, 2); // pintf fd
+	ft_printf_fd(2,"minishell error: %s", msg);
+	if (c)
+		ft_printf_fd(2, "%c", c);
+	ft_printf_fd(2, "\n");
 	return (-1);
 }
 
