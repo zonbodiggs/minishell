@@ -6,7 +6,7 @@
 /*   By: endoliam <endoliam@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/24 13:20:21 by rtehar            #+#    #+#             */
-/*   Updated: 2024/06/04 14:06:40 by endoliam         ###   ########lyon.fr   */
+/*   Updated: 2024/06/04 14:14:17 by endoliam         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,79 +31,6 @@ void	execute_simple_command(t_cmd *cmd)
 		waitpid(pid, NULL, 0);
 	return ;
 }
-// t_cmd	*execute_command(t_cmd *cmd)
-// {
-// 	int		fd[2];
-// 	pid_t	id1;
-// 	pid_t	id2;
-
-// 	id1 = fork();
-// 	pipe(fd);
-// 	if (id1 == 0)
-// 	{
-// 		// redirection in
-// 		dup2(fd[0], STDIN_FILENO);
-// 		dup2(fd[1], STDOUT_FILENO);
-// 		close(fd[0]);
-// 		close(fd[1]);
-// 		my_execve(cmd);
-// 		exit(41);
-// 	}
-// 	id2 = fork();
-// 	if (cmd->next)
-// 	{
-// 		// redirection out
-// 		if (id2 == 0)
-// 		{
-// 			dup2(fd[0], STDIN_FILENO);
-// 			dup2(fd[1], STDOUT_FILENO);
-// 			close(fd[0]);
-// 			close(fd[1]);
-// 			cmd = cmd->next;
-// 			my_execve(cmd);
-// 			exit(43);
-// 		}
-// 	}
-// 	cmd = cmd->next;
-// 	close(fd[1]);
-// 	close(fd[0]);
-// 	while (wait(NULL) > 0)
-// 		;
-// 	return (cmd);
-// }
-
-// void	execute_pipeline(t_cmd *cmds)
-// {
-// 	int		fd[2];
-// 	pid_t	pid;
-// 	int		infile;
-// 	t_cmd	*cmd;
-	
-// 	cmd = cmds;
-// 	infile = STDIN_FILENO;
-// 	pid = fork();
-// 	while (cmd)
-// 	{
-// 		pipe(fd);
-// 		if (pid == -1)
-// 			exit(EXIT_FAILURE);
-// 		else if (pid == 0)
-// 		{
-// 			dup2(infile, STDIN_FILENO);
-// 				if (cmd->next != NULL)
-// 			dup2(fd[1], STDOUT_FILENO);
-// 			close(fd[0]);
-// 			execute_command(cmd);
-// 		}
-// 		else
-// 		{
-// 			close(fd[1]);
-// 			infile = fd[0];
-// 			cmd = cmd->next;
-// 		}
-// 		waitpid(pid, NULL, 0);
-// 	}
-// }
 
 int get_last_index(char **files)
 {
@@ -137,6 +64,8 @@ void run_commands(t_cmd *cmds)
     if (cmds == NULL)
         return;
     cmd = cmds;
+	if (is_only_cmd(cmd->next) == true)
+			execute_simple_command(cmd);
     while (cmd)
     {
 		// if (i > -1)
@@ -150,8 +79,7 @@ void run_commands(t_cmd *cmds)
 		// 	else if (cmd->redir == HEREDOC)
         // 		redirect_heredoc(cmd->files[i]);
 		// }
-		if (cmd->cmd && is_only_cmd(cmd->next) == true)
-			execute_simple_command(cmd);
+		
 		cmd = cmd->next;
     }
 	return ;
