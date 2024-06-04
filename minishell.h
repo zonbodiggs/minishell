@@ -6,7 +6,7 @@
 /*   By: endoliam <endoliam@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/14 13:20:55 by endoliam          #+#    #+#             */
-/*   Updated: 2024/05/31 16:22:35 by endoliam         ###   ########lyon.fr   */
+/*   Updated: 2024/06/03 15:32:16 by endoliam         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,9 @@
 # include <stdlib.h>
 # include <readline/readline.h>
 # include <readline/history.h>
+# include <stdlib.h>
 # include <fcntl.h>
+# include <sys/wait.h>
 
 extern int			g_signal;
 
@@ -72,6 +74,7 @@ typedef struct s_minishell
 }		t_minishell;
 
 int			main(int ac, char **av, char **env);
+
 
 /* 					parsing					*/ 
 
@@ -126,6 +129,7 @@ void		cpy_env(char **env, t_cmd *command);
 int			size_tab_cmd(t_lexer *lex);
 bool		isoperator_cmd(t_lexer_type lex_type);
 bool		isredirection(t_lexer_type lex_type);
+bool		isbuiltin(char *cmd);
 
 // files utils 
 void		set_input(t_cmd *command, t_lexer *lex);
@@ -134,4 +138,21 @@ int			isfilevalid_out(char *file);
 
 /*					end parsing				*/
 
+
+/* 					exec					*/
+void		execute_command(t_cmd *cmd);
+void	execute_pipeline(t_cmd *cmds, int fdin, int fdout);
+int 		get_last_index(char **files);
+void 		run_commands(t_cmd *cmds);
+
+int		redirect_input(const char *file);
+int		redirect_output(const char *file);
+int		redirect_output_append(const char *file);
+void		redirect_heredoc(const char *delimiter);
+
+void 		sort_cmd(char **cmd);
+int 		echo(char **cmd);
+int 		pwd();
+
+/* 					end exec				*/ 
 #endif

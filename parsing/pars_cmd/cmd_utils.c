@@ -6,7 +6,7 @@
 /*   By: endoliam <endoliam@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/29 11:42:24 by endoliam          #+#    #+#             */
-/*   Updated: 2024/05/29 15:24:39 by endoliam         ###   ########lyon.fr   */
+/*   Updated: 2024/06/03 14:40:05 by endoliam         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,6 +33,7 @@ void	cpy_env(char **env, t_cmd *command)
 			exit_cmd("allocation env failed\n");// free and exit
 		i++;
 	}
+	command->t_env[len] = NULL;
 }
 
 int	size_tab_cmd(t_lexer *lex)
@@ -66,6 +67,15 @@ bool	isoperator_cmd(t_lexer_type lex_type)
 {
 	if (isredirection(lex_type)
 		|| lex_type == PIPES)
+		return (true);
+	return (false);
+}
+
+bool	isbuiltin(char *cmd)
+{
+	if (!cmd)
+		return (false);
+	if (!ft_strncmp(cmd, "echo", 4) || !ft_strncmp(cmd, "pwd", 4))
 		return (true);
 	return (false);
 }

@@ -6,7 +6,7 @@
 /*   By: endoliam <endoliam@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/29 12:32:33 by endoliam          #+#    #+#             */
-/*   Updated: 2024/05/31 14:09:50 by endoliam         ###   ########lyon.fr   */
+/*   Updated: 2024/06/03 14:40:42 by endoliam         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,6 +73,8 @@ void	pars_cmd(char **cmd)
 	char	**path;
 	char	*cmd_path;
 
+	if (isbuiltin(cmd[0]) == true)
+		return ;
 	i = 0;
 	path = ft_split(getenv("PATH"), ':');
 	while (path[i])
