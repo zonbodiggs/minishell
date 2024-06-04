@@ -6,7 +6,7 @@
 /*   By: endoliam <endoliam@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/24 12:59:54 by rtehar            #+#    #+#             */
-/*   Updated: 2024/06/04 11:18:37 by endoliam         ###   ########lyon.fr   */
+/*   Updated: 2024/06/04 13:04:11 by endoliam         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,7 @@ int	redirect_input(const char *file)
 
 	fdin = open(file, O_RDONLY);
 	dup2(fdin, STDIN_FILENO);
+	close(fdin);
 	return (fdin);
 }
 
@@ -27,6 +28,7 @@ int	redirect_output(const char *file)
 
 	fdout = open(file, O_WRONLY | O_CREAT | O_TRUNC, 0644);
 	dup2(fdout, STDOUT_FILENO);
+	close(fdout);
 	return(fdout);
 }
 
@@ -35,9 +37,11 @@ int	redirect_output_append(const char *file)
 	int	fd;
 
 	fd = open(file, O_WRONLY | O_CREAT | O_APPEND, 0644);
-	if (fd == -1)
-		exit(EXIT_FAILURE);
-	//dup2(fd, STDOUT_FILENO);
+	if (fd != -1)
+	{	
+		dup2(fd, STDOUT_FILENO);
+		close(fd);
+	}
 	return(fd);
 }
 
