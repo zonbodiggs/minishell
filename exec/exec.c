@@ -6,7 +6,7 @@
 /*   By: endoliam <endoliam@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/24 13:20:21 by rtehar            #+#    #+#             */
-/*   Updated: 2024/06/04 11:43:20 by endoliam         ###   ########lyon.fr   */
+/*   Updated: 2024/06/04 11:46:11 by endoliam         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,11 +14,9 @@
 
 void	execute_command(t_cmd *cmd)
 {
-	// int fd[2];
 	pid_t	pid;
 
 	pid = fork();
-	// pipe(fd);
 	if (pid == 0)
 	{
 		if (execve(cmd->cmd[0], cmd->cmd, cmd->t_env) == -1)
