@@ -6,7 +6,7 @@
 /*   By: endoliam <endoliam@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/24 13:20:21 by rtehar            #+#    #+#             */
-/*   Updated: 2024/06/05 16:06:08 by endoliam         ###   ########lyon.fr   */
+/*   Updated: 2024/06/05 16:13:09 by endoliam         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,7 +70,7 @@ void	child(t_cmd *cmds, int oldfd[2], int newfd[2])
 	else if (!cmd->next) // fin  set in but not out
 	{
 		// verifier enum in and out
-		dup2(oldfd[1], STDIN_FILENO); // in->oldpipe[0]
+		dup2(oldfd[0], STDIN_FILENO); // in->oldpipe[0]
 		
 		// out->stdout
 		ft_printf_fd(2, "cmd last %s\n",cmd->cmd[0]);
@@ -78,7 +78,7 @@ void	child(t_cmd *cmds, int oldfd[2], int newfd[2])
 	else // milieu  set both of them
 	{
 		// verifier enum in and out
-		dup2(oldfd[1], STDIN_FILENO); // in->olpipe[1]
+		dup2(oldfd[0], STDIN_FILENO); // in->olpipe[1]
 		
 		dup2(newfd[1], STDOUT_FILENO); // out->newfd[0]
 	}
