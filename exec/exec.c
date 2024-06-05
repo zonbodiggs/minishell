@@ -6,7 +6,7 @@
 /*   By: endoliam <endoliam@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/24 13:20:21 by rtehar            #+#    #+#             */
-/*   Updated: 2024/06/04 14:14:17 by endoliam         ###   ########lyon.fr   */
+/*   Updated: 2024/06/04 17:22:42 by endoliam         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,15 +24,74 @@ void	execute_simple_command(t_cmd *cmd)
 	pid = fork();
 	if (pid == 0)
 	{
-		if (execve(cmd->cmd[0], cmd->cmd, cmd->t_env) == -1)
-			return ;
+		my_execve(cmd);
 	}
-	else 
-		waitpid(pid, NULL, 0);
+	waitpid(pid, NULL, 0);
 	return ;
 }
+int	number_of_command(t_cmd *cmd)
+{
+	int		i;
+	t_cmd	*start;
 
-int get_last_index(char **files)
+	i = 0;
+	start = cmd;
+	while(start)
+	{
+		if (start->cmd)
+			i++;
+		start = start->next;
+	}
+	return (i);
+}
+t_cmd	*get_next_cmd(t_cmd *cmd)
+{
+	while(cmd && !cmd->cmd)
+			cmd = cmd->next;
+	return (cmd);
+}
+void	first_child(t_cmd *cmd)
+{
+	// (verifier files)
+	// premier in stdin out newpipe[0]
+}
+void	mid_child(t_cmd *cmd)
+{
+	// (verifier files)
+	// milieu in olpipe[1] out newpipe[0]
+}
+void	last_child(t_cmd *cmd)
+{
+	// (verifier files)
+	// fin in oldpipe[0] out newpipte[1]
+}
+void	execute_pipeline(t_cmd *cmds, int size)
+{
+	pid_t	pid[size];
+	t_cmd	*cmd;
+	int		i;
+	int		fd;
+
+	i = 0;
+	cmd = cmds;
+	while (pid[i])
+	{
+		pid[i] = fork();
+		if (pid[i] == 0)
+		{
+			if (i == 1)
+				first_child(cmd);
+			else if (i == size)
+				last_child(cmd);
+			else
+				mid_child(cmd);
+		}
+		cmd = get_next_cmd(cmd);
+		i++;
+	}	
+}
+
+int	get_last_index(char **files)
 {
     int i = 0;
 
@@ -42,52 +101,23 @@ int get_last_index(char **files)
         i++;
     return (i - 1);
 }
-bool	is_only_cmd(t_cmd *cmd)
-{
-	t_cmd	*tmp;
 
-	tmp = cmd;
-	while (tmp)
-	{
-		if (cmd->cmd)
-			return (false);
-		cmd = cmd->next;
-	}
-	return (true);
-}
 void run_commands(t_cmd *cmds)
 {
     t_cmd *cmd;
-    int i;
+	int		i;
 
-    i = get_last_index(cmds->files);
-    if (cmds == NULL)
+    if (cmd == NULL)
         return;
     cmd = cmds;
-	if (is_only_cmd(cmd->next) == true)
-			execute_simple_command(cmd);
-    while (cmd)
-    {
-		// if (i > -1)
-        // {
-		// 	if (cmd->redir == IN)
-		// 		redirect_input(cmd->files[i]);
-		// 	else if (cmd->redir == TRUNC)
-		// 		redirect_output(cmd->files[i]);
-		// 	else if (cmd->redir == APPEND)
-		// 		redirect_output_append(cmd->files[i]);
-		// 	else if (cmd->redir == HEREDOC)
-        // 		redirect_heredoc(cmd->files[i]);
-		// }
-		
-		cmd = cmd->next;
-    }
+	i = number_of_command(cmds);
+	cmds = get_next_cmd(cmds);
+	if (!cmds->next || i == 1)
+		execute_simple_command(cmd);
+	else
+		execute_pipeline(cmd, i);
 	return ;
 }
 
 // pipe sur la premierre commande 
 // derniere cmd ??? sinon ppipe puis fork puis execve
-// (verifier files)
-// premier in stdin out newpipe[0]
-// milieu in olpipe[1] out newpipe[0]
-// fin in oldpipe[0] out newpipte[1]
