@@ -6,7 +6,7 @@
 /*   By: endoliam <endoliam@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/14 13:20:55 by endoliam          #+#    #+#             */
-/*   Updated: 2024/06/04 16:36:45 by endoliam         ###   ########lyon.fr   */
+/*   Updated: 2024/06/05 14:49:28 by endoliam         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@
 # include <stdlib.h>
 # include <fcntl.h>
 # include <sys/wait.h>
-
+# include <sys/types.h>
 extern int			g_signal;
 
 typedef enum e_enum
@@ -120,7 +120,7 @@ void		pars_files(t_cmd *command);
 // lst cmd
 void		lst_init_cmd(char **env, t_cmd **command);
 void		add_cmd(t_cmd **command, t_cmd *element);
-void		pars_cmd(char **cmd);
+int			iscmd(char **cmd);
 void		pars_cmd_list(t_cmd	*command);
 int			error_files(int flag, char *file);
 
@@ -153,4 +153,5 @@ int 		echo(char **cmd);
 int 		pwd();
 
 /* 					end exec				*/ 
+
 #endif

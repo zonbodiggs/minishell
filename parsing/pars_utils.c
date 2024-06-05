@@ -6,7 +6,7 @@
 /*   By: endoliam <endoliam@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/17 17:04:15 by endoliam          #+#    #+#             */
-/*   Updated: 2024/06/04 13:34:00 by endoliam         ###   ########lyon.fr   */
+/*   Updated: 2024/06/05 15:48:34 by endoliam         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,14 +42,6 @@ void	free_array(char **array)
 		i++;
 	}
 }
-// void	free_cmd(t_cmd *cmd)
-// {
-// 	while (cmd->next)
-// 	{
-// 		free_array(cmd->cmd)
-// 		cmd = cmd->next;
-// 	}
-// }
 void	exit_cmd(char *msg)
 {
 	ft_putstr_fd(msg, 2); // printf_fd and exit correctly 

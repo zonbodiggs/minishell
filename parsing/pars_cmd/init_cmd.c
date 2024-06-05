@@ -6,7 +6,7 @@
 /*   By: endoliam <endoliam@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/20 11:36:33 by endoliam          #+#    #+#             */
-/*   Updated: 2024/06/03 14:13:17 by endoliam         ###   ########lyon.fr   */
+/*   Updated: 2024/06/05 15:56:44 by endoliam         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,8 +85,9 @@ t_lexer		*get_cmd(t_cmd *command, t_lexer *lex)
 
 t_cmd	*init_cmd(char **env, t_lexer *lex)
 {
-	t_cmd	*command;
-	t_cmd	*start;
+	t_cmd		*command;
+	t_cmd		*start;
+	t_lexer		*lexer;
 	int		i;
 
 	if (!lex)
@@ -94,15 +95,16 @@ t_cmd	*init_cmd(char **env, t_lexer *lex)
 	i = 0;
 	command = NULL;
 	start = NULL;
-	while (lex)
+	lexer = lex;
+	while (lexer)
 	{
 		i++;
 		lst_init_cmd(env, &command);
-		lex = get_cmd(command, lex);
+		lexer = get_cmd(command, lexer);
 		if (i == 1)
 			start = command;
-		if (lex && isredirection(lex->lex) == false)
-			lex = lex->next;
+		if (lexer && isredirection(lexer->lex) == false)
+			lexer = lexer->next;
 	}
 	command = start;
 	// hererdoc 

@@ -6,7 +6,7 @@
 /*   By: endoliam <endoliam@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/29 12:32:33 by endoliam          #+#    #+#             */
-/*   Updated: 2024/06/03 14:40:42 by endoliam         ###   ########lyon.fr   */
+/*   Updated: 2024/06/05 11:04:06 by endoliam         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,15 +67,17 @@ void	pars_files(t_cmd *command)
 }
 //watch access to cmd
 
-void	pars_cmd(char **cmd)
+int	iscmd(char **cmd)
 {
 	int		i;
 	char	**path;
 	char	*cmd_path;
 
 	if (isbuiltin(cmd[0]) == true)
-		return ;
+		return (1);
 	i = 0;
+	if (!getenv("PATH"))
+		return (0);
 	path = ft_split(getenv("PATH"), ':');
 	while (path[i])
 	{
@@ -86,14 +88,14 @@ void	pars_cmd(char **cmd)
 			free(cmd_path); // free cmd_path
 			free_array(path); // free path
 			printf("path cmd %s\n", cmd[0]);
-			return ;
+			return (1);
 		}
 		i++;
 	}
-	ft_printf_fd(2, "minishell : command '%s' not found\n", cmd[0]); // error message
+	// ft_printf_fd(2, "minishell : command '%s' not found\n", cmd[0]); // error message
 	free(cmd_path); // free cmd_path
 	free_array(path); // free path
-	return ;  // return fonction
+	return (0);  // return fonction
 }
 // parsing files and cmd of any commad list
 
@@ -114,7 +116,7 @@ void	pars_cmd_list(t_cmd	*command)
 		if (cmd->files)
 			pars_files(cmd); // pars files
 		if (cmd->cmd)
-			pars_cmd(cmd->cmd); // add fonction that pars cmd
+			iscmd(cmd->cmd); // add fonction that pars cmd
 		j++;
 		cmd = cmd->next;
 	}
