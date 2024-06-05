@@ -6,7 +6,7 @@
 /*   By: endoliam <endoliam@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/17 16:56:51 by endoliam          #+#    #+#             */
-/*   Updated: 2024/05/31 16:07:49 by endoliam         ###   ########lyon.fr   */
+/*   Updated: 2024/06/05 17:43:44 by endoliam         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,7 +54,7 @@ int	init_operator(t_lexer **lexer, char *s, int start)
 	if (c == '|')
 	{
 		if (s[start + 1] && s[start + 1] == '|')
-			return (exit_failure("syntax error near unexpected symbol", c));
+			return (exit_failure("syntax error near unexpected symbol", c)); // free and exit
 		lst_init_lexer(lexer, "|", 0);
 	}
 	else if (c == '<' || c == '>')
@@ -64,7 +64,7 @@ int	init_operator(t_lexer **lexer, char *s, int start)
 		else if (s[start + 1] && s[start + 1] == c)
 		{
 			if (s[start + 2] && s[start + 2] == s[start])
-				return (exit_failure("syntax error near unexpected symbol", c));
+				return (exit_failure("syntax error near unexpected symbol", c)); // free and exit
 			else
 				init_redirection(lexer, s[start], 2);
 			start++;
@@ -73,7 +73,7 @@ int	init_operator(t_lexer **lexer, char *s, int start)
 	else
 		start = lst_init_lexer(lexer, s, start) - 1;
 	if (start < 0)
-		return (exit_failure("error : quote don't closed", c));
+		return (exit_failure("error : quote don't closed", c)); // free and exit
 	return (start);
 }
 t_lexer *get_start(t_lexer *lexer)

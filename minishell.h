@@ -6,7 +6,7 @@
 /*   By: endoliam <endoliam@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/14 13:20:55 by endoliam          #+#    #+#             */
-/*   Updated: 2024/06/05 14:49:28 by endoliam         ###   ########lyon.fr   */
+/*   Updated: 2024/06/05 17:50:48 by endoliam         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -153,5 +153,8 @@ int 		echo(char **cmd);
 int 		pwd();
 
 /* 					end exec				*/ 
+
+// free
+t_lexer		*free_lexer(t_lexer *lex);
 
 #endif

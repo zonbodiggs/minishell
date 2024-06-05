@@ -6,7 +6,7 @@
 /*   By: endoliam <endoliam@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/24 13:20:21 by rtehar            #+#    #+#             */
-/*   Updated: 2024/06/05 16:13:09 by endoliam         ###   ########lyon.fr   */
+/*   Updated: 2024/06/05 19:09:23 by endoliam         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 void	my_execve(t_cmd *cmd)
 {
 	if (execve(cmd->cmd[0], cmd->cmd, cmd->t_env) == -1)
-		return ; // free and exit
+		exit(127) ; // free and exit
 	// utiliser sterrno and perror pour message d'erreur
 }
 
@@ -28,7 +28,7 @@ void	execute_simple_command(t_cmd *cmd)
 	{
 		my_execve(cmd);
 	}
-	waitpid(pid, NULL, 0);
+	while (wait(NULL) > 0);
 	return ;
 }
 int	number_of_command(t_cmd *cmd)
@@ -36,6 +36,8 @@ int	number_of_command(t_cmd *cmd)
 	int		i;
 	t_cmd	*start;
 
+	if (!cmd)
+		return (0);
 	i = 0;
 	start = cmd;
 	while(start)
@@ -65,39 +67,28 @@ void	child(t_cmd *cmds, int oldfd[2], int newfd[2])
 		// verifier enum in and out
 		// in->stdin 
 		dup2(newfd[1], STDOUT_FILENO); // out->newfd[0]
-		ft_printf_fd(2, "cmd start %s\n",cmd->cmd[0]);
 	}
 	else if (!cmd->next) // fin  set in but not out
 	{
 		// verifier enum in and out
-		dup2(oldfd[0], STDIN_FILENO); // in->oldpipe[0]
-		
-		// out->stdout
-		ft_printf_fd(2, "cmd last %s\n",cmd->cmd[0]);
+		dup2(oldfd[0], STDIN_FILENO);
 	}
 	else // milieu  set both of them
 	{
 		// verifier enum in and out
-		dup2(oldfd[0], STDIN_FILENO); // in->olpipe[1]
-		
-		dup2(newfd[1], STDOUT_FILENO); // out->newfd[0]
+		dup2(oldfd[0], STDIN_FILENO);
+		dup2(newfd[1], STDOUT_FILENO);
 	}
-	close(newfd[0]);
-	close(newfd[1]);
+	if (newfd[0] > 0)
+		close(newfd[0]);
+	if (newfd[1] > 0)
+		close(newfd[1]);
+	if (oldfd[0] > 0)
+		close(oldfd[0]);
 	my_execve(cmd);
 	// child
 }
 
-// void	mid_child(t_cmd *cmd)
-// {
-// 	// (verifier files)
-// 	
-// }
-// void	last_child(t_cmd *cmd)
-// {
-// 	// (verifier files)
-// 
-// }
 
 void		init_fds(int oldfd[2], int newfd[2])
 {
@@ -105,15 +96,13 @@ void		init_fds(int oldfd[2], int newfd[2])
 	ft_memset(newfd, -1, 2 * sizeof(int));
 }
 
-void	execute_pipeline(t_cmd *cmds)
+int		execute_pipeline(t_cmd *cmds)
 {
 	pid_t	pid;
 	t_cmd	*cmd;
-	int		i;
 	int		oldfd[2];
 	int		newfd[2];
 
-	i = 0;
 	init_fds(oldfd, newfd); // init fd -1
 	printf("fds %d %d %d %d\n",oldfd[0], oldfd[1], newfd[0], newfd[1]);
 	cmd = cmds;
@@ -122,16 +111,19 @@ void	execute_pipeline(t_cmd *cmds)
 	{
 		pid = fork();
 		if (pid == 0)
-		{
-			// init fd
 			child(cmd, oldfd, newfd);
-		}
 		oldfd[0] = newfd[0];
 		oldfd[1] = newfd[1];
+		dup2(oldfd[0], newfd[0]);
+		dup2(oldfd[1], newfd[1]);
 		cmd = cmd->next;
-		i++;
 	}
-	while (wait(NULL) < 0);
+	if (oldfd[0] > 0)
+		close(oldfd[0]);
+	if (oldfd[1] > 0)
+		close(oldfd[1]);
+	while(wait(NULL) > 0);
+	return (127);
 }
 
 int	get_last_index(char **files)

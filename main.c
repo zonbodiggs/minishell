@@ -6,23 +6,17 @@
 /*   By: endoliam <endoliam@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/14 16:09:41 by endoliam          #+#    #+#             */
-/*   Updated: 2024/06/05 16:02:36 by endoliam         ###   ########lyon.fr   */
+/*   Updated: 2024/06/05 17:51:22 by endoliam         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
 void	free_all(t_lexer *lex, t_cmd *cmd)
 {
-	t_lexer		*tmplex;
 	t_cmd		*tmpcmd;
-	while(lex)
-	{
-		tmplex = lex;
-		free(tmplex->contain);
-		lex = lex->next;
-		free(tmplex);
-		
-	}
+	
+	free_lexer(lex);
 	while(cmd)
 	{
 		tmpcmd = cmd;
@@ -51,7 +45,8 @@ int		main(int ac, char **av, char **env)
 		buffer = readline("minishell> "); 					// set buffer in readline (wait for read)
 		add_history(buffer);								// clear history after
 		minishell->lex = create_lexer(buffer); 				// check arg in the readline 
-		minishell->input = init_cmd(env, minishell->lex);
+		if (minishell->lex)
+			minishell->input = init_cmd(env, minishell->lex);
 		if (minishell->input)
 			run_commands(minishell->input);
 		free_all(minishell->lex, minishell->input);
