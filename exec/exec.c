@@ -6,7 +6,7 @@
 /*   By: endoliam <endoliam@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/24 13:20:21 by rtehar            #+#    #+#             */
-/*   Updated: 2024/06/07 12:03:55 by endoliam         ###   ########lyon.fr   */
+/*   Updated: 2024/06/07 12:11:05 by endoliam         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -144,11 +144,7 @@ int		execute_pipeline(t_cmd *cmds)
 		}
 		oldfd[0] = newfd[0];
 		oldfd[1] = newfd[1];
-		//if (cmd->next && number_of_command(cmd) > 1)
-		//{	
-		//	printf("NUMBER OF COMMAND for cmd = %s = %d\n", cmd->cmd[0], number_of_command(cmd));
-			pipe(newfd);
-		//}
+		pipe(newfd);
 		cmds = cmds->next;
 		free(cmd);
 	}

@@ -6,30 +6,29 @@
 /*   By: endoliam <endoliam@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/14 16:09:41 by endoliam          #+#    #+#             */
-/*   Updated: 2024/06/07 10:53:01 by endoliam         ###   ########lyon.fr   */
+/*   Updated: 2024/06/07 13:06:49 by endoliam         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	free_all(t_lexer *lex, t_cmd *cmd)
+void	free_all(t_cmd **cmd)
 {
 	t_cmd		*tmpcmd;
 
-	if (lex)
-		free_lexer(lex);
 	if (cmd)
 	{
-			while(cmd)
+			while(*cmd && (*cmd)->next)
 		{
-			tmpcmd = cmd;
-			if (cmd->cmd)
-				free_array(cmd->cmd);
-			if (cmd->files)
-				free_array(cmd->files);
-			if (cmd->t_env)
-				free_array(cmd->t_env);
-			cmd = cmd->next;
+			tmpcmd = *cmd;
+			if ((*cmd)->cmd)
+				free_array((*cmd)->cmd);
+			if ((*cmd)->files)
+				free_array((*cmd)->files);
+			if ((*cmd)->t_env)
+				free_array((*cmd)->t_env);
+			if (*cmd && (*cmd)->next)
+				*cmd = (*cmd)->next;
 			free(tmpcmd);
 		}
 	}
@@ -44,10 +43,10 @@ int		main(int ac, char **av, char **env)
 		ft_putstr_fd("could not execute minishell\n", 2);
 		return (0);
 	}
-	minishell = ft_calloc(1, sizeof(t_minishell));
 	(void)av;
 	while(1)
 	{
+		minishell = ft_calloc(1, sizeof(t_minishell));
 		buffer = readline("minishell> "); 					// set buffer in readline (wait for read)
 		add_history(buffer);								// clear history after
 		minishell->lex = create_lexer(buffer); 				// check arg in the readline 
@@ -55,7 +54,10 @@ int		main(int ac, char **av, char **env)
 			minishell->input = init_cmd(env, minishell->lex);
 		if (minishell->input)
 			run_commands(minishell->input);
-		//free_all(minishell->lex, minishell->input);
+		free_all(&minishell->input);
+		//if (!minishell->input)
+		//	exit(87);
+		free(minishell);
 		free(buffer); // free lex and input
 	}
 	free(minishell);

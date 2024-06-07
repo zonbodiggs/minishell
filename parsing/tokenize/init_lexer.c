@@ -6,7 +6,7 @@
 /*   By: endoliam <endoliam@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/17 16:56:51 by endoliam          #+#    #+#             */
-/*   Updated: 2024/06/05 17:43:44 by endoliam         ###   ########lyon.fr   */
+/*   Updated: 2024/06/07 13:01:15 by endoliam         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,17 +82,19 @@ t_lexer *get_start(t_lexer *lexer)
 		lexer = lexer->prev;
 	return (lexer);
 }
-t_lexer		*free_lexer(t_lexer *lex)
+t_lexer		*free_lexer(t_lexer **lex)
 {
 	t_lexer	*tmp;
 
-	lex = get_start(lex);
-	while (lex)
+	*lex = get_start(*lex);
+	print_lexer(*lex);
+	while (*lex && (*lex)->next)
 	{
-		tmp = lex;
-		if (lex->contain)
-			free(lex->contain);
-		lex = lex->next;
+		tmp = *lex;
+		if (tmp && tmp->contain)
+			free(tmp->contain);
+		if ((*lex)->next)
+			*lex = (*lex)->next;
 		free(tmp);
 	}
 	return (NULL);
@@ -110,12 +112,12 @@ t_lexer		*create_lexer(char *s)
 		if (isword(s, i) == true)
 			i = lst_init_lexer(&lexer, s, i); // allocation
 		if (i < 0)
-			return (free_lexer(lexer)); // free exit and break
+			return (free_lexer(&lexer)); // free exit and break
 		if (isoperator(s[i]) == true)
 		{
 			i = init_operator(&lexer, s, i);
 			if (i < 0)
-				return (free_lexer(lexer)); // free exit and break
+				return (free_lexer(&lexer)); // free exit and break
 			while (s[i] && s[i + 1] && s[i + 1] == ' ')
 				i++;
 		}

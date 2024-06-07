@@ -6,7 +6,7 @@
 /*   By: endoliam <endoliam@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/17 17:09:59 by endoliam          #+#    #+#             */
-/*   Updated: 2024/06/05 17:43:16 by endoliam         ###   ########lyon.fr   */
+/*   Updated: 2024/06/07 12:50:34 by endoliam         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,8 @@ void	add_lexer(t_lexer **lexer, t_lexer *element)
 	if (!*lexer)
 	{
 		*lexer = element;
-		element->prev = NULL;
+		(*lexer)->prev = NULL;
+		(*lexer)->next = NULL;
 	}
 	else
 	{
@@ -26,6 +27,7 @@ void	add_lexer(t_lexer **lexer, t_lexer *element)
 		(*lexer)->next = element;
 		element->prev = *lexer;
 		(*lexer) = (*lexer)->next;
+		(*lexer)->next = NULL;
 	}
 }
 

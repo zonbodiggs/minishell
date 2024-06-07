@@ -6,7 +6,7 @@
 /*   By: endoliam <endoliam@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/20 11:36:33 by endoliam          #+#    #+#             */
-/*   Updated: 2024/06/05 15:56:44 by endoliam         ###   ########lyon.fr   */
+/*   Updated: 2024/06/07 12:40:57 by endoliam         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -106,6 +106,7 @@ t_cmd	*init_cmd(char **env, t_lexer *lex)
 		if (lexer && isredirection(lexer->lex) == false)
 			lexer = lexer->next;
 	}
+	free_lexer(&lex);
 	command = start;
 	// hererdoc 
 	pars_cmd_list(command);
