@@ -6,7 +6,7 @@
 /*   By: endoliam <endoliam@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/17 16:56:51 by endoliam          #+#    #+#             */
-/*   Updated: 2024/06/07 13:01:15 by endoliam         ###   ########lyon.fr   */
+/*   Updated: 2024/06/07 14:52:17 by endoliam         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,20 +51,22 @@ int	init_operator(t_lexer **lexer, char *s, int start)
 	char	c;
 
 	c = s[start];
+	if (!s[start + 1])
+		return (exit_failure("syntax error near unexpected token", c)); // free and exit
 	if (c == '|')
 	{
-		if (s[start + 1] && s[start + 1] == '|')
-			return (exit_failure("syntax error near unexpected symbol", c)); // free and exit
+		if (!s[start + 1] || (s[start + 1] && s[start + 1] == '|'))
+			return (exit_failure("syntax error near unexpected token", c)); // free and exit
 		lst_init_lexer(lexer, "|", 0);
 	}
 	else if (c == '<' || c == '>')
 	{
-		if ((s[start + 1] && s[start + 1] != c) || !s[start + 1])
+		if (s[start + 1] && s[start + 1] != c)
 			init_redirection(lexer, c, 1);
 		else if (s[start + 1] && s[start + 1] == c)
 		{
-			if (s[start + 2] && s[start + 2] == s[start])
-				return (exit_failure("syntax error near unexpected symbol", c)); // free and exit
+			if (!s[start + 2] || (s[start + 2] && s[start + 2] == s[start]))
+				return (exit_failure("syntax error near unexpected token", c)); // free and exit
 			else
 				init_redirection(lexer, s[start], 2);
 			start++;
@@ -73,7 +75,7 @@ int	init_operator(t_lexer **lexer, char *s, int start)
 	else
 		start = lst_init_lexer(lexer, s, start) - 1;
 	if (start < 0)
-		return (exit_failure("error : quote don't closed", c)); // free and exit
+		return (exit_failure("quote don't closed", c)); // free and exit
 	return (start);
 }
 t_lexer *get_start(t_lexer *lexer)
@@ -87,7 +89,6 @@ t_lexer		*free_lexer(t_lexer **lex)
 	t_lexer	*tmp;
 
 	*lex = get_start(*lex);
-	print_lexer(*lex);
 	while (*lex && (*lex)->next)
 	{
 		tmp = *lex;
@@ -124,6 +125,7 @@ t_lexer		*create_lexer(char *s)
 		if (s[i])
 			i++;
 	}
+	free(s);
 	lexer = get_start(lexer);
 	return (lexer);
 }

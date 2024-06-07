@@ -6,7 +6,7 @@
 /*   By: endoliam <endoliam@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/20 11:36:33 by endoliam          #+#    #+#             */
-/*   Updated: 2024/06/07 12:40:57 by endoliam         ###   ########lyon.fr   */
+/*   Updated: 2024/06/07 14:10:08 by endoliam         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,17 +66,12 @@ t_lexer		*get_cmd(t_cmd *command, t_lexer *lex)
 	if (lex && isredirection(lex->lex) == true)
 	{
 		set_input(command, lex);
-		if (lex->next && isoperator_cmd(lex->next->lex) == false)
+		if (lex->next)
 		{
 			lex = lex->next;
 			command->files = init_tab(lex);
 			if (lex->prev->prev && lex->prev->prev->lex != PIPES)
 				lex = zap_lex(lex);
-		}
-		else
-		{
-			ft_printf_fd(2, "syntax error near unexpected token '%s'\n", lex->contain); 
-			return (NULL); // free and exit correctly
 		}
 	}
 	return (lex);
@@ -108,7 +103,6 @@ t_cmd	*init_cmd(char **env, t_lexer *lex)
 	}
 	free_lexer(&lex);
 	command = start;
-	// hererdoc 
 	pars_cmd_list(command);
 	return (command);
 }

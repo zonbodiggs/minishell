@@ -6,7 +6,7 @@
 /*   By: endoliam <endoliam@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/24 13:20:21 by rtehar            #+#    #+#             */
-/*   Updated: 2024/06/07 12:11:05 by endoliam         ###   ########lyon.fr   */
+/*   Updated: 2024/06/07 14:26:53 by endoliam         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,7 +79,7 @@ int	number_of_command(t_cmd *cmd)
 t_cmd	*get_next_cmd(t_cmd *cmd)
 {
 	while(cmd && !cmd->cmd)
-			cmd = cmd->next;
+		cmd = cmd->next;
 	return (cmd);
 }
 
@@ -90,19 +90,11 @@ void	child(t_cmd *cmds, int oldfd[2], int newfd[2])
 	cmd = cmds;
 	printfds(cmd, oldfd,newfd);
 	if (oldfd[0] == -1 && oldfd[1] == -1) // premier set out but not in
-	{
-		// verifier enum in and out
-		// in->stdin 
-		dup2(newfd[1], STDOUT_FILENO); // out->newfd[0]
-	}
+		dup2(newfd[1], STDOUT_FILENO);
 	else if (!cmd->next) // fin  set in but not out
-	{
-		// verifier enum in and out
 		dup2(oldfd[0], STDIN_FILENO);
-	}
 	else // milieu  set both of them
 	{
-		// verifier enum in and out
 		dup2(oldfd[0], STDIN_FILENO);
 		dup2(newfd[1], STDOUT_FILENO);
 	}
@@ -180,7 +172,6 @@ void run_commands(t_cmd *cmds)
 	if (cmd == NULL)
         return;
 	i = number_of_command(cmds);
-	//cmds = get_next_cmd(cmds);
 	if (!cmds->next || i == 1)
 		execute_simple_command(cmd);
 	else
