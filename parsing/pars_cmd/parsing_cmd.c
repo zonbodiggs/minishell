@@ -6,7 +6,7 @@
 /*   By: endoliam <endoliam@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/29 12:32:33 by endoliam          #+#    #+#             */
-/*   Updated: 2024/06/07 13:16:20 by endoliam         ###   ########lyon.fr   */
+/*   Updated: 2024/06/07 15:38:37 by endoliam         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,8 +73,8 @@ int	iscmd(char **cmd)
 	char	**path;
 	char	*cmd_path;
 
-	if (isbuiltin(cmd[0]) == true)
-		return (1);
+	//if (isbuiltin(cmd[0]) == true)
+	//	return (1);
 	i = 0;
 	if (!getenv("PATH"))
 		return (0);

@@ -6,7 +6,7 @@
 /*   By: endoliam <endoliam@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/24 13:20:21 by rtehar            #+#    #+#             */
-/*   Updated: 2024/06/07 14:26:53 by endoliam         ###   ########lyon.fr   */
+/*   Updated: 2024/06/07 15:59:43 by endoliam         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -102,8 +102,6 @@ void	child(t_cmd *cmds, int oldfd[2], int newfd[2])
 		close(newfd[0]);
 	if (newfd[1] > 0)
 		close(newfd[1]);
-	if (oldfd[0] > 0)
-		close(oldfd[0]);
 	my_execve(cmd);
 	// child
 }
@@ -129,25 +127,21 @@ int		execute_pipeline(t_cmd *cmds)
 		cmd = cmds;
 		pid = fork();
 		if (pid == 0)
-		{
-			if (oldfd[1] > 0)
-				close(oldfd[1]);
-			child(cmd, oldfd, newfd);	
-		}
+			child(cmd, oldfd, newfd);
 		oldfd[0] = newfd[0];
 		oldfd[1] = newfd[1];
+		close(newfd[1]);
 		pipe(newfd);
 		cmds = cmds->next;
-		free(cmd);
 	}
 	if (oldfd[0] > 0)
 		close(oldfd[0]);
 	if (oldfd[1] > 0)
 		close(oldfd[1]);
 	if (newfd[0] > 0)
-		close(oldfd[0]);
+		close(newfd[0]);
 	if (newfd[1] > 0)
-		close(oldfd[1]);
+		close(newfd[1]);
 	while(wait(NULL) > 0);
 	return (127);
 }
