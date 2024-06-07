@@ -6,7 +6,7 @@
 /*   By: endoliam <endoliam@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/14 16:09:41 by endoliam          #+#    #+#             */
-/*   Updated: 2024/06/05 17:51:22 by endoliam         ###   ########lyon.fr   */
+/*   Updated: 2024/06/07 10:53:01 by endoliam         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,17 +15,23 @@
 void	free_all(t_lexer *lex, t_cmd *cmd)
 {
 	t_cmd		*tmpcmd;
-	
-	free_lexer(lex);
-	while(cmd)
+
+	if (lex)
+		free_lexer(lex);
+	if (cmd)
 	{
-		tmpcmd = cmd;
-		if (cmd->cmd)
-			free_array(cmd->cmd);
-		if (cmd->files)
-			free_array(cmd->files);
-		cmd = cmd->next;
-		free(tmpcmd);
+			while(cmd)
+		{
+			tmpcmd = cmd;
+			if (cmd->cmd)
+				free_array(cmd->cmd);
+			if (cmd->files)
+				free_array(cmd->files);
+			if (cmd->t_env)
+				free_array(cmd->t_env);
+			cmd = cmd->next;
+			free(tmpcmd);
+		}
 	}
 }
 int		main(int ac, char **av, char **env)
@@ -49,7 +55,7 @@ int		main(int ac, char **av, char **env)
 			minishell->input = init_cmd(env, minishell->lex);
 		if (minishell->input)
 			run_commands(minishell->input);
-		free_all(minishell->lex, minishell->input);
+		//free_all(minishell->lex, minishell->input);
 		free(buffer); // free lex and input
 	}
 	free(minishell);

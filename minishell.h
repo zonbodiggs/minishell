@@ -6,7 +6,7 @@
 /*   By: endoliam <endoliam@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/14 13:20:55 by endoliam          #+#    #+#             */
-/*   Updated: 2024/06/05 17:50:48 by endoliam         ###   ########lyon.fr   */
+/*   Updated: 2024/06/07 10:43:14 by endoliam         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,7 @@
 # include <fcntl.h>
 # include <sys/wait.h>
 # include <sys/types.h>
+
 extern int			g_signal;
 
 typedef enum e_enum
@@ -156,5 +157,11 @@ int 		pwd();
 
 // free
 t_lexer		*free_lexer(t_lexer *lex);
+
+
+/*****************print*********************/
+
+void	printfds(t_cmd *cmd, int *old,int *new);
+void	print_cmd(t_cmd *cmd);
 
 #endif

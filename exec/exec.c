@@ -6,7 +6,7 @@
 /*   By: endoliam <endoliam@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/24 13:20:21 by rtehar            #+#    #+#             */
-/*   Updated: 2024/06/05 19:09:23 by endoliam         ###   ########lyon.fr   */
+/*   Updated: 2024/06/07 11:13:14 by endoliam         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,10 +22,18 @@ void	my_execve(t_cmd *cmd)
 void	execute_simple_command(t_cmd *cmd)
 {
 	pid_t	pid;
+	int		fd[2];
 
 	pid = fork();
+	pipe(fd);
+	if (!cmd->cmd && cmd->files)
+	{
+		
+	}
 	if (pid == 0)
 	{
+		close(fd[0]);	
+		close(fd[1]);
 		my_execve(cmd);
 	}
 	while (wait(NULL) > 0);
@@ -61,7 +69,7 @@ void	child(t_cmd *cmds, int oldfd[2], int newfd[2])
 	t_cmd *cmd;
 
 	cmd = cmds;
-	ft_printf_fd(2, "fds %d %d %d %d\n",oldfd[0], oldfd[1], newfd[0], newfd[1]);
+	printfds(cmd, oldfd,newfd);
 	if (oldfd[0] == -1 && oldfd[1] == -1) // premier set out but not in
 	{
 		// verifier enum in and out
@@ -104,23 +112,34 @@ int		execute_pipeline(t_cmd *cmds)
 	int		newfd[2];
 
 	init_fds(oldfd, newfd); // init fd -1
-	printf("fds %d %d %d %d\n",oldfd[0], oldfd[1], newfd[0], newfd[1]);
-	cmd = cmds;
 	pipe(newfd);
-	while (cmd)
+	while (cmds)
 	{
+		cmd = cmds;
 		pid = fork();
 		if (pid == 0)
-			child(cmd, oldfd, newfd);
+		{
+			if (oldfd[1] > 0)
+				close(oldfd[1]);
+			child(cmd, oldfd, newfd);	
+		}
 		oldfd[0] = newfd[0];
 		oldfd[1] = newfd[1];
-		dup2(oldfd[0], newfd[0]);
-		dup2(oldfd[1], newfd[1]);
-		cmd = cmd->next;
+		//if (cmd->next && number_of_command(cmd) > 1)
+		//{	
+		//	printf("NUMBER OF COMMAND for cmd = %s = %d\n", cmd->cmd[0], number_of_command(cmd));
+			pipe(newfd);
+		//}
+		cmds = cmds->next;
+		free(cmd);
 	}
 	if (oldfd[0] > 0)
 		close(oldfd[0]);
 	if (oldfd[1] > 0)
+		close(oldfd[1]);
+	if (newfd[0] > 0)
+		close(oldfd[0]);
+	if (newfd[1] > 0)
 		close(oldfd[1]);
 	while(wait(NULL) > 0);
 	return (127);
@@ -146,7 +165,7 @@ void run_commands(t_cmd *cmds)
 	if (cmd == NULL)
         return;
 	i = number_of_command(cmds);
-	cmds = get_next_cmd(cmds);
+	//cmds = get_next_cmd(cmds);
 	if (!cmds->next || i == 1)
 		execute_simple_command(cmd);
 	else

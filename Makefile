@@ -21,6 +21,7 @@ SRCS		= parsing/tokenize/bool_lexer.c\
 			  exec/sort_cmd.c\
 			  builtin/echo.c\
 			  builtin/pwd.c\
+			  print_data.c\
 			  main.c
 
 LIB_DIR		= ./libft/
