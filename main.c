@@ -6,7 +6,7 @@
 /*   By: endoliam <endoliam@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/14 16:09:41 by endoliam          #+#    #+#             */
-/*   Updated: 2024/06/07 15:36:09 by endoliam         ###   ########lyon.fr   */
+/*   Updated: 2024/06/07 22:07:01 by endoliam         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,6 +51,7 @@ int		main(int ac, char **av, char **env)
 		if (buffer && buffer[0])
 			add_history(buffer);								// clear history after
 		minishell->lex = create_lexer(buffer); 				// check arg in the readline 
+		print_minishell(minishell);
 		if (minishell->lex)
 			minishell->input = init_cmd(env, minishell->lex);
 		if (minishell->input)

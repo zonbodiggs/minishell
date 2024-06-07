@@ -6,7 +6,7 @@
 /*   By: endoliam <endoliam@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/17 16:56:51 by endoliam          #+#    #+#             */
-/*   Updated: 2024/06/07 14:52:17 by endoliam         ###   ########lyon.fr   */
+/*   Updated: 2024/06/07 21:23:11 by endoliam         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,9 +26,9 @@ void	init_redirection(t_lexer **lexer, char c, int flag)
 
 void	init_lexer_type(t_lexer *data)
 {
-	if (data->contain[0] == 39 && data->contain[1] == '$')
+	if (data->contain[0] == 39 && is_env_var(data->contain) == true)
 		data->lex = SINGLE_ENV;
-	else if (data->contain[0] == '"' && data->contain[1] == '$')
+	else if (data->contain[0] == '"' && is_env_var(data->contain) == true)
 		data->lex = DOUBLE_ENV;
 	else if (data->contain[0] == 39)
 		data->lex = SINGLE_Q;
@@ -36,7 +36,7 @@ void	init_lexer_type(t_lexer *data)
 		data->lex = DOUBLE_Q;
 	else if (data->contain[0] == '|' && !data->contain[1])
 		data->lex = PIPES;
-	else if (getenv(data->contain) != 0)
+	else if (is_env_var(data->contain) == true)
 		data->lex = ENV_VAR;
 	else if (data->contain[0] == '<')
 		data->lex = INPUT;

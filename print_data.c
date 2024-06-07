@@ -6,7 +6,7 @@
 /*   By: endoliam <endoliam@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/07 10:23:43 by endoliam          #+#    #+#             */
-/*   Updated: 2024/06/07 16:38:46 by endoliam         ###   ########lyon.fr   */
+/*   Updated: 2024/06/07 21:27:52 by endoliam         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,5 +66,27 @@ void	print_lexer(t_lexer *lex)
 		printf("is space after ? %d ", lex->spaces);
 		printf("\n");
 		lex = lex->next;
+	}
+}
+void	print_minishell(t_minishell *mini)
+{
+	t_cmd *cmd = mini->input;
+	t_lexer *lex = mini->lex;
+	if (cmd)
+	{
+		while (cmd)
+		{
+			print_cmd(cmd);
+			cmd = cmd->next;
+		}
+	}
+	if (lex)
+	{
+		while (lex)
+		{
+			print_lexer(lex);
+			lex = lex->next;
+		}
+		
 	}
 }

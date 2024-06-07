@@ -6,7 +6,7 @@
 /*   By: endoliam <endoliam@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/17 17:09:59 by endoliam          #+#    #+#             */
-/*   Updated: 2024/06/07 12:50:34 by endoliam         ###   ########lyon.fr   */
+/*   Updated: 2024/06/07 22:05:34 by endoliam         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,20 @@ void	add_lexer(t_lexer **lexer, t_lexer *element)
 		(*lexer)->next = NULL;
 	}
 }
+char	*init_env_var(char *s)
+{
+	char 	*dollar;
+	char	*res;
+
+	dollar = ft_strrchr(s, '$');
+	s[ft_strlen(s) - ft_strlen(dollar)] = '\0';
+	if (!getenv(dollar + 1))
+		res = ft_strdup(s);
+	else
+		res = ft_strjoin(s, getenv(dollar + 1));
+	free(s);
+	return (res);
+}
 
 int	lst_init_lexer(t_lexer **lexer, char *s, int start)
 {
@@ -48,10 +62,11 @@ int	lst_init_lexer(t_lexer **lexer, char *s, int start)
 		&& final_space(s + start + len) == false)
 		data->spaces = true;
 	data->contain = ft_substr(s, start, len);	//allocation
-	init_lexer_type(data);
-	// printf("%s %d %d\n", data->contain, data->spaces, data->lex);
 	if (!data->contain)
 		return (exit_failure("malloc allocation failed", 0)); // free and exit
+	init_lexer_type(data);
+	if (data->lex == ENV_VAR || data->lex == DOUBLE_ENV)
+		data->contain = init_env_var(data->contain);
 	add_lexer(lexer, data);
 	return (start + len);
 }

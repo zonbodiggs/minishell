@@ -6,7 +6,7 @@
 /*   By: endoliam <endoliam@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/14 13:20:55 by endoliam          #+#    #+#             */
-/*   Updated: 2024/06/07 13:33:57 by endoliam         ###   ########lyon.fr   */
+/*   Updated: 2024/06/07 21:28:41 by endoliam         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,6 +96,7 @@ int			word_len(char *s);
 bool		isword(char *s, int start);
 bool		final_space(char *s);
 bool		isoperator(char c);
+bool		is_env_var(char *s);
 
 // utils cmd
 int			exit_failure(char *msg, char c);
@@ -165,5 +166,6 @@ void		free_all(t_cmd **cmd);
 void	printfds(t_cmd *cmd, int *old,int *new);
 void	print_cmd(t_cmd *cmd);
 void	print_lexer(t_lexer *lex);
+void	print_minishell(t_minishell *mini);
 
 #endif
