@@ -6,14 +6,37 @@
 /*   By: endoliam <endoliam@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/24 13:20:21 by rtehar            #+#    #+#             */
-/*   Updated: 2024/06/07 11:13:14 by endoliam         ###   ########lyon.fr   */
+/*   Updated: 2024/06/07 12:03:55 by endoliam         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
+t_cmd	*redirect(t_cmd *cmd)
+{
+	int i;
+
+	i = get_last_index(cmd->files);
+	if (cmd->redir == IN)
+		redirect_input(cmd->files[i]);
+	else if (cmd->redir == TRUNC)
+		redirect_output(cmd->files[i]);
+	else if (cmd->redir == APPEND)
+		redirect_output_append(cmd->files[i]);
+	else if (cmd->redir == HEREDOC)
+		redirect_heredoc(cmd->files[i]);
+	if (!cmd->cmd && cmd->next)
+	{
+		cmd = cmd->next;
+		if (cmd->files)
+			cmd = redirect(cmd);
+	}
+	return (cmd);
+}
 void	my_execve(t_cmd *cmd)
 {
+	if (cmd->files)
+		cmd = redirect(cmd);
 	if (execve(cmd->cmd[0], cmd->cmd, cmd->t_env) == -1)
 		exit(127) ; // free and exit
 	// utiliser sterrno and perror pour message d'erreur
@@ -26,10 +49,6 @@ void	execute_simple_command(t_cmd *cmd)
 
 	pid = fork();
 	pipe(fd);
-	if (!cmd->cmd && cmd->files)
-	{
-		
-	}
 	if (pid == 0)
 	{
 		close(fd[0]);	

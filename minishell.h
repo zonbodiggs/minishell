@@ -6,7 +6,7 @@
 /*   By: endoliam <endoliam@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/14 13:20:55 by endoliam          #+#    #+#             */
-/*   Updated: 2024/06/07 10:43:14 by endoliam         ###   ########lyon.fr   */
+/*   Updated: 2024/06/07 11:48:30 by endoliam         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -144,9 +144,9 @@ int			isfilevalid_out(char *file);
 int 		get_last_index(char **files);
 void 		run_commands(t_cmd *cmds);
 
-int			redirect_input(const char *file);
-int			redirect_output(const char *file);
-int			redirect_output_append(const char *file);
+void		redirect_input(const char *file);
+void		redirect_output(const char *file);
+void		redirect_output_append(const char *file);
 void		redirect_heredoc(const char *delimiter);
 
 void 		sort_cmd(char **cmd);

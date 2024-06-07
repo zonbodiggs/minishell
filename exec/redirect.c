@@ -6,33 +6,31 @@
 /*   By: endoliam <endoliam@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/24 12:59:54 by rtehar            #+#    #+#             */
-/*   Updated: 2024/06/04 13:04:11 by endoliam         ###   ########lyon.fr   */
+/*   Updated: 2024/06/07 11:25:39 by endoliam         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-int	redirect_input(const char *file)
+void	redirect_input(const char *file)
 {
 	int	fdin;
 
 	fdin = open(file, O_RDONLY);
 	dup2(fdin, STDIN_FILENO);
 	close(fdin);
-	return (fdin);
 }
 
-int	redirect_output(const char *file)
+void	redirect_output(const char *file)
 {
 	int	fdout;
 
 	fdout = open(file, O_WRONLY | O_CREAT | O_TRUNC, 0644);
 	dup2(fdout, STDOUT_FILENO);
 	close(fdout);
-	return(fdout);
 }
 
-int	redirect_output_append(const char *file)
+void	redirect_output_append(const char *file)
 {
 	int	fd;
 
@@ -42,7 +40,6 @@ int	redirect_output_append(const char *file)
 		dup2(fd, STDOUT_FILENO);
 		close(fd);
 	}
-	return(fd);
 }
 
 void	redirect_heredoc(const char *delimiter)
