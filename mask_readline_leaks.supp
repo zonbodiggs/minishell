@@ -4,3 +4,15 @@
    ...
    fun:readline
 }
+{
+   <_nc_setupterm >
+   Memcheck:Leak
+   ...
+   fun:_nc_setupterm 
+}
+{
+   <tigetstr_sp>
+   Memcheck:Leak
+   ...
+   fun:tigetstr_sp
+}

@@ -6,13 +6,13 @@
 /*   By: endoliam <endoliam@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/07 10:23:43 by endoliam          #+#    #+#             */
-/*   Updated: 2024/06/07 12:57:48 by endoliam         ###   ########lyon.fr   */
+/*   Updated: 2024/06/07 16:38:46 by endoliam         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	printfds(t_cmd *cmd, int *old,int *new)
+void	printfds(t_cmd *cmd, int *old, int *new)
 {
 	printf("------------------fds-------------------------");
 	printf("\n");
@@ -22,7 +22,10 @@ void	printfds(t_cmd *cmd, int *old,int *new)
 
 void	print_cmd(t_cmd *cmd)
 {
+	if (!cmd)
+		return ;
 	printf("------------------cmds-------------------------");
+	printf("\n");
 	printf("adress list = %p ", cmd);
 	int	i =	0;
 	if (cmd->cmd)

@@ -6,7 +6,7 @@
 /*   By: endoliam <endoliam@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/24 13:20:21 by rtehar            #+#    #+#             */
-/*   Updated: 2024/06/07 15:59:43 by endoliam         ###   ########lyon.fr   */
+/*   Updated: 2024/06/07 16:25:41 by endoliam         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,7 @@ t_cmd	*redirect(t_cmd *cmd)
 		if (cmd->files)
 			cmd = redirect(cmd);
 	}
+	print_cmd(cmd);
 	return (cmd);
 }
 void	my_execve(t_cmd *cmd)
@@ -88,7 +89,6 @@ void	child(t_cmd *cmds, int oldfd[2], int newfd[2])
 	t_cmd *cmd;
 
 	cmd = cmds;
-	printfds(cmd, oldfd,newfd);
 	if (oldfd[0] == -1 && oldfd[1] == -1) // premier set out but not in
 		dup2(newfd[1], STDOUT_FILENO);
 	else if (!cmd->next) // fin  set in but not out
@@ -98,10 +98,8 @@ void	child(t_cmd *cmds, int oldfd[2], int newfd[2])
 		dup2(oldfd[0], STDIN_FILENO);
 		dup2(newfd[1], STDOUT_FILENO);
 	}
-	if (newfd[0] > 0)
-		close(newfd[0]);
-	if (newfd[1] > 0)
-		close(newfd[1]);
+	close(newfd[0]);
+	close(newfd[1]);
 	my_execve(cmd);
 	// child
 }
@@ -134,14 +132,10 @@ int		execute_pipeline(t_cmd *cmds)
 		pipe(newfd);
 		cmds = cmds->next;
 	}
-	if (oldfd[0] > 0)
-		close(oldfd[0]);
-	if (oldfd[1] > 0)
-		close(oldfd[1]);
-	if (newfd[0] > 0)
-		close(newfd[0]);
-	if (newfd[1] > 0)
-		close(newfd[1]);
+	close(oldfd[0]);
+	close(oldfd[1]);
+	close(newfd[0]);
+	close(newfd[1]);
 	while(wait(NULL) > 0);
 	return (127);
 }
@@ -175,5 +169,3 @@ void run_commands(t_cmd *cmds)
 
 // pipe sur la premierre commande 
 // derniere cmd ??? sinon ppipe puis fork puis execve
-
-// ls | cat | rev
