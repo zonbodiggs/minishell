@@ -6,7 +6,7 @@
 /*   By: endoliam <endoliam@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/20 11:36:33 by endoliam          #+#    #+#             */
-/*   Updated: 2024/06/07 14:10:08 by endoliam         ###   ########lyon.fr   */
+/*   Updated: 2024/06/10 18:46:36 by endoliam         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ char	*dup_cmd(t_lexer *lex)
 
 	if (!lex)
 		return (NULL);
-	if (lex->lex == SINGLE_Q || lex->lex == DOUBLE_Q)
+	if (lex->lex == SINGLE_Q || lex->lex == DOUBLE_Q || lex->lex == SINGLE_ENV)
 		cmd = ft_qstrdup(lex->contain);
 	else
 		cmd = ft_strdup(lex->contain);

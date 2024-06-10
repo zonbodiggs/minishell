@@ -6,7 +6,7 @@
 /*   By: endoliam <endoliam@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/24 13:20:21 by rtehar            #+#    #+#             */
-/*   Updated: 2024/06/07 16:25:41 by endoliam         ###   ########lyon.fr   */
+/*   Updated: 2024/06/10 18:54:44 by endoliam         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,6 @@ t_cmd	*redirect(t_cmd *cmd)
 		if (cmd->files)
 			cmd = redirect(cmd);
 	}
-	print_cmd(cmd);
 	return (cmd);
 }
 void	my_execve(t_cmd *cmd)

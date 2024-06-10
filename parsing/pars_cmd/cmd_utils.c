@@ -6,35 +6,13 @@
 /*   By: endoliam <endoliam@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/29 11:42:24 by endoliam          #+#    #+#             */
-/*   Updated: 2024/06/07 15:38:13 by endoliam         ###   ########lyon.fr   */
+/*   Updated: 2024/06/10 17:17:57 by endoliam         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../minishell.h"
 
-// copy environement and add it to command list
 
-void	cpy_env(char **env, t_cmd *command)
-{
-	int		len;	
-	int		i;
-
-	i = 0;
-	len = 0;
-	if (!command)
-		return ;
-	while (env[len])
-		len++;
-	command->t_env = malloc((len + 1) * sizeof(char *));
-	while (i <= len && env[i])
-	{
-		command->t_env[i] = ft_strdup(env[i]);
-		if (!command->t_env[i])
-			exit_cmd("allocation env failed\n");// free and exit
-		i++;
-	}
-	command->t_env[len] = NULL;
-}
 
 int	size_tab_cmd(t_lexer *lex)
 {

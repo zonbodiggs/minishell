@@ -6,7 +6,7 @@
 /*   By: endoliam <endoliam@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/07 10:23:43 by endoliam          #+#    #+#             */
-/*   Updated: 2024/06/07 21:27:52 by endoliam         ###   ########lyon.fr   */
+/*   Updated: 2024/06/10 18:24:35 by endoliam         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ void	print_cmd(t_cmd *cmd)
 	printf("------------------cmds-------------------------");
 	printf("\n");
 	printf("adress list = %p ", cmd);
-	int	i =	0;
+	int	i =	-1;
 	if (cmd->cmd)
 	{
 		printf("adress cmd = %p ", cmd->cmd);
@@ -35,7 +35,7 @@ void	print_cmd(t_cmd *cmd)
 			printf("cmd[%d] = %s ", i, cmd->cmd[i]);
 		printf("\n");
 	}
-	i=0;
+	i=-1;
 	if (cmd->files)
 	{
 		printf("adress files = %p ", cmd->files);
@@ -51,10 +51,13 @@ void	print_cmd(t_cmd *cmd)
 			printf("files[%d] = %s ", i, cmd->files[i]);
 		printf("\n");
 	}
+	print_env(cmd->t_env);
 }
 
 void	print_lexer(t_lexer *lex)
 {
+	if (!lex)
+		return ;
 	printf("------------------lexer-------------------------");
 	printf("\n");
 	printf("adress list = %p ", lex);
@@ -88,5 +91,19 @@ void	print_minishell(t_minishell *mini)
 			lex = lex->next;
 		}
 		
+	}
+}
+
+void	print_env(char **env)
+{
+	printf("------------------ENVIRONEMENT-------------------------");
+	printf("\n");
+	if (!env)
+		return ;
+	int i = 0;
+	while (env[i])
+	{
+		printf("%s\n", env[i]);
+		i++;
 	}
 }

@@ -6,7 +6,7 @@
 /*   By: endoliam <endoliam@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/29 12:32:33 by endoliam          #+#    #+#             */
-/*   Updated: 2024/06/07 15:38:37 by endoliam         ###   ########lyon.fr   */
+/*   Updated: 2024/06/10 18:52:38 by endoliam         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,9 +76,9 @@ int	iscmd(char **cmd)
 	//if (isbuiltin(cmd[0]) == true)
 	//	return (1);
 	i = 0;
-	if (!getenv("PATH"))
-		return (0);
 	path = ft_split(getenv("PATH"), ':');
+	if (!path)
+		return (0);
 	while (path[i])
 	{
 		cmd_path = ft_slash_strjoin(path[i], cmd[0]);
@@ -87,7 +87,6 @@ int	iscmd(char **cmd)
 			cmd[0] = ft_strdup(cmd_path); // set cmd_path to cmd[0]
 			free(cmd_path); // free cmd_path
 			free_array(path); // free path
-			printf("path cmd %s\n", cmd[0]);
 			return (1);
 		}
 		i++;
@@ -109,10 +108,6 @@ void	pars_cmd_list(t_cmd	*command)
 	int j = 1;
 	while (cmd)
 	{
-		if (cmd->cmd)
-			printf("COMMAND %d %s\n",j,cmd->cmd[0]);
-		if (cmd->files)
-			printf("FILES %d %s\n",j,cmd->files[0]);
 		if (cmd->files)
 			pars_files(cmd); // pars files
 		if (cmd->cmd)

@@ -6,7 +6,7 @@
 /*   By: endoliam <endoliam@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/14 16:09:41 by endoliam          #+#    #+#             */
-/*   Updated: 2024/06/07 22:07:01 by endoliam         ###   ########lyon.fr   */
+/*   Updated: 2024/06/10 18:28:26 by endoliam         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ void	free_all(t_cmd **cmd)
 
 	if (cmd)
 	{
-			while(*cmd && (*cmd)->next)
+		while(*cmd && (*cmd)->next)
 		{
 			tmpcmd = *cmd;
 			if ((*cmd)->cmd)
@@ -33,31 +33,33 @@ void	free_all(t_cmd **cmd)
 		}
 	}
 }
+void	kill_prompt(t_minishell *mini)
+{
+	free_all(&mini->input);
+	mini->input = NULL;
+	mini->lex = NULL;
+}
 int		main(int ac, char **av, char **env)
 {
-	char *buffer;
+	char 		*buffer;
 	t_minishell *minishell;
 
-	if (!*env || ac != 1 || !getenv("PATH"))
-	{
-		ft_putstr_fd("could not execute minishell\n", 2);
-		return (0);
-	}
 	(void)av;
+	if (ac != 1)
+		exit (2);
+	minishell = ft_calloc(1, sizeof(t_minishell));
+	minishell->env = cpy_env(env);
 	while(1)
 	{
-		minishell = ft_calloc(1, sizeof(t_minishell));
 		buffer = readline("minishell> "); 					// set buffer in readline (wait for read)
 		if (buffer && buffer[0])
 			add_history(buffer);								// clear history after
 		minishell->lex = create_lexer(buffer); 				// check arg in the readline 
-		print_minishell(minishell);
 		if (minishell->lex)
-			minishell->input = init_cmd(env, minishell->lex);
+			minishell->input = init_cmd(minishell->env, minishell->lex);
 		if (minishell->input)
 			run_commands(minishell->input);
-		free_all(&minishell->input);
-		free(minishell);
+		kill_prompt(minishell);
 	}
 	free(minishell);
 }

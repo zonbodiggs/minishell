@@ -6,7 +6,7 @@
 /*   By: endoliam <endoliam@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/17 17:04:15 by endoliam          #+#    #+#             */
-/*   Updated: 2024/06/07 14:09:01 by endoliam         ###   ########lyon.fr   */
+/*   Updated: 2024/06/10 18:17:13 by endoliam         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,4 +46,30 @@ void	exit_cmd(char *msg)
 {
 	ft_putstr_fd(msg, 2); // printf_fd and exit correctly 
 	exit (47);
+}
+
+// copy environement and add it to command list
+
+char	**cpy_env(char **env)
+{
+	int		len;	
+	int		i;
+	char	**dest;
+
+	i = 0;
+	len = 0;
+	if (!env)
+		return (NULL);
+	while (env[len])
+		len++;
+	dest = malloc((len + 1) * sizeof(char *));
+	while (i <= len && env[i])
+	{
+		dest[i] = ft_strdup(env[i]);
+		if (!dest[i])
+			exit_cmd("allocation env failed\n"); // free and exit
+		i++;
+	}
+	dest[len] = NULL;
+	return (dest);
 }

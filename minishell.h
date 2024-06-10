@@ -6,7 +6,7 @@
 /*   By: endoliam <endoliam@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/14 13:20:55 by endoliam          #+#    #+#             */
-/*   Updated: 2024/06/07 21:28:41 by endoliam         ###   ########lyon.fr   */
+/*   Updated: 2024/06/10 17:51:45 by endoliam         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,7 +71,7 @@ typedef struct s_minishell
 {
 	t_cmd		*input;				// cmd
 	t_lexer		*lex;				// lex
-	char		**path;				// path
+	char		**env;				// path
 }		t_minishell;
 
 int			main(int ac, char **av, char **env);
@@ -103,10 +103,10 @@ int			exit_failure(char *msg, char c);
 int			zap_quote(char *s, char quote, int i);
 void		free_array(char **array);
 void		exit_cmd(char *msg);
+char		**cpy_env(char **env);
 
 // init cmd
 t_cmd		*init_cmd(char **env, t_lexer *lex);
-void		cpy_env(char **env, t_cmd *command);
 
 //parsing cmd for execution
 
@@ -127,7 +127,6 @@ void		pars_cmd_list(t_cmd	*command);
 int			error_files(int flag, char *file);
 
 // utils cmd
-void		cpy_env(char **env, t_cmd *command);
 int			size_tab_cmd(t_lexer *lex);
 bool		isoperator_cmd(t_lexer_type lex_type);
 bool		isredirection(t_lexer_type lex_type);
@@ -167,5 +166,6 @@ void	printfds(t_cmd *cmd, int *old,int *new);
 void	print_cmd(t_cmd *cmd);
 void	print_lexer(t_lexer *lex);
 void	print_minishell(t_minishell *mini);
+void	print_env(char **env);
 
 #endif
