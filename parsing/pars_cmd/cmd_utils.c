@@ -6,7 +6,7 @@
 /*   By: endoliam <endoliam@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/29 11:42:24 by endoliam          #+#    #+#             */
-/*   Updated: 2024/06/10 17:20:15 by endoliam         ###   ########lyon.fr   */
+/*   Updated: 2024/06/10 17:25:55 by endoliam         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,10 +53,10 @@ bool	isbuiltin(char *cmd)
 {
 	if (!cmd)
 		return (false);
-	if (!ft_strncmp(cmd, "echo", ft_strlen(cmd)) 
+	if (!ft_strncmp(cmd, "echo", ft_strlen(cmd))
 		|| !ft_strncmp(cmd, "pwd", ft_strlen(cmd))
-		|| !ft_strncmp(cmd, "cd", ft_strlen(cmd) 
-		|| !ft_strncmp(cmd, "export", ft_strlen(cmd)))
+		|| !ft_strncmp(cmd, "cd", ft_strlen(cmd))
+		|| !ft_strncmp(cmd, "export", ft_strlen(cmd))
 		|| !ft_strncmp(cmd, "unset", ft_strlen(cmd)) 
 		|| !ft_strncmp(cmd, "env", ft_strlen(cmd))
 		|| !ft_strncmp(cmd, "exit", ft_strlen(cmd)))
