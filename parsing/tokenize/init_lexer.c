@@ -6,7 +6,7 @@
 /*   By: endoliam <endoliam@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/17 16:56:51 by endoliam          #+#    #+#             */
-/*   Updated: 2024/06/07 21:23:11 by endoliam         ###   ########lyon.fr   */
+/*   Updated: 2024/06/10 22:15:02 by endoliam         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,20 +84,23 @@ t_lexer *get_start(t_lexer *lexer)
 		lexer = lexer->prev;
 	return (lexer);
 }
+
 t_lexer		*free_lexer(t_lexer **lex)
 {
 	t_lexer	*tmp;
 
-	*lex = get_start(*lex);
-	while (*lex && (*lex)->next)
+	if (!lex)
+		return (NULL);
+	tmp = *lex;
+	while(*lex)
 	{
-		tmp = *lex;
-		if (tmp && tmp->contain)
-			free(tmp->contain);
-		if ((*lex)->next)
-			*lex = (*lex)->next;
-		free(tmp);
+		tmp = tmp->next;
+		free((*lex)->contain);
+		(*lex)->contain = NULL;
+		free(*lex);
+		*lex = tmp;
 	}
+	*lex = 0;
 	return (NULL);
 }
 

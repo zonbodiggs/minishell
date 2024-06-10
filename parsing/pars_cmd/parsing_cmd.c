@@ -6,7 +6,7 @@
 /*   By: endoliam <endoliam@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/29 12:32:33 by endoliam          #+#    #+#             */
-/*   Updated: 2024/06/10 17:19:51 by endoliam         ###   ########lyon.fr   */
+/*   Updated: 2024/06/10 23:26:49 by endoliam         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,15 +84,16 @@ int	iscmd(char **cmd)
 		cmd_path = ft_slash_strjoin(path[i], cmd[0]);
 		if (access(cmd_path, F_OK) == 0) // check also if cmd[0] is builtin
 		{
+			free(cmd[0]);
 			cmd[0] = ft_strdup(cmd_path); // set cmd_path to cmd[0]
 			free(cmd_path); // free cmd_path
 			free_array(path); // free path
 			return (1);
 		}
+		free(cmd_path);
 		i++;
 	}
 	ft_printf_fd(2, "minishell : command '%s' not found\n", cmd[0]); // error message
-	free(cmd_path); // free cmd_path
 	free_array(path); // free path
 	return (0);  // return fonction
 }

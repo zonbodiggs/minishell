@@ -6,16 +6,28 @@
 /*   By: endoliam <endoliam@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/24 13:20:21 by rtehar            #+#    #+#             */
-/*   Updated: 2024/06/10 18:54:44 by endoliam         ###   ########lyon.fr   */
+/*   Updated: 2024/06/11 00:01:49 by endoliam         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
+void	free_cmd(t_cmd **cmd)
+{
+	if ((*cmd)->cmd)
+		free_array((*cmd)->cmd);
+	if ((*cmd)->files)
+		free_array((*cmd)->files);
+	if ((*cmd)->t_env)
+		free_array((*cmd)->t_env);
+}
+
 t_cmd	*redirect(t_cmd *cmd)
 {
-	int i;
+	int 	i;
+	t_cmd	*tmp;
 
+	tmp = cmd;
 	i = get_last_index(cmd->files);
 	if (cmd->redir == IN)
 		redirect_input(cmd->files[i]);
@@ -27,22 +39,36 @@ t_cmd	*redirect(t_cmd *cmd)
 		redirect_heredoc(cmd->files[i]);
 	if (!cmd->cmd && cmd->next)
 	{
-		cmd = cmd->next;
-		if (cmd->files)
-			cmd = redirect(cmd);
+		tmp = tmp->next;
+		free_cmd(&cmd);
+		if (tmp->files)
+			tmp = redirect(tmp);
 	}
 	return (cmd);
 }
-void	my_execve(t_cmd *cmd)
+void	exit_error_exec(t_minishell *mini)
 {
-	if (cmd->files)
-		cmd = redirect(cmd);
+	free_cmd(&mini->input);
+	free(mini->input);
+	free_array(mini->env);
+	ft_memset(mini, 0, sizeof(mini));
+	free(mini);
+	rl_clear_history();
+	exit(147);
+}
+void	my_execve(t_minishell *mini)
+{
+	t_cmd	*cmd;
+
+	cmd = mini->input;
+	if (mini->input->files)
+		mini->input = redirect(mini->input);
 	if (execve(cmd->cmd[0], cmd->cmd, cmd->t_env) == -1)
-		exit(127) ; // free and exit
+		exit_error_exec(mini);
 	// utiliser sterrno and perror pour message d'erreur
 }
 
-void	execute_simple_command(t_cmd *cmd)
+void	execute_simple_command(t_minishell *mini)
 {
 	pid_t	pid;
 	int		fd[2];
@@ -53,7 +79,7 @@ void	execute_simple_command(t_cmd *cmd)
 	{
 		close(fd[0]);	
 		close(fd[1]);
-		my_execve(cmd);
+		my_execve(mini);
 	}
 	while (wait(NULL) > 0);
 	return ;
@@ -83,11 +109,11 @@ t_cmd	*get_next_cmd(t_cmd *cmd)
 	return (cmd);
 }
 
-void	child(t_cmd *cmds, int oldfd[2], int newfd[2])
+void	child(t_minishell *mini, int oldfd[2], int newfd[2])
 {
 	t_cmd *cmd;
 
-	cmd = cmds;
+	cmd = mini->input;
 	if (oldfd[0] == -1 && oldfd[1] == -1) // premier set out but not in
 		dup2(newfd[1], STDOUT_FILENO);
 	else if (!cmd->next) // fin  set in but not out
@@ -99,7 +125,7 @@ void	child(t_cmd *cmds, int oldfd[2], int newfd[2])
 	}
 	close(newfd[0]);
 	close(newfd[1]);
-	my_execve(cmd);
+	my_execve(mini);
 	// child
 }
 
@@ -110,26 +136,30 @@ void		init_fds(int oldfd[2], int newfd[2])
 	ft_memset(newfd, -1, 2 * sizeof(int));
 }
 
-int		execute_pipeline(t_cmd *cmds)
+
+int		execute_pipeline(t_minishell *mini)
 {
 	pid_t	pid;
-	t_cmd	*cmd;
 	int		oldfd[2];
 	int		newfd[2];
+	t_cmd	*tmp;
 
 	init_fds(oldfd, newfd); // init fd -1
 	pipe(newfd);
-	while (cmds)
+	tmp = mini->input;
+	while (mini->input)
 	{
-		cmd = cmds;
+		tmp = tmp->next;
 		pid = fork();
 		if (pid == 0)
-			child(cmd, oldfd, newfd);
+			child(mini, oldfd, newfd);
 		oldfd[0] = newfd[0];
 		oldfd[1] = newfd[1];
 		close(newfd[1]);
 		pipe(newfd);
-		cmds = cmds->next;
+		free_cmd(&mini->input);
+		free(mini->input);
+		mini->input = tmp;
 	}
 	close(oldfd[0]);
 	close(oldfd[1]);
@@ -150,19 +180,18 @@ int	get_last_index(char **files)
     return (i - 1);
 }
 
-void run_commands(t_cmd *cmds)
+
+void run_commands(t_minishell *mini)
 {
-    t_cmd *cmd;
 	int		i;
 
-    cmd = cmds;
-	if (cmd == NULL)
+	if (!mini->input)
         return;
-	i = number_of_command(cmds);
-	if (!cmds->next || i == 1)
-		execute_simple_command(cmd);
+	i = number_of_command(mini->input);
+	if (!mini->input->next || i == 1)
+		execute_simple_command(mini);
 	else
-		execute_pipeline(cmd);
+		execute_pipeline(mini);
 	return ;
 }
 

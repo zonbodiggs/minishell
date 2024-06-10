@@ -6,7 +6,7 @@
 /*   By: endoliam <endoliam@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/14 16:09:41 by endoliam          #+#    #+#             */
-/*   Updated: 2024/06/10 18:28:26 by endoliam         ###   ########lyon.fr   */
+/*   Updated: 2024/06/10 23:33:06 by endoliam         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,23 +14,22 @@
 
 void	free_all(t_cmd **cmd)
 {
-	t_cmd		*tmpcmd;
+	t_cmd		*tmp;
 
 	if (cmd)
 	{
-		while(*cmd && (*cmd)->next)
+		tmp = *cmd;
+		while(*cmd)
 		{
-			tmpcmd = *cmd;
-			if ((*cmd)->cmd)
-				free_array((*cmd)->cmd);
-			if ((*cmd)->files)
-				free_array((*cmd)->files);
-			if ((*cmd)->t_env)
-				free_array((*cmd)->t_env);
-			if (*cmd && (*cmd)->next)
-				*cmd = (*cmd)->next;
-			free(tmpcmd);
+			tmp = tmp->next;
+			free_array((*cmd)->cmd);
+			free_array((*cmd)->files);
+			free_array((*cmd)->t_env);
+			free(*cmd);
+			*cmd = tmp;
 		}
+		*cmd = NULL;
+		//free(cmd);
 	}
 }
 void	kill_prompt(t_minishell *mini)
@@ -56,10 +55,12 @@ int		main(int ac, char **av, char **env)
 			add_history(buffer);								// clear history after
 		minishell->lex = create_lexer(buffer); 				// check arg in the readline 
 		if (minishell->lex)
-			minishell->input = init_cmd(minishell->env, minishell->lex);
+			minishell->input = init_cmd(minishell->env, &minishell->lex);
 		if (minishell->input)
-			run_commands(minishell->input);
-		kill_prompt(minishell);
+			run_commands(minishell);
+		free_all(&minishell->input);
+		free(minishell->input);
 	}
+	rl_clear_history();
 	free(minishell);
 }

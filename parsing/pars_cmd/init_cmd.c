@@ -6,7 +6,7 @@
 /*   By: endoliam <endoliam@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/20 11:36:33 by endoliam          #+#    #+#             */
-/*   Updated: 2024/06/10 18:46:36 by endoliam         ###   ########lyon.fr   */
+/*   Updated: 2024/06/10 21:45:46 by endoliam         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,7 +78,7 @@ t_lexer		*get_cmd(t_cmd *command, t_lexer *lex)
 }
 // init struct list cmd
 
-t_cmd	*init_cmd(char **env, t_lexer *lex)
+t_cmd	*init_cmd(char **env, t_lexer **lex)
 {
 	t_cmd		*command;
 	t_cmd		*start;
@@ -90,7 +90,7 @@ t_cmd	*init_cmd(char **env, t_lexer *lex)
 	i = 0;
 	command = NULL;
 	start = NULL;
-	lexer = lex;
+	lexer = *lex;
 	while (lexer)
 	{
 		i++;
@@ -101,8 +101,8 @@ t_cmd	*init_cmd(char **env, t_lexer *lex)
 		if (lexer && isredirection(lexer->lex) == false)
 			lexer = lexer->next;
 	}
-	free_lexer(&lex);
 	command = start;
+	free_lexer(lex);
 	pars_cmd_list(command);
 	return (command);
 }
