@@ -6,7 +6,7 @@
 /*   By: endoliam <endoliam@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/24 13:20:21 by rtehar            #+#    #+#             */
-/*   Updated: 2024/06/11 00:01:49 by endoliam         ###   ########lyon.fr   */
+/*   Updated: 2024/06/11 00:12:02 by endoliam         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -108,7 +108,19 @@ t_cmd	*get_next_cmd(t_cmd *cmd)
 		cmd = cmd->next;
 	return (cmd);
 }
-
+bool	is_last_cmd(t_cmd	*cmd)
+{
+	if (!cmd->next)
+		return (true);
+	cmd = cmd->next;
+	while(cmd)
+	{
+		if (cmd->cmd)
+			return (false);
+		cmd = cmd->next;
+	}
+	return (true);
+}
 void	child(t_minishell *mini, int oldfd[2], int newfd[2])
 {
 	t_cmd *cmd;
@@ -116,7 +128,7 @@ void	child(t_minishell *mini, int oldfd[2], int newfd[2])
 	cmd = mini->input;
 	if (oldfd[0] == -1 && oldfd[1] == -1) // premier set out but not in
 		dup2(newfd[1], STDOUT_FILENO);
-	else if (!cmd->next) // fin  set in but not out
+	else if (is_last_cmd(cmd)) // fin  set in but not out
 		dup2(oldfd[0], STDIN_FILENO);
 	else // milieu  set both of them
 	{
