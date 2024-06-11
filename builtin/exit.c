@@ -6,7 +6,7 @@
 /*   By: endoliam <endoliam@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/11 13:56:11 by endoliam          #+#    #+#             */
-/*   Updated: 2024/06/11 14:10:27 by endoliam         ###   ########lyon.fr   */
+/*   Updated: 2024/06/11 14:25:49 by endoliam         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,8 +46,11 @@ void exit_shell(t_minishell *shell, char **cmd)
 		}
 	}
 	free_cmd(&shell->input);
+	free(shell->input);
 	free_array(shell->env);
-	clear_history();
+	ft_memset(shell, 0, sizeof(t_minishell));
+	free(shell);
+	rl_clear_history();
 	printf("exit\n");
 	exit(exit_code);
 }
