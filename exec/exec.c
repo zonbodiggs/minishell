@@ -6,7 +6,7 @@
 /*   By: endoliam <endoliam@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/24 13:20:21 by rtehar            #+#    #+#             */
-/*   Updated: 2024/06/11 00:12:02 by endoliam         ###   ########lyon.fr   */
+/*   Updated: 2024/06/11 14:09:13 by endoliam         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,6 +63,16 @@ void	my_execve(t_minishell *mini)
 	cmd = mini->input;
 	if (mini->input->files)
 		mini->input = redirect(mini->input);
+	if(sort_cmd(mini->input->cmd, mini->env) == 1 )
+	{
+		free_cmd(&mini->input);
+		free(mini->input);
+		free_array(mini->env);
+		ft_memset(mini, 0, sizeof(mini));
+		free(mini);
+		rl_clear_history();
+		exit(1);
+	}
 	if (execve(cmd->cmd[0], cmd->cmd, cmd->t_env) == -1)
 		exit_error_exec(mini);
 	// utiliser sterrno and perror pour message d'erreur

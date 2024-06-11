@@ -6,7 +6,7 @@
 /*   By: endoliam <endoliam@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/14 13:20:55 by endoliam          #+#    #+#             */
-/*   Updated: 2024/06/10 22:57:44 by endoliam         ###   ########lyon.fr   */
+/*   Updated: 2024/06/11 14:12:41 by endoliam         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -146,16 +146,20 @@ void		redirect_output(const char *file);
 void		redirect_output_append(const char *file);
 void		redirect_heredoc(const char *delimiter);
 
-void 		sort_cmd(char **cmd);
+int 		sort_cmd(char **cmd, char **env);
 int 		echo(char **cmd);
 int 		pwd();
+int 		env_shell(char **env);
+void 		exit_shell(t_minishell *shell, char **cmd);
+int			export_variable(char **cmd, char ***env);
+
 
 /* 					end exec				*/ 
 
 // free
 t_lexer		*free_lexer(t_lexer **lex);
 void		free_all(t_cmd **cmd);
-void		kill_prompt(t_minishell *mini);
+void		free_cmd(t_cmd **cmd);
 
 
 /*****************print*********************/
