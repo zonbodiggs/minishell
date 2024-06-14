@@ -1,7 +1,7 @@
 #-----------------------------------------------------------------#
 CC			=	cc
 
-CFLAGS		= -g -Wall -Wextra -Werror
+CFLAGS		= -g -Wall -Wextra -Werror #-fsanitize=adress
 
 LIBFTFLAGS	= -Llibft -lft -L/usr/local/lib -I/usr/local/include -lreadline
 
@@ -10,6 +10,7 @@ NAME		= minishell
 SRCS		= parsing/tokenize/bool_lexer.c\
 			  parsing/tokenize/init_lexer.c\
 			  parsing/tokenize/lexer_tools.c\
+			  parsing/tokenize/expand.c\
 			  parsing/pars_cmd/init_cmd.c\
 			  parsing/pars_cmd/cmd_utils.c\
 			  parsing/pars_cmd/files_utils.c\
@@ -25,6 +26,7 @@ SRCS		= parsing/tokenize/bool_lexer.c\
 			  builtin/export.c\
 			  builtin/exit.c\
 			  print_data.c\
+			  free.c\
 			  main.c
 
 LIB_DIR		= ./libft/

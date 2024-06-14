@@ -6,7 +6,7 @@
 /*   By: endoliam <endoliam@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/07 10:23:43 by endoliam          #+#    #+#             */
-/*   Updated: 2024/06/10 21:27:43 by endoliam         ###   ########lyon.fr   */
+/*   Updated: 2024/06/11 20:05:38 by endoliam         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,32 +26,37 @@ void	print_cmd(t_cmd *cmd)
 		return ;
 	printf("------------------cmds-------------------------");
 	printf("\n");
-	printf("adress list = %p ", cmd);
-	int	i =	-1;
-	if (cmd->cmd)
+	while (cmd)
 	{
-		printf("adress cmd = %p ", cmd->cmd);
-		while(cmd->cmd[++i])
-			printf("cmd[%d] = %s ", i, cmd->cmd[i]);
-		printf("\n");
+		printf("adress list = %p ", cmd);
+		int	i =	-1;
+		if (cmd->cmd)
+		{
+			printf("adress cmd = %p ", cmd->cmd);
+			while(cmd->cmd[++i])
+				printf("cmd[%d] = %s ", i, cmd->cmd[i]);
+			printf("\n");
+		}
+		i=-1;
+		if (cmd->files)
+		{
+			printf("adress files = %p ", cmd->files);
+			if (cmd->redir == IN)
+				printf("INFILE = ");
+			else if (cmd->redir == APPEND)
+				printf("OUTFILE APPEND = ");
+			else if (cmd->redir == TRUNC)
+				printf("OUTFILE TRUNC = ");
+			else if (cmd->redir == HEREDOC)
+				printf("OUTFILE HEREDOC = ");
+			while(cmd->files[++i])
+				printf("files[%d] = %s ", i, cmd->files[i]);
+			printf("\n");
+		}
+		cmd = cmd->next;
 	}
-	i=-1;
-	if (cmd->files)
-	{
-		printf("adress files = %p ", cmd->files);
-		if (cmd->redir == IN)
-			printf("INFILE = ");
-		else if (cmd->redir == APPEND)
-			printf("OUTFILE APPEND = ");
-		else if (cmd->redir == TRUNC)
-			printf("OUTFILE TRUNC = ");
-		else if (cmd->redir == HEREDOC)
-			printf("OUTFILE HEREDOC = ");
-		while(cmd->files[++i])
-			printf("files[%d] = %s ", i, cmd->files[i]);
-		printf("\n");
-	}
-	print_env(cmd->t_env);
+	
+	//print_env(cmd->t_env);
 }
 
 void	print_lexer(t_lexer *lex)

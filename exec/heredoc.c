@@ -1,34 +1,13 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_strjoin.c                                       :+:      :+:    :+:   */
+/*   heredoc.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: endoliam <endoliam@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/11/16 19:48:39 by endoliam          #+#    #+#             */
-/*   Updated: 2024/06/11 18:30:20 by endoliam         ###   ########lyon.fr   */
+/*   Created: 2024/06/12 20:43:01 by endoliam          #+#    #+#             */
+/*   Updated: 2024/06/12 20:43:13 by endoliam         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
-
-char	*ft_strjoin(const char *s1, char const *s2)
-{
-	char	*result;
-	size_t	i;
-	size_t	j;
-
-	if (!s1 || !s2)
-		return (NULL);
-	result = malloc(ft_strlen(s1) + ft_strlen(s2) + 1);
-	if (!result)
-		return (NULL);
-	i = -1;
-	while (s1[++i])
-		result[i] = s1[i];
-	j = -1;
-	while (s2[++j])
-		result[i + j] = s2[j];
-	result[i + j] = '\0';
-	return (result);
-}
+#include "../minishell.h"

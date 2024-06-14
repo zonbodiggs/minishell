@@ -6,7 +6,7 @@
 /*   By: endoliam <endoliam@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/17 17:09:59 by endoliam          #+#    #+#             */
-/*   Updated: 2024/06/10 18:51:33 by endoliam         ###   ########lyon.fr   */
+/*   Updated: 2024/06/11 18:59:04 by endoliam         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,30 +32,7 @@ void	add_lexer(t_lexer **lexer, t_lexer *element)
 		(*lexer)->next = NULL;
 	}
 }
-char	*init_env_var(char *s)
-{
-	char 	*dollar;
-	char	*res;
 
-	dollar = ft_strrchr(s, '$');
-	if (s[0] && s[0] == '"')
-	{	
-		s++;
-		s[ft_strlen(s) - 1] = '\0';
-	}
-	s[ft_strlen(s) - ft_strlen(dollar)] = '\0';
-	if (!getenv(dollar + 1) && ft_strlen(s) - ft_strlen(dollar) == 0)
-	{
-		s = NULL;
-		free(s);
-		return (NULL);
-	}
-	if (!getenv(dollar + 1))
-		res = ft_strdup(s);
-	else
-		res = ft_strjoin(s, getenv(dollar + 1));
-	return (res);
-}
 
 int	lst_init_lexer(t_lexer **lexer, char *s, int start)
 {

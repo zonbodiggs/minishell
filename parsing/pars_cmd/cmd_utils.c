@@ -6,7 +6,7 @@
 /*   By: endoliam <endoliam@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/29 11:42:24 by endoliam          #+#    #+#             */
-/*   Updated: 2024/06/10 17:25:55 by endoliam         ###   ########lyon.fr   */
+/*   Updated: 2024/06/12 19:23:54 by endoliam         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,11 +24,17 @@ int	size_tab_cmd(t_lexer *lex)
 	if (lex->prev && isredirection(lex->prev->lex)
 		&& (!lex->prev->prev || lex->prev->prev->lex == PIPES))
 		return (1);
-	while (tmp  && tmp->lex != PIPES
-			&& tmp->lex != INPUT && tmp->lex != OUTPUT)
+	while (tmp  && !isoperator_cmd(tmp->lex))
 	{
 		i++;
-		tmp = tmp->next;
+		if (tmp->spaces == false)
+		{
+			while (tmp && isoperator_cmd(tmp->lex) == false 
+				&& tmp->spaces == false)
+				tmp = tmp->next;
+		}
+		if (tmp && isoperator_cmd(tmp->lex) == false)
+			tmp = tmp->next;
 	}
 	return (i);
 }
@@ -51,7 +57,7 @@ bool	isoperator_cmd(t_lexer_type lex_type)
 
 bool	isbuiltin(char *cmd)
 {
-	if (!cmd)
+	if (!cmd || !cmd[0])
 		return (false);
 	if (!ft_strncmp(cmd, "echo", ft_strlen(cmd))
 		|| !ft_strncmp(cmd, "pwd", ft_strlen(cmd))

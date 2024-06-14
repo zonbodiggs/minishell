@@ -6,7 +6,7 @@
 /*   By: endoliam <endoliam@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/29 12:32:33 by endoliam          #+#    #+#             */
-/*   Updated: 2024/06/10 23:26:49 by endoliam         ###   ########lyon.fr   */
+/*   Updated: 2024/06/11 18:55:27 by endoliam         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,6 +75,8 @@ int	iscmd(char **cmd)
 
 	if (isbuiltin(cmd[0]) == true)
 		return (1);
+	if (!getenv("PATH"))
+		return (0);
 	i = 0;
 	path = ft_split(getenv("PATH"), ':');
 	if (!path)

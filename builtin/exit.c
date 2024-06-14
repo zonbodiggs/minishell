@@ -6,25 +6,12 @@
 /*   By: endoliam <endoliam@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/11 13:56:11 by endoliam          #+#    #+#             */
-/*   Updated: 2024/06/11 14:25:49 by endoliam         ###   ########lyon.fr   */
+/*   Updated: 2024/06/11 14:35:21 by endoliam         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-/*void free_cmd(t_cmd *cmd)
-{
-    t_cmd *tmp;
-
-    while (cmd) {
-        tmp = cmd;
-        cmd = cmd->next;
-        free_array(tmp->cmp);
-	free_array(tmp->t_env);
-        free_array(tmp->files);
-        free(tmp);
-    }
-}*/
 
 void exit_shell(t_minishell *shell, char **cmd)
 {
@@ -45,12 +32,7 @@ void exit_shell(t_minishell *shell, char **cmd)
 			return;
 		}
 	}
-	free_cmd(&shell->input);
-	free(shell->input);
-	free_array(shell->env);
-	ft_memset(shell, 0, sizeof(t_minishell));
-	free(shell);
-	rl_clear_history();
+	kill_shell(shell);
 	printf("exit\n");
 	exit(exit_code);
 }

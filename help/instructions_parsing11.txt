@@ -113,19 +113,16 @@ arg[1]->io->type = 0
 arg[1]->io->arg = log
 
                         Exemples chiants a tester:
-
-echo '"'"$USER"'"'
-export test=$test"coucou"
-echo mdrr 1<>coucou
-echo mdrr 2<>coucou
-echo coucou > "ihi aha"ihi
-echo >mdr>hey>>sarace \sal"mdr"
-echo <hey1<h'ey2'
-echo bonjour >hey >>hey2 >>hey3
->> e
-ls $HOME/Desktop
-echo “$PATH”
-echo "$PATH$PWD"
+1: echo '"'"$USER"'"' -->ok
+export test=$test"coucou" --> non testable
+1: echo coucou > "ihi aha"ihi -->ok
+echo >mdr>hey>>sarace \sal"mdr" --->>> voir exec
+echo <hey1<h'ey2' --->>> voir exec
+echo bonjour >hey >>hey2 >>hey3 --->>> voir exec
+>> e ->> ok mais heredoc pas bien mise en place
+ls $HOME/Desktop ->> mauvaise gestion expand (prendre que les majuscule)
+1 : echo “$PATH” --> ok
+echo "$PATH$PWD" ->> mauvaise gestion expand (prendre que les majuscule)
 echo -n a '' b '' c '' d
 e"ch"o bonjour
 echo\ bonjour
@@ -184,7 +181,7 @@ export TEST='""' -> puis echo $TEST
 << 'test' et << "test" ne doivent pas gerer les expansions
 export A=a B=b C=c D=d E=e F=f G=g H=h I=i J=j K=k L=l M=m N=n O=o P=p Q=q R=r
 unset A B C D E F G H I J K L M N O P Q R
-cat Makefile > z | cat z | wc -l > r | ls
+1: cat Makefile > z | cat z | wc -l > r | ls
 echo "$""USER"
 
 dans le here_doc :

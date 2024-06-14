@@ -6,7 +6,7 @@
 /*   By: endoliam <endoliam@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/24 12:59:54 by rtehar            #+#    #+#             */
-/*   Updated: 2024/06/07 11:25:39 by endoliam         ###   ########lyon.fr   */
+/*   Updated: 2024/06/13 09:42:29 by endoliam         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,30 +16,42 @@ void	redirect_input(const char *file)
 {
 	int	fdin;
 
-	fdin = open(file, O_RDONLY);
-	dup2(fdin, STDIN_FILENO);
-	close(fdin);
+	if (isdigit(file[0] ) && !file[1])
+		fdin = atoi(file);
+	else
+		fdin = open(file, O_RDONLY);
+	if (fdin != -1)
+	{
+		dup2(fdin, STDIN_FILENO);
+		close(fdin);
+	}
+	return ;
 }
 
 void	redirect_output(const char *file)
 {
 	int	fdout;
-
+	
 	fdout = open(file, O_WRONLY | O_CREAT | O_TRUNC, 0644);
-	dup2(fdout, STDOUT_FILENO);
-	close(fdout);
+	if (fdout != -1)
+	{	
+		dup2(fdout, STDOUT_FILENO);
+		close(fdout);
+	}
+	return ;
 }
 
 void	redirect_output_append(const char *file)
 {
-	int	fd;
+	int	fdout;
 
-	fd = open(file, O_WRONLY | O_CREAT | O_APPEND, 0644);
-	if (fd != -1)
+	fdout = open(file, O_WRONLY | O_CREAT | O_APPEND, 0644);
+	if (fdout != -1)
 	{	
-		dup2(fd, STDOUT_FILENO);
-		close(fd);
+		dup2(fdout, STDOUT_FILENO);
+		close(fdout);
 	}
+	return ;
 }
 
 void	redirect_heredoc(const char *delimiter)
@@ -52,7 +64,7 @@ void	redirect_heredoc(const char *delimiter)
 	while (1)
 	{
 		line = readline("> ");
-		if (line == NULL || ft_strncmp(line, delimiter, ft_strlen(delimiter)))
+		if (line == NULL || !ft_strncmp(line, delimiter, ft_strlen(delimiter)))
 		{
 			free(line);
 			break ;
@@ -61,7 +73,7 @@ void	redirect_heredoc(const char *delimiter)
 		write(pipefd[1], "\n", 1);
 		free(line);
 	}
-	close(pipefd[1]);
 	dup2(pipefd[0], STDIN_FILENO);
+	close(pipefd[1]);
 	close(pipefd[0]);
 }

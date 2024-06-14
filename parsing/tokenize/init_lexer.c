@@ -6,7 +6,7 @@
 /*   By: endoliam <endoliam@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/17 16:56:51 by endoliam          #+#    #+#             */
-/*   Updated: 2024/06/10 22:15:02 by endoliam         ###   ########lyon.fr   */
+/*   Updated: 2024/06/11 20:17:08 by endoliam         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,25 +85,6 @@ t_lexer *get_start(t_lexer *lexer)
 	return (lexer);
 }
 
-t_lexer		*free_lexer(t_lexer **lex)
-{
-	t_lexer	*tmp;
-
-	if (!lex)
-		return (NULL);
-	tmp = *lex;
-	while(*lex)
-	{
-		tmp = tmp->next;
-		free((*lex)->contain);
-		(*lex)->contain = NULL;
-		free(*lex);
-		*lex = tmp;
-	}
-	*lex = 0;
-	return (NULL);
-}
-
 t_lexer		*create_lexer(char *s)
 {
 	int			i;
@@ -122,6 +103,9 @@ t_lexer		*create_lexer(char *s)
 			i = init_operator(&lexer, s, i);
 			if (i < 0)
 				return (free_lexer(&lexer)); // free exit and break
+			if (s[i] && s[i] == ' '
+				&& final_space(s + i) == false)
+				lexer->spaces = true;
 			while (s[i] && s[i + 1] && s[i + 1] == ' ')
 				i++;
 		}

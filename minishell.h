@@ -6,7 +6,7 @@
 /*   By: endoliam <endoliam@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/14 13:20:55 by endoliam          #+#    #+#             */
-/*   Updated: 2024/06/11 14:12:41 by endoliam         ###   ########lyon.fr   */
+/*   Updated: 2024/06/12 21:50:39 by endoliam         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,76 +76,77 @@ typedef struct s_minishell
 
 int			main(int ac, char **av, char **env);
 
-
 /* 					parsing					*/ 
 
-// tokenize
-
-// init lexer
+// 				init lexer
 t_lexer		*create_lexer(char *s);
 int			init_operator(t_lexer **lexer, char *s, int start);
 void		init_lexer_type(t_lexer *data);
 void		init_redirection(t_lexer **lexer, char c, int flag);
 
-// tools lexer
+// 				tools lexer
 int			lst_init_lexer(t_lexer **lexer, char *s, int start);
 void		add_lexer(t_lexer **lexer, t_lexer *element);
 int			word_len(char *s);
 
-// bool lexer
+// 				bool lexer
 bool		isword(char *s, int start);
 bool		final_space(char *s);
 bool		isoperator(char c);
 bool		is_env_var(char *s);
 
-// utils cmd
+//				expand
+char		*init_env_var(char *s);
+char 		*join_and_free(char *s1, char *s2);
+
+// 				utils cmd
 int			exit_failure(char *msg, char c);
 int			zap_quote(char *s, char quote, int i);
 void		free_array(char **array);
 void		exit_cmd(char *msg);
 char		**cpy_env(char **env);
 
-//parsing cmd for execution
+//			parsing cmd for execution
 
-// init cmd
+// 				init cmd
 t_cmd		*init_cmd(char **env, t_lexer **lex);
-char		**init_tab(t_lexer *lex);
+char		**init_tab(t_lexer *lex, int flag);
 char		*dup_cmd(t_lexer *lex);
 
-// pars cmd
+// 				pars cmd
 int			set_file(char **files, int flag);
 void		pars_files(t_cmd *command);
 
-// lst cmd
+// 				lst cmd
 void		lst_init_cmd(char **env, t_cmd **command);
 void		add_cmd(t_cmd **command, t_cmd *element);
 int			iscmd(char **cmd);
 void		pars_cmd_list(t_cmd	*command);
 int			error_files(int flag, char *file);
 
-// utils cmd
+// 				utils cmd
 int			size_tab_cmd(t_lexer *lex);
 bool		isoperator_cmd(t_lexer_type lex_type);
 bool		isredirection(t_lexer_type lex_type);
 bool		isbuiltin(char *cmd);
 
-// files utils 
+// 				files utils 
 void		set_input(t_cmd *command, t_lexer *lex);
 int			isfilevalid_in(char *file);
 int			isfilevalid_out(char *file);
-
 /*					end parsing				*/
-
 
 /* 					exec					*/
 int 		get_last_index(char **files);
 void 		run_commands(t_minishell *mini);
 
+//					redirection
 void		redirect_input(const char *file);
 void		redirect_output(const char *file);
 void		redirect_output_append(const char *file);
 void		redirect_heredoc(const char *delimiter);
 
+//					builtins
 int 		sort_cmd(char **cmd, char **env);
 int 		echo(char **cmd);
 int 		pwd();
@@ -156,13 +157,14 @@ int			export_variable(char **cmd, char ***env);
 
 /* 					end exec				*/ 
 
-// free
+// 					free
 t_lexer		*free_lexer(t_lexer **lex);
 void		free_all(t_cmd **cmd);
 void		free_cmd(t_cmd **cmd);
+void		kill_shell(t_minishell *shell);
 
 
-/*****************print*********************/
+/*******************print*********************/
 
 void	printfds(t_cmd *cmd, int *old,int *new);
 void	print_cmd(t_cmd *cmd);

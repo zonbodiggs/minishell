@@ -6,21 +6,11 @@
 /*   By: endoliam <endoliam@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/24 13:20:21 by rtehar            #+#    #+#             */
-/*   Updated: 2024/06/11 14:09:13 by endoliam         ###   ########lyon.fr   */
+/*   Updated: 2024/06/13 09:54:53 by endoliam         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
-
-void	free_cmd(t_cmd **cmd)
-{
-	if ((*cmd)->cmd)
-		free_array((*cmd)->cmd);
-	if ((*cmd)->files)
-		free_array((*cmd)->files);
-	if ((*cmd)->t_env)
-		free_array((*cmd)->t_env);
-}
 
 t_cmd	*redirect(t_cmd *cmd)
 {
@@ -41,39 +31,29 @@ t_cmd	*redirect(t_cmd *cmd)
 	{
 		tmp = tmp->next;
 		free_cmd(&cmd);
-		if (tmp->files)
-			tmp = redirect(tmp);
+		free(cmd);
+		cmd = tmp;
+		if (cmd->files)
+			cmd = redirect(cmd);
 	}
 	return (cmd);
 }
 void	exit_error_exec(t_minishell *mini)
 {
-	free_cmd(&mini->input);
-	free(mini->input);
-	free_array(mini->env);
-	ft_memset(mini, 0, sizeof(mini));
-	free(mini);
-	rl_clear_history();
+	kill_shell(mini);
 	exit(147);
 }
 void	my_execve(t_minishell *mini)
 {
-	t_cmd	*cmd;
-
-	cmd = mini->input;
 	if (mini->input->files)
 		mini->input = redirect(mini->input);
-	if(sort_cmd(mini->input->cmd, mini->env) == 1 )
+	if (mini->input->cmd && isbuiltin(mini->input->cmd[0]) == true)
 	{
-		free_cmd(&mini->input);
-		free(mini->input);
-		free_array(mini->env);
-		ft_memset(mini, 0, sizeof(mini));
-		free(mini);
-		rl_clear_history();
+		sort_cmd(mini->input->cmd, mini->env);
+		kill_shell(mini);
 		exit(1);
 	}
-	if (execve(cmd->cmd[0], cmd->cmd, cmd->t_env) == -1)
+	if (mini->input->cmd && execve(mini->input->cmd[0], mini->input->cmd, mini->input->t_env) == -1)
 		exit_error_exec(mini);
 	// utiliser sterrno and perror pour message d'erreur
 }

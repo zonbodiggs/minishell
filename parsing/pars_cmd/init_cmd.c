@@ -6,7 +6,7 @@
 /*   By: endoliam <endoliam@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/20 11:36:33 by endoliam          #+#    #+#             */
-/*   Updated: 2024/06/10 21:45:46 by endoliam         ###   ########lyon.fr   */
+/*   Updated: 2024/06/13 10:05:39 by endoliam         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,8 @@ char	*dup_cmd(t_lexer *lex)
 
 	if (!lex)
 		return (NULL);
-	if (lex->lex == SINGLE_Q || lex->lex == DOUBLE_Q || lex->lex == SINGLE_ENV)
+	if (lex->lex == SINGLE_Q || lex->lex == DOUBLE_Q 
+		|| lex->lex == SINGLE_ENV || lex->lex == DOUBLE_ENV)
 		cmd = ft_qstrdup(lex->contain);
 	else
 		cmd = ft_strdup(lex->contain);
@@ -30,7 +31,7 @@ char	*dup_cmd(t_lexer *lex)
 }
 // put array of *cmd or *files in command
 
-char	**init_tab(t_lexer *lex)
+char	**init_tab(t_lexer *lex, int flag)
 {
 	int		len;
 	int		i;
@@ -41,11 +42,32 @@ char	**init_tab(t_lexer *lex)
 	cmd = ft_calloc(len + 1, sizeof(char *));
 	if (!cmd)
 		exit_cmd("allocation t_cmd failed\n"); // free and exit 
-	while (i < len)
+	while (lex && i < len)
 	{
+		//if ((flag == 1 && lex->next && lex->next->lex != INPUT 
+		//		&& lex->next->next && lex->next->next->lex != OUTPUT)
+		//	|| (!lex->next) || (!lex->next->next) || (flag == 2))
 		cmd[i] = dup_cmd(lex);
+		if (lex->spaces == false)
+		{
+			while (lex && lex->spaces == false && !isoperator_cmd(lex->lex))
+			{	
+				lex = lex->next;
+				if (lex && (lex->lex == SINGLE_Q || lex->lex == DOUBLE_Q 
+					|| lex->lex == SINGLE_ENV || lex->lex == DOUBLE_ENV))
+				{
+					char *tmp = ft_qstrdup(lex->contain);
+					free(lex->contain);
+					lex->contain = tmp;
+				}
+				if (lex && lex->contain && !isoperator_cmd(lex->lex))
+					cmd[i] = join_and_free(cmd[i], lex->contain);
+			}
+		}
 		i++;
-		lex = lex->next;
+		if (lex)
+			lex = lex->next;
+		(void)flag;
 	}
 	return (cmd);
 }
@@ -60,7 +82,7 @@ t_lexer		*get_cmd(t_cmd *command, t_lexer *lex)
 {
 	if (lex && isoperator_cmd(lex->lex) == false)
 	{
-		command->cmd = init_tab(lex);
+		command->cmd = init_tab(lex, 1);
 		lex = zap_lex(lex);
 	}
 	if (lex && isredirection(lex->lex) == true)
@@ -68,10 +90,18 @@ t_lexer		*get_cmd(t_cmd *command, t_lexer *lex)
 		set_input(command, lex);
 		if (lex->next)
 		{
+			if (lex->prev && lex->lex == INPUT && lex->next->lex == OUTPUT)
+			{
+				command->files = init_tab(lex->prev , 2);
+				lex = lex->next;
+			}
+			else
+			{
 			lex = lex->next;
-			command->files = init_tab(lex);
-			if (lex->prev->prev && lex->prev->prev->lex != PIPES)
-				lex = zap_lex(lex);
+				command->files = init_tab(lex, 1);
+				if (lex->prev->prev && lex->prev->prev->lex != PIPES)
+					lex = zap_lex(lex);
+			}
 		}
 	}
 	return (lex);
