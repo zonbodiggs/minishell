@@ -6,7 +6,7 @@
 /*   By: endoliam <endoliam@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/29 11:42:24 by endoliam          #+#    #+#             */
-/*   Updated: 2024/06/12 19:23:54 by endoliam         ###   ########lyon.fr   */
+/*   Updated: 2024/06/20 12:01:21 by endoliam         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,13 +21,12 @@ int	size_tab_cmd(t_lexer *lex)
 
 	i = 0;
 	tmp = lex;
-	if (lex->prev && isredirection(lex->prev->lex)
-		&& (!lex->prev->prev || lex->prev->prev->lex == PIPES))
-		return (1);
-	while (tmp  && !isoperator_cmd(tmp->lex))
+	if (lex->prev && isredirection(lex->prev->lex))
+			return (1);
+	while (tmp  && tmp->lex != PIPES)
 	{
 		i++;
-		if (tmp->spaces == false)
+		if (tmp->spaces == false && !isredirection(tmp->lex))
 		{
 			while (tmp && isoperator_cmd(tmp->lex) == false 
 				&& tmp->spaces == false)
@@ -35,6 +34,8 @@ int	size_tab_cmd(t_lexer *lex)
 		}
 		if (tmp && isoperator_cmd(tmp->lex) == false)
 			tmp = tmp->next;
+		if (tmp && tmp->lex && isredirection(tmp->lex))
+			tmp = zap_redirection(tmp);
 	}
 	return (i);
 }

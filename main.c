@@ -6,7 +6,7 @@
 /*   By: endoliam <endoliam@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/14 16:09:41 by endoliam          #+#    #+#             */
-/*   Updated: 2024/06/13 10:18:42 by endoliam         ###   ########lyon.fr   */
+/*   Updated: 2024/06/20 17:59:25 by endoliam         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,10 +29,13 @@ int		main(int ac, char **av, char **env)
 	t_minishell *minishell;
 	
 	if (ac != 1)
+	{	
+		ft_printf_fd(2, "too many arguments");
 		exit (2);
+	}
 	(void)av;
-	signal(SIGINT, handle_sigint);
-	signal(SIGQUIT, handle_sigquit);
+	//signal(SIGINT, handle_sigint);
+	//signal(SIGQUIT, handle_sigquit);
 	minishell = ft_calloc(1, sizeof(t_minishell));
 	minishell->env = cpy_env(env);
 	while(1)
@@ -46,7 +49,7 @@ int		main(int ac, char **av, char **env)
 		if (buffer && buffer[0])
 			add_history(buffer);
 		minishell->lex = create_lexer(buffer);
-		//print_lexer(minishell->lex);
+		print_lexer(minishell->lex);
 		if (minishell->lex)
 			minishell->input = init_cmd(minishell->env, &minishell->lex);
 		print_cmd(minishell->input);
@@ -64,3 +67,8 @@ int		main(int ac, char **av, char **env)
 }
 
 // mise en place heredoc
+// expand (when expand lex have multiple $)
+// help export
+// signals
+// <Make'file' cat (fon't work correctly)
+// return value 

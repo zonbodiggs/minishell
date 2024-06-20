@@ -116,9 +116,9 @@ arg[1]->io->arg = log
 1: echo '"'"$USER"'"' -->ok
 export test=$test"coucou" --> non testable
 1: echo coucou > "ihi aha"ihi -->ok
-echo >mdr>hey>>sarace \sal"mdr" --->>> voir exec
+echo >mdr>hey>>sarace \sal"mdr" --->>> ok
 echo <hey1<h'ey2' --->>> voir exec
-echo bonjour >hey >>hey2 >>hey3 --->>> voir exec
+echo bonjour >hey >>hey2 >>hey3 --->>> voir parsing
 >> e ->> ok mais heredoc pas bien mise en place
 ls $HOME/Desktop ->> mauvaise gestion expand (prendre que les majuscule)
 1 : echo “$PATH” --> ok

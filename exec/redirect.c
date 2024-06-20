@@ -6,50 +6,62 @@
 /*   By: endoliam <endoliam@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/24 12:59:54 by rtehar            #+#    #+#             */
-/*   Updated: 2024/06/13 09:42:29 by endoliam         ###   ########lyon.fr   */
+/*   Updated: 2024/06/20 18:32:01 by endoliam         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-void	redirect_input(const char *file)
+void	redirect_input(t_minishell *mini)
 {
 	int	fdin;
+	int	i;
 
-	if (isdigit(file[0] ) && !file[1])
-		fdin = atoi(file);
-	else
-		fdin = open(file, O_RDONLY);
-	if (fdin != -1)
+	i = 0;
+	while (mini->input->files[i])
 	{
+		fdin = open(mini->input->files[i], O_RDONLY);
+		if (fdin == -1)
+			exit_error_exec(mini);;
 		dup2(fdin, STDIN_FILENO);
 		close(fdin);
+		i++;
 	}
 	return ;
 }
 
-void	redirect_output(const char *file)
+void	redirect_output(t_minishell *mini)
 {
 	int	fdout;
-	
-	fdout = open(file, O_WRONLY | O_CREAT | O_TRUNC, 0644);
-	if (fdout != -1)
-	{	
+	int	i;
+
+	i = 0;
+	while (mini->input->files[i])
+	{
+		fdout = open(mini->input->files[i], O_WRONLY | O_CREAT | O_TRUNC, 0644);
+		if (fdout == -1)
+			exit_error_exec(mini);;
 		dup2(fdout, STDOUT_FILENO);
 		close(fdout);
+		i++;
 	}
 	return ;
 }
 
-void	redirect_output_append(const char *file)
+void	redirect_output_append(t_minishell *mini)
 {
 	int	fdout;
+	int		i;
 
-	fdout = open(file, O_WRONLY | O_CREAT | O_APPEND, 0644);
-	if (fdout != -1)
-	{	
+	i = 0;
+	while (mini->input->files[i])
+	{
+		fdout = open(mini->input->files[i], O_WRONLY | O_CREAT | O_APPEND, 0644);
+		if (fdout == -1)
+			exit_error_exec(mini);;	
 		dup2(fdout, STDOUT_FILENO);
 		close(fdout);
+		i++;
 	}
 	return ;
 }

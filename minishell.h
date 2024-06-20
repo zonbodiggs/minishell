@@ -6,7 +6,7 @@
 /*   By: endoliam <endoliam@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/14 13:20:55 by endoliam          #+#    #+#             */
-/*   Updated: 2024/06/12 21:50:39 by endoliam         ###   ########lyon.fr   */
+/*   Updated: 2024/06/20 18:32:25 by endoliam         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -110,7 +110,7 @@ char		**cpy_env(char **env);
 
 // 				init cmd
 t_cmd		*init_cmd(char **env, t_lexer **lex);
-char		**init_tab(t_lexer *lex, int flag);
+char		**init_tab(t_lexer *lex);
 char		*dup_cmd(t_lexer *lex);
 
 // 				pars cmd
@@ -140,10 +140,10 @@ int			isfilevalid_out(char *file);
 int 		get_last_index(char **files);
 void 		run_commands(t_minishell *mini);
 
-//					redirection
-void		redirect_input(const char *file);
-void		redirect_output(const char *file);
-void		redirect_output_append(const char *file);
+//					redirecion
+void		redirect_input(t_minishell *mini);
+void		redirect_output(t_minishell *mini);
+void		redirect_output_append(t_minishell *mini);
 void		redirect_heredoc(const char *delimiter);
 
 //					builtins
@@ -162,7 +162,7 @@ t_lexer		*free_lexer(t_lexer **lex);
 void		free_all(t_cmd **cmd);
 void		free_cmd(t_cmd **cmd);
 void		kill_shell(t_minishell *shell);
-
+void		exit_error_exec(t_minishell *mini);
 
 /*******************print*********************/
 
@@ -171,5 +171,6 @@ void	print_cmd(t_cmd *cmd);
 void	print_lexer(t_lexer *lex);
 void	print_minishell(t_minishell *mini);
 void	print_env(char **env);
+t_lexer		*zap_redirection(t_lexer *lex);
 
 #endif

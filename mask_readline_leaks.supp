@@ -16,3 +16,9 @@
    ...
    fun:tigetstr_sp
 }
+{
+   <ls>
+   Memcheck:Leak
+   ...
+   fun:ls
+}
