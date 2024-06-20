@@ -6,7 +6,7 @@
 /*   By: endoliam <endoliam@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/24 13:20:21 by rtehar            #+#    #+#             */
-/*   Updated: 2024/06/20 18:31:18 by endoliam         ###   ########lyon.fr   */
+/*   Updated: 2024/06/20 18:49:54 by endoliam         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,29 +14,28 @@
 
 t_cmd	*redirect(t_minishell *mini)
 {
-	t_cmd	*cmd;
 	t_cmd	*tmp;
 
-	cmd = mini->input;
-	tmp = cmd;
-	if (cmd->redir == IN)
+	tmp = mini->input;
+	if (mini->input->redir == IN)
 		redirect_input(mini);
-	else if (cmd->redir == TRUNC)
+	else if (mini->input->redir == TRUNC)
 		redirect_output(mini);
-	else if (cmd->redir == APPEND)
+	else if (mini->input->redir == APPEND)
 		redirect_output_append(mini);
-	else if (cmd->redir == HEREDOC)
-		redirect_heredoc(cmd->files[0]);
-	if ((cmd->next && !cmd->next->cmd) || (cmd->redir == IN && !cmd->cmd))
+	else if (mini->input->redir == HEREDOC)
+		redirect_heredoc(mini->input->files[0]);
+	if ((mini->input->next && !mini->input->next->cmd) 
+		|| (mini->input->redir == IN && !mini->input->cmd))
 	{
 		tmp = tmp->next;
-		free_cmd(&cmd);
-		free(cmd);
-		cmd = tmp;
-		if (cmd->files)
-			cmd = redirect(mini);
+		free_cmd(&mini->input);
+		free(mini->input);
+		mini->input = tmp;
+		if (mini->input->files)
+			mini->input = redirect(mini);
 	}
-	return (cmd);
+	return (mini->input);
 }
 void	exit_error_exec(t_minishell *mini)
 {
