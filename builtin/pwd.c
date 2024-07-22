@@ -6,7 +6,7 @@
 /*   By: endoliam <endoliam@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/03 13:32:33 by endoliam          #+#    #+#             */
-/*   Updated: 2024/06/03 13:33:27 by endoliam         ###   ########lyon.fr   */
+/*   Updated: 2024/07/22 17:22:07 by endoliam         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,11 +14,11 @@
 
 int pwd()
 {
-        char cwd[PATH_MAX];
+	char cwd[PATH_MAX];
 
-        if (getcwd(cwd, sizeof(cwd)) != NULL)
-                printf("%s\n", cwd);
-        else
-                return 1;
-    return 0;
+	if (getcwd(cwd, sizeof(cwd)) != NULL)
+		printf("%s\n", cwd);
+	else
+		return (1);
+	return (0);
 }

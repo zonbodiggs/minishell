@@ -6,7 +6,7 @@
 /*   By: endoliam <endoliam@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/11 13:56:32 by endoliam          #+#    #+#             */
-/*   Updated: 2024/07/22 16:45:52 by endoliam         ###   ########lyon.fr   */
+/*   Updated: 2024/07/22 17:20:18 by endoliam         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,15 +23,15 @@ static void	sort_export(char **arr, int n)
 	while (i < n)
 	{
 		key = arr[i];
-        j = i - 1;
-        while (j >= 0 && ft_strncmp(arr[j], key, ft_strlen(arr[j])) > 0)
+		j = i - 1;
+		while (j >= 0 && ft_strncmp(arr[j], key, ft_strlen(arr[j])) > 0)
 		{
-            arr[j + 1] = arr[j];
-            j--;
-        }
-        arr[j + 1] = key;
+			arr[j + 1] = arr[j];
+			j--;
+		}
+		arr[j + 1] = key;
 		i++;
-    }
+	}
 }
 
 static char **copy_env(char **dest, char **src, int count)
