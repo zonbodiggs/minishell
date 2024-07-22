@@ -6,7 +6,7 @@
 /*   By: endoliam <endoliam@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/20 11:36:33 by endoliam          #+#    #+#             */
-/*   Updated: 2024/06/20 17:44:09 by endoliam         ###   ########lyon.fr   */
+/*   Updated: 2024/07/18 18:12:18 by endoliam         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,21 +20,22 @@ char	*dup_cmd(t_lexer *lex)
 
 	if (!lex)
 		return (NULL);
-	if (lex->lex == SINGLE_Q || lex->lex == DOUBLE_Q 
+	if (lex->lex == SINGLE_Q || lex->lex == DOUBLE_Q
 		|| lex->lex == SINGLE_ENV || lex->lex == DOUBLE_ENV)
 		cmd = ft_qstrdup(lex->contain);
 	else
 		cmd = ft_strdup(lex->contain);
 	if (!cmd)
-		exit_cmd("allocation cmd failed\n"); // free and exit
+		exit_cmd("allocation cmd failed\n");
 	return (cmd);
 }
+
 t_lexer	*zap_redirection(t_lexer *lex)
 {
-	while ((lex && lex->prev && isredirection(lex->prev->lex)) 
-			|| (lex && isredirection(lex->lex)))
+	while ((lex && lex->prev && isredirection(lex->prev->lex))
+		|| (lex && isredirection(lex->lex)))
 		lex = lex->next;
-	return(lex);
+	return (lex);
 }
 // put array of *cmd or *files in command
 
@@ -43,25 +44,27 @@ char	**init_tab(t_lexer *lex)
 	int		len;
 	int		i;
 	char	**cmd;
+	char	*tmp;
 
 	i = 0;
 	len = size_tab_cmd(lex);
 	cmd = ft_calloc(len + 1, sizeof(char *));
 	if (!cmd)
-		exit_cmd("allocation t_cmd failed\n"); // free and exit 
+		exit_cmd("allocation t_cmd failed\n");
+	tmp = NULL;
 	while (lex && i < len)
 	{
-		printf("CONTAIN CMD %s\n", lex->contain);
 		cmd[i] = dup_cmd(lex);
 		if (lex->spaces == false)
 		{
 			while (lex && lex->spaces == false && !isoperator_cmd(lex->lex))
-			{	
+			{
 				lex = lex->next;
-				if (lex && !isredirection(lex->lex) && (lex->lex == SINGLE_Q || lex->lex == DOUBLE_Q 
-					|| lex->lex == SINGLE_ENV || lex->lex == DOUBLE_ENV))
+				if (lex && !isredirection(lex->lex) && (lex->lex == SINGLE_Q
+						|| lex->lex == DOUBLE_Q || lex->lex == SINGLE_ENV
+						|| lex->lex == DOUBLE_ENV))
 				{
-					char *tmp = ft_qstrdup(lex->contain);
+					tmp = ft_qstrdup(lex->contain);
 					free(lex->contain);
 					lex->contain = tmp;
 				}
@@ -77,21 +80,22 @@ char	**init_tab(t_lexer *lex)
 	}
 	return (cmd);
 }
-int		size_files(t_lexer *lex)
+
+int	size_files(t_lexer *lex)
 {
 	int		i;
 	t_lexer	*tmp;
 
 	tmp = lex;
 	i = 0;
-	while ((tmp && isredirection(tmp->lex)) 
-			|| (tmp && tmp->prev && isredirection(tmp->prev->lex)))
-	{	
+	while ((tmp && isredirection(tmp->lex))
+		|| (tmp && tmp->prev && isredirection(tmp->prev->lex)))
+	{
 		if (tmp && !isredirection(tmp->lex))
 			i++;
 		tmp = tmp->next;
 	}
-	return(i);
+	return (i);
 }
 
 char	**init_files(t_lexer *lex)
@@ -99,15 +103,16 @@ char	**init_files(t_lexer *lex)
 	int		len;
 	int		i;
 	char	**cmd;
+	char	*tmp;
 
+	tmp = NULL;
 	i = 0;
 	len = size_files(lex);
 	cmd = ft_calloc(len + 1, sizeof(char *));
 	if (!cmd)
-		exit_cmd("allocation t_cmd failed\n"); // free and exit 
+		exit_cmd("allocation t_cmd failed\n");
 	while (lex && i < len)
 	{
-		printf("CONTAIN FILES %s\n", lex->contain);
 		lex = lex->next;
 		cmd[i] = dup_cmd(lex);
 		if (lex->spaces == false && lex->next && !isredirection(lex->next->lex))
@@ -115,10 +120,11 @@ char	**init_files(t_lexer *lex)
 			while (lex && lex->spaces == false && !isoperator_cmd(lex->lex))
 			{
 				lex = lex->next;
-				if (lex && !isredirection(lex->lex) && (lex->lex == SINGLE_Q || lex->lex == DOUBLE_Q 
-					|| lex->lex == SINGLE_ENV || lex->lex == DOUBLE_ENV))
+				if (lex && !isredirection(lex->lex) && (lex->lex == SINGLE_Q
+						|| lex->lex == DOUBLE_Q || lex->lex == SINGLE_ENV
+						|| lex->lex == DOUBLE_ENV))
 				{
-					char *tmp = ft_qstrdup(lex->contain);
+					tmp = ft_qstrdup(lex->contain);
 					free(lex->contain);
 					lex->contain = tmp;
 				}
@@ -133,14 +139,14 @@ char	**init_files(t_lexer *lex)
 	return (cmd);
 }
 
-t_lexer		*zap_lex(t_lexer *lex)
-{	
+t_lexer	*zap_lex(t_lexer *lex)
+{
 	while (lex && isoperator_cmd(lex->lex) == false)
-				lex = lex->next;
+		lex = lex->next;
 	return (lex);
 }
 
-t_lexer		*get_cmd(t_cmd *command, t_lexer *lex)
+t_lexer	*get_cmd(t_cmd *command, t_lexer *lex)
 {
 	if (lex && isoperator_cmd(lex->lex) == false)
 	{
@@ -183,10 +189,9 @@ t_cmd	*init_cmd(char **env, t_lexer **lex)
 		lexer = get_cmd(command, lexer);
 		if (i == 1)
 			start = command;
-		if ((lexer && isredirection(lexer->lex) == false) 
+		if ((lexer && isredirection(lexer->lex) == false)
 			&& (command && command->redir != IN))
 			lexer = lexer->next;
-		
 	}
 	command = start;
 	free_lexer(lex);

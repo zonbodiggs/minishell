@@ -11,6 +11,7 @@ SRCS		= parsing/tokenize/bool_lexer.c\
 			  parsing/tokenize/init_lexer.c\
 			  parsing/tokenize/lexer_tools.c\
 			  parsing/tokenize/expand.c\
+			  parsing/tokenize/operator.c\
 			  parsing/pars_cmd/init_cmd.c\
 			  parsing/pars_cmd/cmd_utils.c\
 			  parsing/pars_cmd/files_utils.c\
@@ -21,9 +22,11 @@ SRCS		= parsing/tokenize/bool_lexer.c\
 			  exec/redirect.c\
 			  exec/sort_cmd.c\
 			  builtin/echo.c\
+			  builtin/cd.c\
 			  builtin/pwd.c\
 			  builtin/env.c\
 			  builtin/export.c\
+			  builtin/unset.c\
 			  builtin/exit.c\
 			  print_data.c\
 			  free.c\

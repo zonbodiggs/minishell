@@ -276,7 +276,7 @@ echo $PATH"coucou"
 echo "hello"$PWD"coucou"
 coucou$PWD test$COLORTERMlol lol$HOME
 echo "bonjour$PATH$PWD"
-echo "bonjour\$PATH$PWD"
+echo "bonjour\$PATH$PWD" -->parsing
 echo $PATH"coucou"
 echo $$$$$$$$
 echo $12345

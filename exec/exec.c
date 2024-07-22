@@ -6,7 +6,7 @@
 /*   By: endoliam <endoliam@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/24 13:20:21 by rtehar            #+#    #+#             */
-/*   Updated: 2024/06/20 18:49:54 by endoliam         ###   ########lyon.fr   */
+/*   Updated: 2024/07/17 17:24:47 by endoliam         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,10 +66,12 @@ void	execute_simple_command(t_minishell *mini)
 	pipe(fd);
 	if (pid == 0)
 	{
-		close(fd[0]);	
+		close(fd[0]);
 		close(fd[1]);
 		my_execve(mini);
 	}
+	close(fd[0]);
+	close(fd[1]);
 	while (wait(NULL) > 0)
 		;
 	return ;

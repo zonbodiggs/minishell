@@ -6,37 +6,35 @@
 /*   By: endoliam <endoliam@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/29 12:32:33 by endoliam          #+#    #+#             */
-/*   Updated: 2024/06/20 17:54:12 by endoliam         ###   ########lyon.fr   */
+/*   Updated: 2024/07/18 17:59:12 by endoliam         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../minishell.h"
 
-// watch the 
-
-int		set_file(char **files, int flag)
+int	set_file(char **files, int flag)
 {
 	int		i;
 
 	i = 0;
 	if (!files)
 		return (0);
-	while(files[i])
+	while (files[i])
 	{
 		if (flag == 1)
 		{
 			if (isfilevalid_in(files[i]) != 0)
-				return(error_files(isfilevalid_in(files[i]), files[i]));
+				return (error_files(isfilevalid_in(files[i]), files[i]));
 		}
 		else if (flag == 2)
 		{
 			if (i > 0 && isfilevalid_in(files[i]) != 0)
-				return(error_files(isfilevalid_in(files[i]), files[i]));
+				return (error_files(isfilevalid_in(files[i]), files[i]));
 		}
 		else if (flag == 3)
 		{
 			if (isfilevalid_out(files[i]) != 0)
-				return(error_files(isfilevalid_out(files[i]), files[i]));
+				return (error_files(isfilevalid_out(files[i]), files[i]));
 		}
 		i++;
 	}
@@ -77,8 +75,8 @@ int	iscmd(char **cmd)
 		return (1);
 	if (!getenv("PATH"))
 	{
-		ft_printf_fd(2, "minishell : command '%s' not found\n", cmd[0]); // error message
-		return (0);	
+		ft_printf_fd(2, "minishell : command '%s' not found\n", cmd[0]);
+		return (0);
 	}
 	i = 0;
 	path = ft_split(getenv("PATH"), ':');
@@ -87,37 +85,38 @@ int	iscmd(char **cmd)
 	while (path[i])
 	{
 		cmd_path = ft_slash_strjoin(path[i], cmd[0]);
-		if (access(cmd_path, F_OK) == 0) // check also if cmd[0] is builtin
+		if (access(cmd_path, F_OK) == 0)
 		{
 			free(cmd[0]);
-			cmd[0] = ft_strdup(cmd_path); // set cmd_path to cmd[0]
-			free(cmd_path); // free cmd_path
-			free_array(path); // free path
+			cmd[0] = ft_strdup(cmd_path);
+			free(cmd_path);
+			free_array(path);
 			return (1);
 		}
 		free(cmd_path);
 		i++;
 	}
-	ft_printf_fd(2, "minishell : command '%s' not found\n", cmd[0]); // error message
-	free_array(path); // free path
-	return (0);  // return fonction
+	ft_printf_fd(2, "minishell : command '%s' not found\n", cmd[0]);
+	free_array(path);
+	return (0);
 }
 // parsing files and cmd of any commad list
 
 void	pars_cmd_list(t_cmd	*command)
 {
 	t_cmd	*cmd;
+	int		j;
 
 	cmd = command;
 	if (!command)
 		return ;
-	int j = 1;
+	j = 1;
 	while (cmd)
 	{
 		if (cmd->files)
-			pars_files(cmd); // pars files
+			pars_files(cmd);
 		if (cmd->cmd)
-			iscmd(cmd->cmd); // add fonction that pars cmd
+			iscmd(cmd->cmd);
 		j++;
 		cmd = cmd->next;
 	}
@@ -126,21 +125,8 @@ void	pars_cmd_list(t_cmd	*command)
 int	error_files(int flag, char *file)
 {
 	if (flag == -2)
-		ft_printf_fd(2, "minishell : can't found file '%s'\n", file); // put name of file
+		ft_printf_fd(2, "minishell : can't found file '%s'\n", file);
 	else if (flag == -3)
 		ft_printf_fd(2, "minishell : permision to file denied '%s'\n", file);
 	return (-2);
 }
-
-// // open file and return result of open
-
-// int	create_file(char *file, int flag)
-// {
-// 	if (flag <= 2)
-// 		return (open(file, O_RDONLY));	// for in file
-// 	else if (flag == 3)
-// 		return (open(file, O_TRUNC)); // out file >
-// 	else if (flag == 4)
-// 		return (open(file, O_WRONLY | O_CREAT)); // out file >>
-// 	return (0);
-// }

@@ -6,7 +6,7 @@
 /*   By: endoliam <endoliam@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/29 14:42:36 by endoliam          #+#    #+#             */
-/*   Updated: 2024/05/31 11:54:16 by endoliam         ###   ########lyon.fr   */
+/*   Updated: 2024/07/18 18:04:08 by endoliam         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,8 @@ void	set_input(t_cmd *command, t_lexer *lex)
 			command->redir = TRUNC;
 	}
 }
-int		isfilevalid_in(char *file)
+
+int	isfilevalid_in(char *file)
 {
 	if (access(file, F_OK) == -1)
 		return (-2);
@@ -40,7 +41,7 @@ int		isfilevalid_in(char *file)
 	return (0);
 }
 
-int		isfilevalid_out(char *file)
+int	isfilevalid_out(char *file)
 {
 	if (access(file, F_OK) == 0 && access(file, W_OK) == -1)
 		return (-3);

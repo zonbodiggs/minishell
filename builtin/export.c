@@ -6,21 +6,79 @@
 /*   By: endoliam <endoliam@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/11 13:56:32 by endoliam          #+#    #+#             */
-/*   Updated: 2024/06/11 13:56:41 by endoliam         ###   ########lyon.fr   */
+/*   Updated: 2024/07/22 16:45:52 by endoliam         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-static void	list_env_vars(char **env)
+
+static void	sort_export(char **arr, int n)
 {
-	int i;
-	i = 0;
-	while (env[i] != NULL)
+	int 	i;
+	int		j;
+	char	*key;
+
+	i = 1;
+	while (i < n)
 	{
-		printf("%s\n", env[i]);
+		key = arr[i];
+        j = i - 1;
+        while (j >= 0 && ft_strncmp(arr[j], key, ft_strlen(arr[j])) > 0)
+		{
+            arr[j + 1] = arr[j];
+            j--;
+        }
+        arr[j + 1] = key;
+		i++;
+    }
+}
+
+static char **copy_env(char **dest, char **src, int count)
+{
+	int	i;
+
+	i = 0;
+	while (i < count)
+	{
+		dest[i] = src[i];
 		i++;
 	}
+	dest[i] = NULL;
+	return (dest);
+}
+
+static void	list_env_vars(char **env)
+{
+	char **env_sort;
+	int i;
+	int	count;
+
+	i = 0;
+	count = 0;
+	while (env[count])
+		count++;
+	count = count - 1;
+	env_sort = malloc(count * sizeof(char *));
+	if(!env_sort)
+	{
+		perror("malloc");
+		exit(EXIT_FAILURE);
+	}
+	env_sort = copy_env(env_sort, env, count);
+	sort_export(env_sort, count);
+	while (env_sort[i] != NULL)
+	{
+		printf("declare -x %s\n", env_sort[i]);
+		i++;
+	}
+	/*i = 0;    j'arrive pas a free mdrr
+	while(env_sort[i] != NULL)
+	{
+		free(env_sort[i]);
+		i++;
+	}
+	free(env_sort);*/
 }
 
 static int	validate_variable(char *var)

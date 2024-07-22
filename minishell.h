@@ -6,7 +6,7 @@
 /*   By: endoliam <endoliam@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/14 13:20:55 by endoliam          #+#    #+#             */
-/*   Updated: 2024/06/20 18:32:25 by endoliam         ###   ########lyon.fr   */
+/*   Updated: 2024/07/22 17:04:08 by endoliam         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,13 +79,14 @@ int			main(int ac, char **av, char **env);
 /* 					parsing					*/ 
 
 // 				init lexer
-t_lexer		*create_lexer(char *s);
-int			init_operator(t_lexer **lexer, char *s, int start);
+t_lexer		*create_lexer(char *s, t_minishell mini);
+int			init_operator(t_lexer **lexer, char *s, int start, t_minishell mini);
 void		init_lexer_type(t_lexer *data);
-void		init_redirection(t_lexer **lexer, char c, int flag);
+void		init_redirection(t_lexer **lexer, char c, int flag, t_minishell mini);
+int		find_redirection(t_lexer **lexer, char *s, int start, t_minishell mini);
 
 // 				tools lexer
-int			lst_init_lexer(t_lexer **lexer, char *s, int start);
+int			lst_init_lexer(t_lexer **lexer, char *s, int start, t_minishell mini);
 void		add_lexer(t_lexer **lexer, t_lexer *element);
 int			word_len(char *s);
 
@@ -94,9 +95,10 @@ bool		isword(char *s, int start);
 bool		final_space(char *s);
 bool		isoperator(char c);
 bool		is_env_var(char *s);
+bool		isispace(char c);
 
 //				expand
-char		*init_env_var(char *s);
+char		*init_env_var(char *s, t_minishell mini);
 char 		*join_and_free(char *s1, char *s2);
 
 // 				utils cmd
@@ -105,6 +107,7 @@ int			zap_quote(char *s, char quote, int i);
 void		free_array(char **array);
 void		exit_cmd(char *msg);
 char		**cpy_env(char **env);
+char		*mygetenv(char *s, char **env);
 
 //			parsing cmd for execution
 
@@ -147,13 +150,14 @@ void		redirect_output_append(t_minishell *mini);
 void		redirect_heredoc(const char *delimiter);
 
 //					builtins
+int 		cd(char **cmd, char ***env);
 int 		sort_cmd(char **cmd, char **env);
 int 		echo(char **cmd);
 int 		pwd();
 int 		env_shell(char **env);
 void 		exit_shell(t_minishell *shell, char **cmd);
 int			export_variable(char **cmd, char ***env);
-
+int 		unset_variable(char **cmd, char ***env);
 
 /* 					end exec				*/ 
 

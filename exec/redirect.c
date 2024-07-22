@@ -6,7 +6,7 @@
 /*   By: endoliam <endoliam@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/24 12:59:54 by rtehar            #+#    #+#             */
-/*   Updated: 2024/06/20 18:32:01 by endoliam         ###   ########lyon.fr   */
+/*   Updated: 2024/07/18 16:58:39 by endoliam         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,7 +58,7 @@ void	redirect_output_append(t_minishell *mini)
 	{
 		fdout = open(mini->input->files[i], O_WRONLY | O_CREAT | O_APPEND, 0644);
 		if (fdout == -1)
-			exit_error_exec(mini);;	
+			exit_error_exec(mini);
 		dup2(fdout, STDOUT_FILENO);
 		close(fdout);
 		i++;

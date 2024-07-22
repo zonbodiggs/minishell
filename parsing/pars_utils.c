@@ -6,7 +6,7 @@
 /*   By: endoliam <endoliam@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/17 17:04:15 by endoliam          #+#    #+#             */
-/*   Updated: 2024/06/10 23:07:01 by endoliam         ###   ########lyon.fr   */
+/*   Updated: 2024/07/22 16:52:19 by endoliam         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 int	exit_failure(char *msg, char c)
 {
-	ft_printf_fd(2,"minishell error: %s ", msg);
+	ft_printf_fd(2, "minishell error: %s ", msg);
 	if (c)
 		ft_printf_fd(2, "%c", c);
 	ft_printf_fd(2, "\n");
@@ -29,6 +29,7 @@ int	zap_quote(char *s, char quote, int i)
 		return (0);
 	return (i);
 }
+
 void	free_array(char **array)
 {
 	int	i;
@@ -36,16 +37,18 @@ void	free_array(char **array)
 	i = 0;
 	if (!array)
 		return ;
-	while(array[i])
+	while (array[i])
 	{
 		free(array[i]);
 		i++;
 	}
 	free(array);
 }
+// printf_fd and exit correctly 
+
 void	exit_cmd(char *msg)
 {
-	ft_putstr_fd(msg, 2); // printf_fd and exit correctly 
+	ft_putstr_fd(msg, 2);
 	exit (47);
 }
 
@@ -68,7 +71,7 @@ char	**cpy_env(char **env)
 	{
 		dest[i] = ft_strdup(env[i]);
 		if (!dest[i])
-			exit_cmd("allocation env failed\n"); // free and exit
+			exit_cmd("allocation env failed\n");
 		i++;
 	}
 	dest[len] = NULL;

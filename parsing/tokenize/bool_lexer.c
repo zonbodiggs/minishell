@@ -6,11 +6,18 @@
 /*   By: endoliam <endoliam@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/17 17:20:55 by endoliam          #+#    #+#             */
-/*   Updated: 2024/06/07 21:20:47 by endoliam         ###   ########lyon.fr   */
+/*   Updated: 2024/07/18 17:19:10 by endoliam         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../minishell.h"
+
+bool	isispace(char c)
+{
+	if ((c <= 9 && c >= 13) || c == 32)
+		return (true);
+	return (false);
+}
 
 bool	isword(char *s, int start)
 {
@@ -18,10 +25,10 @@ bool	isword(char *s, int start)
 	{
 		if ((start > 0 && isoperator(s[start]) == false
 				&& isoperator(s[start - 1]) == true)
-			|| (start == 0 && s[start] != ' ')
-			|| (start > 0 && s[start] != ' ' && s[start] != '|'
-				&& s[start - 1] == ' ' ))
-		return (true);	
+			|| (start == 0 && !isispace(s[start]))
+			|| (start > 0 && !isispace(s[start]) && s[start] != '|'
+				&& !isispace(s[start])))
+			return (true);
 	}
 	return (false);
 }
@@ -48,6 +55,7 @@ bool	isoperator(char c)
 		return (true);
 	return (false);
 }
+
 bool	is_env_var(char *s)
 {
 	int	i;

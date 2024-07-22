@@ -6,7 +6,7 @@
 /*   By: endoliam <endoliam@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/17 17:09:59 by endoliam          #+#    #+#             */
-/*   Updated: 2024/06/11 18:59:04 by endoliam         ###   ########lyon.fr   */
+/*   Updated: 2024/07/18 17:43:27 by endoliam         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,8 +33,7 @@ void	add_lexer(t_lexer **lexer, t_lexer *element)
 	}
 }
 
-
-int	lst_init_lexer(t_lexer **lexer, char *s, int start)
+int	lst_init_lexer(t_lexer **lexer, char *s, int start, t_minishell mini)
 {
 	t_lexer		*data;
 	int			len;
@@ -45,22 +44,17 @@ int	lst_init_lexer(t_lexer **lexer, char *s, int start)
 		return (-1);
 	data = ft_calloc(1, sizeof(t_lexer));
 	if (!data)
-		return (exit_failure("malloc allocation failed", 0)); // free and exit
+		return (exit_failure("malloc allocation failed", 0));
 	ft_memset(data, 0, sizeof(t_lexer));
 	if (s[start + len] && s[start + len] == ' '
 		&& final_space(s + start + len) == false)
 		data->spaces = true;
-	data->contain = ft_substr(s, start, len);	//allocation
+	data->contain = ft_substr(s, start, len);
 	if (!data->contain)
-		return (exit_failure("malloc allocation failed", 0)); // free and exit
+		return (exit_failure("malloc allocation failed", 0));
 	init_lexer_type(data);
 	if (data->lex == ENV_VAR || data->lex == DOUBLE_ENV)
-		data->contain = init_env_var(data->contain);
-	if (!data->contain)
-	{	
-		free(data);
-		return (start + len);
-	}
+		data->contain = init_env_var(data->contain, mini);
 	add_lexer(lexer, data);
 	return (start + len);
 }

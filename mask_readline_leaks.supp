@@ -17,8 +17,8 @@
    fun:tigetstr_sp
 }
 {
-   <ls>
+   <add_history>
    Memcheck:Leak
    ...
-   fun:ls
+   fun:add_history
 }

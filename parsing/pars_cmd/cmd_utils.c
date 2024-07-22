@@ -6,13 +6,11 @@
 /*   By: endoliam <endoliam@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/29 11:42:24 by endoliam          #+#    #+#             */
-/*   Updated: 2024/06/20 12:01:21 by endoliam         ###   ########lyon.fr   */
+/*   Updated: 2024/07/18 18:04:51 by endoliam         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../minishell.h"
-
-
 
 int	size_tab_cmd(t_lexer *lex)
 {
@@ -22,13 +20,13 @@ int	size_tab_cmd(t_lexer *lex)
 	i = 0;
 	tmp = lex;
 	if (lex->prev && isredirection(lex->prev->lex))
-			return (1);
-	while (tmp  && tmp->lex != PIPES)
+		return (1);
+	while (tmp && tmp->lex != PIPES)
 	{
 		i++;
 		if (tmp->spaces == false && !isredirection(tmp->lex))
 		{
-			while (tmp && isoperator_cmd(tmp->lex) == false 
+			while (tmp && isoperator_cmd(tmp->lex) == false
 				&& tmp->spaces == false)
 				tmp = tmp->next;
 		}
@@ -64,7 +62,7 @@ bool	isbuiltin(char *cmd)
 		|| !ft_strncmp(cmd, "pwd", ft_strlen(cmd))
 		|| !ft_strncmp(cmd, "cd", ft_strlen(cmd))
 		|| !ft_strncmp(cmd, "export", ft_strlen(cmd))
-		|| !ft_strncmp(cmd, "unset", ft_strlen(cmd)) 
+		|| !ft_strncmp(cmd, "unset", ft_strlen(cmd))
 		|| !ft_strncmp(cmd, "env", ft_strlen(cmd))
 		|| !ft_strncmp(cmd, "exit", ft_strlen(cmd)))
 		return (true);
