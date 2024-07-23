@@ -6,7 +6,7 @@
 /*   By: endoliam <endoliam@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/14 16:09:41 by endoliam          #+#    #+#             */
-/*   Updated: 2024/07/22 17:16:46 by endoliam         ###   ########lyon.fr   */
+/*   Updated: 2024/07/23 15:37:37 by endoliam         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,15 +44,33 @@ char	*mygetenv(char *s, char **env)
 	}
 	return (NULL);
 }
-void sort_env(char **cmd, char ***env)
+
+void run_builtin(char *cmd, t_minishell *mini)
 {
-	if (cmd && ft_strncmp(cmd[0], "export", 6) == 0)
-		export_variable(cmd, env);
-	else if (cmd && ft_strncmp(cmd[0], "unset", 5) == 0)
-		unset_variable(cmd, env);
-	else if (cmd && ft_strncmp(cmd[0], "cd", 2) == 0)
-		cd(cmd, env);
+	if (!mini->input->cmd[1])
+	{
+		if (cmd && ft_strncmp(cmd, "export", ft_strlen(cmd)) == 0)
+			export_variable(mini->input->cmd, &mini->env);
+		else if (cmd && ft_strncmp(cmd, "unset", ft_strlen(cmd)) == 0)
+			unset_variable(mini->input->cmd, &mini->env);
+		else if (cmd && ft_strncmp(cmd, "cd", ft_strlen(cmd)) == 0)
+			cd(mini->input->cmd, &mini->env);
+	}
+	else if (cmd && ft_strncmp(cmd, "exit", ft_strlen(cmd)) == 0)
+		exit_shell(mini, mini->input->cmd);	
 	return ;
+}
+
+void	sort_builtin(t_minishell *mini)
+{
+	int	i;
+
+	i = 0;
+	while (mini->input->cmd && mini->input->cmd[i])
+	{
+		run_builtin(mini->input->cmd[i], mini);
+		i++;
+	}
 }
 
 int		main(int ac, char **av, char **env)
@@ -66,8 +84,8 @@ int		main(int ac, char **av, char **env)
 		exit (2);
 	}
 	(void)av;
-	//signal(SIGINT, handle_sigint);
-	//signal(SIGQUIT, handle_sigquit);
+	signal(SIGINT, handle_sigint);
+	signal(SIGQUIT, handle_sigquit);
 	minishell = ft_calloc(1, sizeof(t_minishell));
 	minishell->env = cpy_env(env);
 	while(1)
@@ -81,13 +99,12 @@ int		main(int ac, char **av, char **env)
 		if (buffer && buffer[0])
 			add_history(buffer);
 		minishell->lex = create_lexer(buffer, *minishell);
+		print_lexer(minishell->lex);
 		if (minishell->lex)
 			minishell->input = init_cmd(minishell->env, &minishell->lex);
 		if (minishell->input)
 		{
-			if (minishell->input->cmd && ft_strncmp(minishell->input->cmd[0], "exit", 4) == 0)
-				exit_shell(minishell, minishell->input->cmd);
-			sort_env(minishell->input->cmd, &minishell->env);
+			sort_builtin(minishell);
 			run_commands(minishell);
 		}
 		free_all(&minishell->input);
@@ -98,9 +115,6 @@ int		main(int ac, char **av, char **env)
 }
 
 // mise en place heredoc
-// help export
-// signals
 // return value
 // gestion ispace
 // gestion backslash
-// finir mise en place export unset et exit

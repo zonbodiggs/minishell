@@ -104,7 +104,6 @@ int cd(char **cmd, char ***env)
 {
 	char *path;
 
-	printf("%s", "test");
 	path = cmd[1];
 	if (!path)
 	{

@@ -6,7 +6,7 @@
 /*   By: endoliam <endoliam@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/24 13:20:21 by rtehar            #+#    #+#             */
-/*   Updated: 2024/07/17 17:24:47 by endoliam         ###   ########lyon.fr   */
+/*   Updated: 2024/07/23 14:37:18 by endoliam         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ t_cmd	*redirect(t_minishell *mini)
 		free_cmd(&mini->input);
 		free(mini->input);
 		mini->input = tmp;
-		if (mini->input->files)
+		if (mini->input && mini->input->files)
 			mini->input = redirect(mini);
 	}
 	return (mini->input);
@@ -44,15 +44,15 @@ void	exit_error_exec(t_minishell *mini)
 }
 void	my_execve(t_minishell *mini)
 {
-	if (mini->input->files)
+	if (mini->input && mini->input->files)
 		mini->input = redirect(mini);
-	if (mini->input->cmd && isbuiltin(mini->input->cmd[0]) == true)
+	if (mini->input && mini->input->cmd && isbuiltin(mini->input->cmd[0]) == true)
 	{
 		sort_cmd(mini->input->cmd, mini->env);
 		kill_shell(mini);
 		exit(1);
 	}
-	if (mini->input->cmd && execve(mini->input->cmd[0], mini->input->cmd, mini->input->t_env) == -1)
+	if (!mini->input ||(mini->input->cmd && execve(mini->input->cmd[0], mini->input->cmd, mini->input->t_env) == -1))
 		exit_error_exec(mini);
 	// utiliser sterrno and perror pour message d'erreur
 }
