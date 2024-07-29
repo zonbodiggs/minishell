@@ -6,7 +6,7 @@
 /*   By: endoliam <endoliam@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/24 13:20:21 by rtehar            #+#    #+#             */
-/*   Updated: 2024/07/29 13:23:08 by endoliam         ###   ########lyon.fr   */
+/*   Updated: 2024/07/29 14:44:16 by endoliam         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,8 +25,8 @@ t_cmd	*redirect(t_minishell *mini)
 		redirect_output_append(mini);
 	else if (mini->input->redir == HEREDOC)
 		redirect_heredoc(mini->input->files);
-	if ((mini->input->next && !mini->input->next->cmd) 
-		|| (mini->input->redir  && !mini->input->cmd))
+	if ((mini->input->next && !mini->input->cmd) 
+		|| (mini->input->redir == IN  && !mini->input->cmd))
 	{
 		tmp = tmp->next;
 		free_cmd(&mini->input);

@@ -6,7 +6,7 @@
 /*   By: endoliam <endoliam@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/07 10:23:43 by endoliam          #+#    #+#             */
-/*   Updated: 2024/07/24 16:05:11 by endoliam         ###   ########lyon.fr   */
+/*   Updated: 2024/07/29 15:03:04 by endoliam         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,6 +52,8 @@ void	print_cmd(t_cmd *cmd)
 			printf("files = %s ", cmd->files);
 			printf("\n");
 		}
+		if (cmd->pipe == true)
+			printf("there is pipes after\n");
 		cmd = cmd->next;
 	}
 	

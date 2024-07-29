@@ -6,7 +6,7 @@
 /*   By: endoliam <endoliam@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/14 13:20:55 by endoliam          #+#    #+#             */
-/*   Updated: 2024/07/29 12:17:36 by endoliam         ###   ########lyon.fr   */
+/*   Updated: 2024/07/29 14:35:01 by endoliam         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,6 +63,7 @@ typedef struct s_cmd // for exec
 	char				**cmd;			// cmd
 	char				**t_env;		// env
 	char				*files;
+	bool				pipe;
 	t_enum				redir;			// enum of fd
 	struct s_cmd		*next;
 }		t_cmd;

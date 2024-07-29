@@ -6,7 +6,7 @@
 /*   By: endoliam <endoliam@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/24 18:53:22 by endoliam          #+#    #+#             */
-/*   Updated: 2024/07/24 19:09:01 by endoliam         ###   ########lyon.fr   */
+/*   Updated: 2024/07/29 14:15:41 by endoliam         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,8 @@ bool	isredirection(t_lexer_type lex_type)
 
 bool	isoperator_cmd(t_lexer_type lex_type)
 {
+	if (!lex_type)
+		return (false);
 	if (isredirection(lex_type)
 		|| lex_type == PIPES)
 		return (true);
