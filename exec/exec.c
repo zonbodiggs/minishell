@@ -6,7 +6,7 @@
 /*   By: endoliam <endoliam@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/24 13:20:21 by rtehar            #+#    #+#             */
-/*   Updated: 2024/07/24 15:37:28 by endoliam         ###   ########lyon.fr   */
+/*   Updated: 2024/07/29 13:23:08 by endoliam         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ t_cmd	*redirect(t_minishell *mini)
 	else if (mini->input->redir == HEREDOC)
 		redirect_heredoc(mini->input->files);
 	if ((mini->input->next && !mini->input->next->cmd) 
-		|| (mini->input->redir == IN && !mini->input->cmd))
+		|| (mini->input->redir  && !mini->input->cmd))
 	{
 		tmp = tmp->next;
 		free_cmd(&mini->input);
@@ -117,11 +117,11 @@ void	child(t_minishell *mini, int oldfd[2], int newfd[2])
 	t_cmd *cmd;
 
 	cmd = mini->input;
-	if (oldfd[0] == -1 && oldfd[1] == -1) // premier set out but not in
+	if (oldfd[0] == -1 && oldfd[1] == -1)
 		dup2(newfd[1], STDOUT_FILENO);
-	else if (is_last_cmd(cmd)) // fin  set in but not out
+	else if (is_last_cmd(cmd))
 		dup2(oldfd[0], STDIN_FILENO);
-	else // milieu  set both of them
+	else
 	{
 		dup2(oldfd[0], STDIN_FILENO);
 		dup2(newfd[1], STDOUT_FILENO);
@@ -129,7 +129,6 @@ void	child(t_minishell *mini, int oldfd[2], int newfd[2])
 	close(newfd[0]);
 	close(newfd[1]);
 	my_execve(mini);
-	// child
 }
 
 

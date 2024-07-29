@@ -6,7 +6,7 @@
 /*   By: endoliam <endoliam@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/17 17:20:55 by endoliam          #+#    #+#             */
-/*   Updated: 2024/07/24 14:26:20 by endoliam         ###   ########lyon.fr   */
+/*   Updated: 2024/07/29 12:14:23 by endoliam         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 bool	isispace(char c)
 {
-	if ((c <= 9 && c >= 13) || c == ' ')
+	if ((c >= 9 && c <= 13) || c == ' ')
 		return (true);
 	return (false);
 }

@@ -6,7 +6,7 @@
 /*   By: endoliam <endoliam@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/14 13:20:55 by endoliam          #+#    #+#             */
-/*   Updated: 2024/07/24 17:51:47 by endoliam         ###   ########lyon.fr   */
+/*   Updated: 2024/07/29 12:17:36 by endoliam         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -129,14 +129,23 @@ int			error_files(int flag, char *file);
 
 // 				utils cmd
 int			size_tab_cmd(t_lexer *lex);
+t_lexer		*zap_redirection(t_lexer *lex);
+t_lexer		*go_next_cmd(t_lexer *lex);
+char		*join_cmd(t_lexer *lex, char *cmd);
+char		*dup_cmd(t_lexer *lex);
+
+//				bool cmd
 bool		isoperator_cmd(t_lexer_type lex_type);
 bool		isredirection(t_lexer_type lex_type);
 bool		isbuiltin(char *cmd);
+bool		isthereredirection(t_lexer *lexer, t_cmd *command);
 
 // 				files utils 
 void		set_input(t_cmd *command, t_lexer *lex);
 int			isfilevalid_in(char *file);
 int			isfilevalid_out(char *file);
+char		*init_files(t_lexer *lex);
+
 /*					end parsing				*/
 
 /* 					exec					*/
