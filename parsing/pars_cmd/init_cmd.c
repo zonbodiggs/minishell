@@ -6,7 +6,7 @@
 /*   By: endoliam <endoliam@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/20 11:36:33 by endoliam          #+#    #+#             */
-/*   Updated: 2024/07/29 15:03:52 by endoliam         ###   ########lyon.fr   */
+/*   Updated: 2024/07/29 15:11:50 by endoliam         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,9 +55,6 @@ t_lexer		*get_cmd(t_cmd *command, t_lexer *lex)
 			command->files = init_files(lex);
 			while (lex && !lex->spaces && !isoperator_cmd(lex->lex))
 				lex = lex->next;
-			// lex = zap_redirection(lex);
-			// if (lex && lex->contain)
-				// printf("redir = %s\n", lex->contain);
 			if (lex && lex->next && !isoperator_cmd(lex->lex))
 				lex = lex->next;
 			if ((lex && lex->lex == SINGLE_Q)
@@ -86,11 +83,9 @@ t_cmd	*init_cmd(char **env, t_lexer **lex)
 		i++;
 		lst_init_cmd(env, &command);
 		lexer = get_cmd(command, lexer);
-		if (lexer && lexer->contain)
-			printf("contain = %s\n", lexer->contain);
 		if (lexer && lexer->lex == PIPES)
 		{
-			lexer = lexer->next;	
+			lexer = lexer->next;
 			command->pipe = true;
 		}
 		if (i == 1)
