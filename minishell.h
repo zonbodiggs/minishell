@@ -6,7 +6,7 @@
 /*   By: endoliam <endoliam@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/14 13:20:55 by endoliam          #+#    #+#             */
-/*   Updated: 2024/07/22 17:04:08 by endoliam         ###   ########lyon.fr   */
+/*   Updated: 2024/07/24 17:51:47 by endoliam         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,7 +62,7 @@ typedef struct s_cmd // for exec
 {
 	char				**cmd;			// cmd
 	char				**t_env;		// env
-	char				**files;
+	char				*files;
 	t_enum				redir;			// enum of fd
 	struct s_cmd		*next;
 }		t_cmd;
@@ -79,11 +79,11 @@ int			main(int ac, char **av, char **env);
 /* 					parsing					*/ 
 
 // 				init lexer
-t_lexer		*create_lexer(char *s, t_minishell mini);
+t_lexer		*create_lexer(char *s, t_minishell *mini);
 int			init_operator(t_lexer **lexer, char *s, int start, t_minishell mini);
 void		init_lexer_type(t_lexer *data);
 void		init_redirection(t_lexer **lexer, char c, int flag, t_minishell mini);
-int		find_redirection(t_lexer **lexer, char *s, int start, t_minishell mini);
+int			find_redirection(t_lexer **lexer, char *s, int start, t_minishell mini);
 
 // 				tools lexer
 int			lst_init_lexer(t_lexer **lexer, char *s, int start, t_minishell mini);
@@ -117,7 +117,7 @@ char		**init_tab(t_lexer *lex);
 char		*dup_cmd(t_lexer *lex);
 
 // 				pars cmd
-int			set_file(char **files, int flag);
+int			set_file(char *files, int flag);
 void		pars_files(t_cmd *command);
 
 // 				lst cmd
@@ -162,7 +162,7 @@ int 		unset_variable(char **cmd, char ***env);
 /* 					end exec				*/ 
 
 // 					free
-t_lexer		*free_lexer(t_lexer **lex);
+void		free_lexer(t_lexer **lex);
 void		free_all(t_cmd **cmd);
 void		free_cmd(t_cmd **cmd);
 void		kill_shell(t_minishell *shell);

@@ -6,7 +6,7 @@
 /*   By: endoliam <endoliam@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/29 14:42:36 by endoliam          #+#    #+#             */
-/*   Updated: 2024/07/18 18:04:08 by endoliam         ###   ########lyon.fr   */
+/*   Updated: 2024/07/24 19:05:50 by endoliam         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,19 @@ void	set_input(t_cmd *command, t_lexer *lex)
 		else if (ft_strlen(lex->contain) == 1)
 			command->redir = TRUNC;
 	}
+}
+char	*init_files(t_lexer *lex)
+{
+	char	*file;
+
+	file = ft_strdup(lex->contain);
+	if (lex->spaces == false)
+	{
+		file = join_cmd(lex, file);
+		while (lex && !lex->spaces && !isoperator_cmd(lex->lex))
+			lex = lex->next;
+	}
+	return (file);
 }
 
 int	isfilevalid_in(char *file)

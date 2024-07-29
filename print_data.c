@@ -6,7 +6,7 @@
 /*   By: endoliam <endoliam@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/07 10:23:43 by endoliam          #+#    #+#             */
-/*   Updated: 2024/06/11 20:05:38 by endoliam         ###   ########lyon.fr   */
+/*   Updated: 2024/07/24 16:05:11 by endoliam         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,8 +49,7 @@ void	print_cmd(t_cmd *cmd)
 				printf("OUTFILE TRUNC = ");
 			else if (cmd->redir == HEREDOC)
 				printf("OUTFILE HEREDOC = ");
-			while(cmd->files[++i])
-				printf("files[%d] = %s ", i, cmd->files[i]);
+			printf("files = %s ", cmd->files);
 			printf("\n");
 		}
 		cmd = cmd->next;

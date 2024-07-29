@@ -6,11 +6,28 @@
 /*   By: endoliam <endoliam@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/29 11:42:24 by endoliam          #+#    #+#             */
-/*   Updated: 2024/07/18 18:04:51 by endoliam         ###   ########lyon.fr   */
+/*   Updated: 2024/07/24 19:06:54 by endoliam         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../minishell.h"
+
+t_lexer	*zap_redirection(t_lexer *lex)
+{
+	while ((lex && lex->prev && isredirection(lex->prev->lex))
+		|| (lex && isredirection(lex->lex)))
+		lex = lex->next;
+	return (lex);
+}
+
+t_lexer	*go_next_cmd(t_lexer *lex)
+{
+	if (lex)
+		lex = lex->next;
+	if (lex && lex->lex && isredirection(lex->lex))
+		lex = zap_redirection(lex);
+	return (lex);
+}
 
 int	size_tab_cmd(t_lexer *lex)
 {
@@ -38,33 +55,40 @@ int	size_tab_cmd(t_lexer *lex)
 	return (i);
 }
 
-bool	isredirection(t_lexer_type lex_type)
+char	*join_cmd(t_lexer *lex, char *cmd)
 {
-	if (lex_type == INPUT
-		|| lex_type == OUTPUT)
-		return (true);
-	return (false);
+	char	*tmp;
+
+	tmp = NULL;
+	while (lex && lex->spaces == false && !isoperator_cmd(lex->lex))
+	{
+		lex = lex->next;
+		if (lex && !isredirection(lex->lex) && (lex->lex == SINGLE_Q
+				|| lex->lex == DOUBLE_Q || lex->lex == SINGLE_ENV
+				|| lex->lex == DOUBLE_ENV))
+		{
+			tmp = ft_qstrdup(lex->contain);
+			free(lex->contain);
+			lex->contain = tmp;
+		}
+		if (lex && lex->contain && !isoperator_cmd(lex->lex))
+			cmd = join_and_free(cmd, lex->contain);
+	}
+	return (cmd);
+}
+char	*dup_cmd(t_lexer *lex)
+{
+	char	*cmd;
+
+	if (!lex)
+		return (NULL);
+	if (lex->lex == SINGLE_Q || lex->lex == DOUBLE_Q
+		|| lex->lex == SINGLE_ENV || lex->lex == DOUBLE_ENV)
+		cmd = ft_qstrdup(lex->contain);
+	else
+		cmd = ft_strdup(lex->contain);
+	if (!cmd)
+		exit_cmd("allocation cmd failed\n");
+	return (cmd);
 }
 
-bool	isoperator_cmd(t_lexer_type lex_type)
-{
-	if (isredirection(lex_type)
-		|| lex_type == PIPES)
-		return (true);
-	return (false);
-}
-
-bool	isbuiltin(char *cmd)
-{
-	if (!cmd || !cmd[0])
-		return (false);
-	if (!ft_strncmp(cmd, "echo", ft_strlen(cmd))
-		|| !ft_strncmp(cmd, "pwd", ft_strlen(cmd))
-		|| !ft_strncmp(cmd, "cd", ft_strlen(cmd))
-		|| !ft_strncmp(cmd, "export", ft_strlen(cmd))
-		|| !ft_strncmp(cmd, "unset", ft_strlen(cmd))
-		|| !ft_strncmp(cmd, "env", ft_strlen(cmd))
-		|| !ft_strncmp(cmd, "exit", ft_strlen(cmd)))
-		return (true);
-	return (false);
-}

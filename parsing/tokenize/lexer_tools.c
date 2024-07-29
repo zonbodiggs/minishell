@@ -6,7 +6,7 @@
 /*   By: endoliam <endoliam@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/17 17:09:59 by endoliam          #+#    #+#             */
-/*   Updated: 2024/07/23 15:06:59 by endoliam         ###   ########lyon.fr   */
+/*   Updated: 2024/07/24 15:04:26 by endoliam         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,12 +51,14 @@ int	lst_init_lexer(t_lexer **lexer, char *s, int start, t_minishell mini)
 		data->spaces = true;
 	data->contain = ft_substr(s, start, len);
 	if (!data->contain)
+	{
+		free(data);
 		return (exit_failure("malloc allocation failed", 0));
+	}
 	init_lexer_type(data);
 	if (data->lex == ENV_VAR || data->lex == DOUBLE_ENV)
 		data->contain = init_env_var(data->contain, mini);
 	add_lexer(lexer, data);
-	printf("coucou %d\n", start + len);
 	return (start + len);
 }
 
@@ -78,7 +80,7 @@ int	word_len(char *s)
 	}
 	while (s[i] && isoperator(quote) == true)
 		i++;
-	while (s[i] && s[i] != ' ' && isoperator(s[i]) == false)
+	while (s[i] && !isispace(s[i]) && isoperator(s[i]) == false)
 		i++;
 	return (i);
 }

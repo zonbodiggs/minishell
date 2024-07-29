@@ -6,7 +6,7 @@
 /*   By: endoliam <endoliam@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/17 17:04:15 by endoliam          #+#    #+#             */
-/*   Updated: 2024/07/22 16:52:19 by endoliam         ###   ########lyon.fr   */
+/*   Updated: 2024/07/24 14:33:02 by endoliam         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,8 @@ int	exit_failure(char *msg, char c)
 	if (c)
 		ft_printf_fd(2, "%c", c);
 	ft_printf_fd(2, "\n");
+	if (!c)
+		return (-2);
 	return (-1);
 }
 

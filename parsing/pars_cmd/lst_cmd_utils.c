@@ -6,15 +6,13 @@
 /*   By: endoliam <endoliam@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/29 11:45:22 by endoliam          #+#    #+#             */
-/*   Updated: 2024/07/18 18:01:12 by endoliam         ###   ########lyon.fr   */
+/*   Updated: 2024/07/24 18:13:57 by endoliam         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../minishell.h"
 
-// init command list
-
-void	lst_init_cmd(char **env, t_cmd **command)
+void		lst_init_cmd(char **env, t_cmd **command)
 {
 	t_cmd	*data;
 

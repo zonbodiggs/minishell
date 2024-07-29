@@ -6,7 +6,7 @@
 /*   By: endoliam <endoliam@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/17 16:56:51 by endoliam          #+#    #+#             */
-/*   Updated: 2024/07/23 15:16:27 by endoliam         ###   ########lyon.fr   */
+/*   Updated: 2024/07/24 14:58:04 by endoliam         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,7 +54,18 @@ int	create_operator(t_lexer **lexer, char *s, int i, t_minishell mini)
 	return (i);
 }
 
-t_lexer	*create_lexer(char *s, t_minishell mini)
+t_lexer *lexer_error_exit(int i, t_lexer *lexer, t_minishell *mini)
+{
+	free_lexer(&lexer);
+	if (i == -2)
+	{
+		kill_shell(mini);
+		exit(42);
+	}
+	return (NULL);
+}
+
+t_lexer	*create_lexer(char *s, t_minishell *mini)
 {
 	int			i;
 	t_lexer		*lexer;
@@ -64,14 +75,14 @@ t_lexer	*create_lexer(char *s, t_minishell mini)
 	while (s && s[i])
 	{
 		if (isword(s, i) == true)
-			i = lst_init_lexer(&lexer, s, i, mini);
+			i = lst_init_lexer(&lexer, s, i, *mini);
 		if (i < 0)
-			return (free_lexer(&lexer));
+			return (lexer_error_exit(i, lexer, mini));
 		if (isoperator(s[i]) == true)
 		{
-			i = create_operator(&lexer, s, i, mini);
+			i = create_operator(&lexer, s, i, *mini);
 			if (i < 0)
-				return (free_lexer(&lexer));
+				return (lexer_error_exit(i, lexer, mini));
 		}
 		if (s[i])
 			i++;

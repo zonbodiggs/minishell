@@ -6,37 +6,30 @@
 /*   By: endoliam <endoliam@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/29 12:32:33 by endoliam          #+#    #+#             */
-/*   Updated: 2024/07/18 17:59:12 by endoliam         ###   ########lyon.fr   */
+/*   Updated: 2024/07/24 15:36:45 by endoliam         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../minishell.h"
 
-int	set_file(char **files, int flag)
+int	set_file(char *files, int flag)
 {
-	int		i;
-
-	i = 0;
 	if (!files)
 		return (0);
-	while (files[i])
+	if (flag == 1)
 	{
-		if (flag == 1)
-		{
-			if (isfilevalid_in(files[i]) != 0)
-				return (error_files(isfilevalid_in(files[i]), files[i]));
-		}
-		else if (flag == 2)
-		{
-			if (i > 0 && isfilevalid_in(files[i]) != 0)
-				return (error_files(isfilevalid_in(files[i]), files[i]));
-		}
-		else if (flag == 3)
-		{
-			if (isfilevalid_out(files[i]) != 0)
-				return (error_files(isfilevalid_out(files[i]), files[i]));
-		}
-		i++;
+		if (isfilevalid_in(files) != 0)
+			return (error_files(isfilevalid_in(files), files));
+	}
+	else if (flag == 2)
+	{
+		if (isfilevalid_in(files) != 0)
+			return (error_files(isfilevalid_in(files), files));
+	}
+	else if (flag == 3)
+	{
+		if (isfilevalid_out(files) != 0)
+			return (error_files(isfilevalid_out(files), files));
 	}
 	return (0);
 }

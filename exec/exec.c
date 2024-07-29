@@ -6,7 +6,7 @@
 /*   By: endoliam <endoliam@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/24 13:20:21 by rtehar            #+#    #+#             */
-/*   Updated: 2024/07/23 14:37:18 by endoliam         ###   ########lyon.fr   */
+/*   Updated: 2024/07/24 15:37:28 by endoliam         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ t_cmd	*redirect(t_minishell *mini)
 	else if (mini->input->redir == APPEND)
 		redirect_output_append(mini);
 	else if (mini->input->redir == HEREDOC)
-		redirect_heredoc(mini->input->files[0]);
+		redirect_heredoc(mini->input->files);
 	if ((mini->input->next && !mini->input->next->cmd) 
 		|| (mini->input->redir == IN && !mini->input->cmd))
 	{
@@ -52,9 +52,8 @@ void	my_execve(t_minishell *mini)
 		kill_shell(mini);
 		exit(1);
 	}
-	if (!mini->input ||(mini->input->cmd && execve(mini->input->cmd[0], mini->input->cmd, mini->input->t_env) == -1))
-		exit_error_exec(mini);
-	// utiliser sterrno and perror pour message d'erreur
+	if (!mini->input|| !mini->input->cmd || (execve(mini->input->cmd[0], mini->input->cmd, mini->input->t_env) == -1))
+		exit_error_exec(mini); // utiliser sterrno and perror pour message d'erreur
 }
 
 void	execute_simple_command(t_minishell *mini)
