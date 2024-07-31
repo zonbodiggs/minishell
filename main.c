@@ -6,7 +6,7 @@
 /*   By: endoliam <endoliam@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/14 16:09:41 by endoliam          #+#    #+#             */
-/*   Updated: 2024/07/29 14:53:09 by endoliam         ###   ########lyon.fr   */
+/*   Updated: 2024/07/31 19:10:48 by endoliam         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -106,10 +106,9 @@ int		main(int ac, char **av, char **env)
 		if (minishell->input)
 		{
 			sort_builtin(minishell);
-			// run_commands(minishell);
+			run_commands(minishell);
 		}
-		free_all(&minishell->input);
-		free(minishell->input);
+		free_all_input(minishell->input);
 	}
 	rl_clear_history();
 	free(minishell);

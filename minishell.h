@@ -6,7 +6,7 @@
 /*   By: endoliam <endoliam@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/14 13:20:55 by endoliam          #+#    #+#             */
-/*   Updated: 2024/07/29 14:35:01 by endoliam         ###   ########lyon.fr   */
+/*   Updated: 2024/07/31 19:12:10 by endoliam         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -173,10 +173,14 @@ int 		unset_variable(char **cmd, char ***env);
 
 // 					free
 void		free_lexer(t_lexer **lex);
-void		free_all(t_cmd **cmd);
+void		free_all_input(t_cmd *cmd);
 void		free_cmd(t_cmd **cmd);
-void		kill_shell(t_minishell *shell);
+void		free_one_input(t_cmd *cmd);
+void		free_input(t_cmd **cmd);
+
+//					exit
 void		exit_error_exec(t_minishell *mini);
+void		kill_shell(t_minishell *shell);
 
 /*******************print*********************/
 

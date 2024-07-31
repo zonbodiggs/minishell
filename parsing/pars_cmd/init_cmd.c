@@ -6,7 +6,7 @@
 /*   By: endoliam <endoliam@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/20 11:36:33 by endoliam          #+#    #+#             */
-/*   Updated: 2024/07/29 15:11:50 by endoliam         ###   ########lyon.fr   */
+/*   Updated: 2024/07/31 15:23:00 by endoliam         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,13 +81,12 @@ t_cmd	*init_cmd(char **env, t_lexer **lex)
 	while (lexer)
 	{
 		i++;
+		if (lexer && lexer->lex == PIPES)
+				lexer = lexer->next;
 		lst_init_cmd(env, &command);
 		lexer = get_cmd(command, lexer);
 		if (lexer && lexer->lex == PIPES)
-		{
-			lexer = lexer->next;
 			command->pipe = true;
-		}
 		if (i == 1)
 			start = command;
 		if (isthereredirection(lexer, command))
