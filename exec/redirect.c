@@ -6,7 +6,7 @@
 /*   By: endoliam <endoliam@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/24 12:59:54 by rtehar            #+#    #+#             */
-/*   Updated: 2024/07/29 14:45:09 by endoliam         ###   ########lyon.fr   */
+/*   Updated: 2024/07/31 19:29:15 by endoliam         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ void	redirect_input(t_minishell *mini)
 
 	fdin = open(mini->input->files, O_RDONLY);
 	if (fdin == -1)
-		exit_error_exec(mini);;
+		exit_error_exec(mini, NULL);
 	dup2(fdin, STDIN_FILENO);
 	close(fdin);
 	return ;
@@ -30,7 +30,7 @@ void	redirect_output(t_minishell *mini)
 
 	fdout = open(mini->input->files, O_WRONLY | O_CREAT | O_TRUNC, 0644);
 	if (fdout == -1)
-		exit_error_exec(mini);;
+		exit_error_exec(mini, NULL);
 	dup2(fdout, STDOUT_FILENO);
 	close(fdout);
 	return ;
@@ -42,7 +42,7 @@ void	redirect_output_append(t_minishell *mini)
 
 	fdout = open(mini->input->files, O_WRONLY | O_CREAT | O_APPEND, 0644);
 	if (fdout == -1)
-		exit_error_exec(mini);
+		exit_error_exec(mini, NULL);
 	dup2(fdout, STDOUT_FILENO);
 	close(fdout);
 	return ;

@@ -6,7 +6,7 @@
 /*   By: endoliam <endoliam@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/14 13:20:55 by endoliam          #+#    #+#             */
-/*   Updated: 2024/07/31 19:15:28 by endoliam         ###   ########lyon.fr   */
+/*   Updated: 2024/07/31 19:27:16 by endoliam         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -179,7 +179,7 @@ void		free_one_input(t_cmd *cmd);
 void		free_input(t_cmd **cmd);
 
 //					exit
-void		exit_error_exec(t_minishell *mini);
+void		exit_error_exec(t_minishell *mini, t_cmd *cmd);
 void		kill_shell(t_minishell *shell);
 
 /*******************print*********************/

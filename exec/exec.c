@@ -6,7 +6,7 @@
 /*   By: endoliam <endoliam@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/24 13:20:21 by rtehar            #+#    #+#             */
-/*   Updated: 2024/07/31 19:10:37 by endoliam         ###   ########lyon.fr   */
+/*   Updated: 2024/07/31 19:26:39 by endoliam         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,8 +44,9 @@ t_cmd	*redirect_pipe(t_minishell *mini)
 	return (mini->input);
 }
 
-void	exit_error_exec(t_minishell *mini)
+void	exit_error_exec(t_minishell *mini, t_cmd *cmd)
 {
+	free_one_input(cmd);
 	kill_shell(mini);
 	exit(147);
 }
@@ -62,7 +63,13 @@ t_cmd	*get_pipe_comd(t_cmd *cmd)
 	}
 	return (tmp);
 }
-
+void	exec_builtin(t_minishell *mini, t_cmd *cmd)
+{
+	sort_cmd(cmd->cmd, mini->env);
+	free_one_input(cmd);
+	kill_shell(mini);
+	exit(1);
+}
 void	my_execve(t_minishell *mini)
 {
 	t_cmd	*cmd;
@@ -70,17 +77,9 @@ void	my_execve(t_minishell *mini)
 	cmd = get_pipe_comd(mini->input);
 	mini->input = redirect_pipe(mini);
 	if (cmd && cmd->cmd && isbuiltin(cmd->cmd[0]) == true)
-	{
-		sort_cmd(cmd->cmd, mini->env);
-		free_one_input(cmd);
-		kill_shell(mini);
-		exit(1);
-	}
+		exec_builtin(mini, cmd);
 	if (!cmd| !cmd->cmd || (execve(cmd->cmd[0], cmd->cmd, cmd->t_env) == -1))
-	{
-		free_one_input(cmd);
-		exit_error_exec(mini); // utiliser sterrno and perror pour message d'erreur
-	}
+		exit_error_exec(mini, cmd); // utiliser sterrno and perror pour message d'erreur
 }
 
 void	execute_simple_command(t_minishell *mini)
@@ -185,7 +184,7 @@ int		execute_pipeline(t_minishell *mini)
 	int		newfd[2];
 	t_cmd	*tmp;
 
-	init_fds(oldfd, newfd); // init fd -1
+	init_fds(oldfd, newfd);
 	pipe(newfd);
 	tmp = mini->input;
 	while (mini->input)
@@ -235,6 +234,3 @@ void run_commands(t_minishell *mini)
 		execute_pipeline(mini);
 	return ;
 }
-
-// pipe sur la premierre commande
-// derniere cmd ??? sinon ppipe puis fork puis execve
