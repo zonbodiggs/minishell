@@ -6,7 +6,7 @@
 /*   By: endoliam <endoliam@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/14 13:20:55 by endoliam          #+#    #+#             */
-/*   Updated: 2024/08/01 13:24:03 by endoliam         ###   ########lyon.fr   */
+/*   Updated: 2024/08/01 14:45:03 by endoliam         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@
 # include <fcntl.h>
 # include <sys/wait.h>
 # include <sys/types.h>
-
+# include <errno.h>
 extern int			g_signal;
 
 typedef enum e_enum
@@ -73,6 +73,7 @@ typedef struct s_minishell
 	t_cmd		*input;				// cmd
 	t_lexer		*lex;				// lex
 	char		**env;				// path
+	char		*exit_code;
 }		t_minishell;
 
 int			main(int ac, char **av, char **env);
@@ -108,7 +109,7 @@ int			zap_quote(char *s, char quote, int i);
 void		free_array(char **array);
 void		exit_cmd(char *msg);
 char		**cpy_env(char **env);
-char		*mygetenv(char *s, char **env);
+char		*mygetenv(char *s, t_minishell mini);
 
 //			parsing cmd for execution
 
@@ -151,7 +152,7 @@ char		*init_files(t_lexer *lex);
 
 /* 					exec					*/
 int 		get_last_index(char **files);
-void 		run_commands(t_minishell *mini);
+char 		*run_commands(t_minishell *mini);
 
 //					redirecion
 void		redirect_input(t_minishell *mini);
@@ -183,7 +184,7 @@ void		free_one_input(t_cmd *cmd);
 void		free_input(t_cmd **cmd);
 
 //					exit
-void		exit_error_exec(t_minishell *mini, t_cmd *cmd);
+int		exit_error_exec(t_minishell *mini, t_cmd *cmd);
 void		kill_shell(t_minishell *shell);
 
 /*******************print*********************/

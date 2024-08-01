@@ -6,7 +6,7 @@
 /*   By: endoliam <endoliam@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/11 18:58:41 by endoliam          #+#    #+#             */
-/*   Updated: 2024/07/18 17:22:01 by endoliam         ###   ########lyon.fr   */
+/*   Updated: 2024/08/01 14:13:43 by endoliam         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,16 +47,16 @@ char	*init_env_var(char *s, t_minishell mini)
 	tmp = ft_strdup(s);
 	var = find_expand(tmp);
 	s[ft_strlen(s) - ft_strlen(ft_strchr(s, '$'))] = '\0';
-	if (!mygetenv(var + 1, mini.env) && ft_strlen(s) - ft_strlen(var) == 0)
+	if (!mygetenv(var + 1, mini) && ft_strlen(s) - ft_strlen(var) == 0)
 	{
 		s = NULL;
 		free(s);
 		return (NULL);
 	}
-	if (!mygetenv(var + 1, mini.env))
+	if (!mygetenv(var + 1, mini))
 		res = ft_strdup(s);
 	else
-		res = ft_strjoin(s, mygetenv(var + 1, mini.env));
+		res = ft_strjoin(s, mygetenv(var + 1, mini));
 	if (tmp[ft_strlen(s) + ft_strlen(var)])
 		res = join_and_free(res, tmp + ft_strlen(var) + ft_strlen(s));
 	free(tmp);

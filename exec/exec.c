@@ -6,7 +6,7 @@
 /*   By: endoliam <endoliam@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/24 13:20:21 by rtehar            #+#    #+#             */
-/*   Updated: 2024/08/01 13:54:25 by endoliam         ###   ########lyon.fr   */
+/*   Updated: 2024/08/01 15:13:20 by endoliam         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,11 +21,17 @@ t_cmd	*redirect_pipe(t_minishell *mini)
 	return (mini->input);
 }
 
-void	exit_error_exec(t_minishell *mini, t_cmd *cmd)
+int		exit_error_exec(t_minishell *mini, t_cmd *cmd)
 {
+	char	*str;
+
+	str = strerror(errno);
+	if (cmd && cmd->cmd)
+		perror(cmd->cmd[0]);
+	ft_printf_fd(2, "%s\n", str);
 	free_one_input(cmd);
 	kill_shell(mini);
-	exit(147);
+	exit(errno);
 }
 t_cmd	*get_pipe_comd(t_cmd *cmd)
 {
@@ -47,7 +53,7 @@ void	exec_builtin(t_minishell *mini, t_cmd *cmd)
 	kill_shell(mini);
 	exit(1);
 }
-void	my_execve(t_minishell *mini)
+int		my_execve(t_minishell *mini)
 {
 	t_cmd	*cmd;
 
@@ -56,10 +62,11 @@ void	my_execve(t_minishell *mini)
 	if (cmd && cmd->cmd && isbuiltin(cmd->cmd[0]) == true)
 		exec_builtin(mini, cmd);
 	if (!cmd| !cmd->cmd || (execve(cmd->cmd[0], cmd->cmd, cmd->t_env) == -1))
-		exit_error_exec(mini, cmd); // utiliser sterrno and perror pour message d'erreur
+		return (exit_error_exec(mini, cmd)); // utiliser sterrno and perror pour message d'erreur
+	return (127);
 }
 
-void	execute_simple_command(t_minishell *mini)
+int		execute_simple_command(t_minishell *mini)
 {
 	pid_t	pid;
 	int		fd[2];
@@ -76,7 +83,7 @@ void	execute_simple_command(t_minishell *mini)
 	close(fd[1]);
 	while (wait(NULL) > 0)
 		;
-	return ;
+	return (127);
 }
 
 int	number_of_command(t_cmd *cmd)
@@ -154,6 +161,14 @@ void	close_all(int *newfd, int *oldfd)
 	close(newfd[0]);
 	close(newfd[1]);
 }
+void	update_pipeline(int *oldfd, int *newfd)
+{
+	if (oldfd[0] >= 0)
+		close(oldfd[0]);
+	oldfd[0] = newfd[0];
+	oldfd[1] = newfd[1];
+	close(newfd[1]);
+}
 int		execute_pipeline(t_minishell *mini)
 {
 	pid_t	pid;
@@ -170,11 +185,7 @@ int		execute_pipeline(t_minishell *mini)
 		pid = fork();
 		if (pid == 0)
 			child(mini, oldfd, newfd);
-		if (oldfd[0] >= 0)
-			close(oldfd[0]);
-		oldfd[0] = newfd[0];
-		oldfd[1] = newfd[1];
-		close(newfd[1]);
+		update_pipeline(oldfd, newfd);
 		pipe(newfd);
 		free_one_input(mini->input);
 		mini->input = tmp;
@@ -197,16 +208,18 @@ int	get_last_index(char **files)
     return (i - 1);
 }
 
-void run_commands(t_minishell *mini)
+char *run_commands(t_minishell *mini)
 {
 	int		i;
+	int		exit_code;
 
+	exit_code = 0;
 	if (!mini->input)
-        return;
+        return (0);
 	i = number_of_command(mini->input);
 	if (!mini->input->next || i == 1)
-		execute_simple_command(mini);
+		exit_code = execute_simple_command(mini);
 	else
-		execute_pipeline(mini);
-	return ;
+		exit_code = execute_pipeline(mini);
+	return (ft_itoa(exit_code));
 }

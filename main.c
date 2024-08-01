@@ -6,7 +6,7 @@
 /*   By: endoliam <endoliam@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/14 16:09:41 by endoliam          #+#    #+#             */
-/*   Updated: 2024/08/01 12:29:01 by endoliam         ###   ########lyon.fr   */
+/*   Updated: 2024/08/01 15:16:40 by endoliam         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ void	handle_sigquit(int sig)
 {
 	(void)sig;
 }
-char	*mygetenv(char *s, char **env)
+char	*mygetenv(char *s, t_minishell mini)
 {
 	int		i;
 	int		len;
@@ -30,14 +30,16 @@ char	*mygetenv(char *s, char **env)
 
 	len = 0;
 	i = 0;
-	if (!env)
+	if (!ft_strncmp(s, "?", ft_strlen(s)))
+		return (mini.exit_code);
+	if (!mini.env)
 		return (NULL);
-	while (env[i])
+	while (mini.env[i])
 	{
-		len = ft_strlen(env[i]) - ft_strlen(ft_strchr(env[i], '='));
-		if (!ft_strncmp(s, env[i], len))
+		len = ft_strlen(mini.env[i]) - ft_strlen(ft_strchr(mini.env[i], '='));
+		if (!ft_strncmp(s, mini.env[i], len))
 		{
-			res = ft_strchr(env[i], '=') + 1;
+			res = ft_strchr(mini.env[i], '=') + 1;
 			return (res);
 		}
 		i++;
@@ -102,8 +104,9 @@ int		main(int ac, char **av, char **env)
 		print_cmd(minishell->input);
 		if (minishell->input)
 		{
+			free(minishell->exit_code);
 			sort_builtin(minishell);
-			run_commands(minishell);
+			minishell->exit_code = run_commands(minishell);
 		}
 		free_input(&minishell->input);
 		free(minishell->input);
