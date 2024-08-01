@@ -6,7 +6,7 @@
 /*   By: endoliam <endoliam@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/29 12:32:33 by endoliam          #+#    #+#             */
-/*   Updated: 2024/08/01 14:58:56 by endoliam         ###   ########lyon.fr   */
+/*   Updated: 2024/08/01 15:30:22 by endoliam         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,7 +65,7 @@ int	iscmd(char **cmd)
 		return (1);
 	if (!getenv("PATH"))
 	{
-		// ft_printf_fd(2, "minishell : command '%s' not found\n", cmd[0]);
+		ft_printf_fd(2, "minishell : command '%s' not found\n", cmd[0]);
 		return (0);
 	}
 	i = 0;
@@ -86,7 +86,7 @@ int	iscmd(char **cmd)
 		free(cmd_path);
 		i++;
 	}
-	// ft_printf_fd(2, "minishell : command '%s' not found\n", cmd[0]);
+	ft_printf_fd(2, "minishell : command '%s' not found\n", cmd[0]);
 	free_array(path);
 	return (0);
 }
