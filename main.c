@@ -6,7 +6,7 @@
 /*   By: endoliam <endoliam@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/14 16:09:41 by endoliam          #+#    #+#             */
-/*   Updated: 2024/07/31 19:10:48 by endoliam         ###   ########lyon.fr   */
+/*   Updated: 2024/08/01 12:29:01 by endoliam         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,19 +45,16 @@ char	*mygetenv(char *s, char **env)
 	return (NULL);
 }
 
-void run_builtin(char *cmd, t_minishell *mini)
+void run_builtin(char **cmd, t_minishell *mini)
 {
-	if (cmd && ft_strlen(cmd) == 4 && ft_strncmp(cmd, "exit", ft_strlen(cmd)) == 0)
-		exit_shell(mini, mini->input->cmd);
-	if (!mini->input->cmd[1])
-	{
-		if (cmd && ft_strlen(cmd) == 6 && ft_strncmp(cmd, "export", ft_strlen(cmd)) == 0)
-			export_variable(mini->input->cmd, &mini->env);
-		else if (cmd && ft_strlen(cmd) == 5 && ft_strncmp(cmd, "unset", ft_strlen(cmd)) == 0)
-			unset_variable(mini->input->cmd, &mini->env);
-		else if (cmd && ft_strlen(cmd) == 2 && ft_strncmp(cmd, "cd", ft_strlen(cmd)) == 0)
-			cd(mini->input->cmd, &mini->env);
-	}	
+	if (cmd && ft_strlen(cmd[0]) == 4 && ft_strncmp(cmd[0], "exit", ft_strlen(cmd[0])) == 0)
+		exit_shell(mini, cmd);
+	if (cmd && ft_strlen(cmd[0]) == 2 && ft_strncmp(cmd[0], "cd", ft_strlen(cmd[0])) == 0)
+			cd(cmd, &mini->env);
+	if (cmd && ft_strlen(cmd[0]) == 6 && ft_strncmp(cmd[0], "export", ft_strlen(cmd[0])) == 0)
+		export_variable(cmd, &mini->env);
+	if (cmd && ft_strlen(cmd[0]) == 5 && ft_strncmp(cmd[0], "unset", ft_strlen(cmd[0])) == 0)
+		unset_variable(cmd, &mini->env);
 }
 
 void	sort_builtin(t_minishell *mini)
@@ -67,7 +64,7 @@ void	sort_builtin(t_minishell *mini)
 	cmd = mini->input;
 	while (cmd && cmd->cmd)
 	{
-		run_builtin(cmd->cmd[0], mini);
+		run_builtin(cmd->cmd, mini);
 		cmd = cmd->next;
 	}
 	return ;
@@ -108,7 +105,8 @@ int		main(int ac, char **av, char **env)
 			sort_builtin(minishell);
 			run_commands(minishell);
 		}
-		free_all_input(minishell->input);
+		free_input(&minishell->input);
+		free(minishell->input);
 	}
 	rl_clear_history();
 	free(minishell);

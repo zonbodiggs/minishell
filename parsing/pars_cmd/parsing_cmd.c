@@ -6,7 +6,7 @@
 /*   By: endoliam <endoliam@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/29 12:32:33 by endoliam          #+#    #+#             */
-/*   Updated: 2024/07/24 15:36:45 by endoliam         ###   ########lyon.fr   */
+/*   Updated: 2024/08/01 13:23:49 by endoliam         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,22 +38,19 @@ int	set_file(char *files, int flag)
 
 void	pars_files(t_cmd *command)
 {
-	t_cmd	*cmd;
-
-	cmd = command;
-	if (cmd->redir == IN || cmd->redir == HEREDOC)
+	if (command->redir == IN || command->redir == HEREDOC)
 	{
-		if (cmd->redir == IN)
-			set_file(cmd->files, 1);
+		if (command->redir == IN)
+			set_file(command->files, 1);
 		else
-			set_file(cmd->files, 2);
+			heredoc(command->files);
 	}
-	else if (cmd->redir == TRUNC || cmd->redir == APPEND)
+	else if (command->redir == TRUNC || command->redir == APPEND)
 	{
-		if (cmd->redir == TRUNC)
-			set_file(cmd->files, 3);
+		if (command->redir == TRUNC)
+			set_file(command->files, 3);
 		else
-			set_file(cmd->files, 4);
+			set_file(command->files, 4);
 	}
 }
 //watch access to cmd

@@ -6,35 +6,12 @@
 /*   By: endoliam <endoliam@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/24 13:20:21 by rtehar            #+#    #+#             */
-/*   Updated: 2024/07/31 19:26:39 by endoliam         ###   ########lyon.fr   */
+/*   Updated: 2024/08/01 13:54:25 by endoliam         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-
-t_cmd	*redirect(t_minishell *mini)
-{
-	t_cmd	*tmp;
-
-	tmp = mini->input;
-	tmp = tmp->next;
-	if (mini->input && mini->input->redir)
-	{
-		if (mini->input->redir == IN)
-			redirect_input(mini);
-		else if (mini->input->redir == TRUNC)
-			redirect_output(mini);
-		else if (mini->input->redir == APPEND)
-			redirect_output_append(mini);
-		else if (mini->input->redir == HEREDOC)
-			redirect_heredoc(mini->input->files);
-		if (!mini->input->cmd)
-			free_one_input(mini->input);	
-	}
-	mini->input = tmp;
-	return (mini->input);
-}
 t_cmd	*redirect_pipe(t_minishell *mini)
 {
 	while (mini->input && !mini->input->pipe)	
@@ -199,8 +176,7 @@ int		execute_pipeline(t_minishell *mini)
 		oldfd[1] = newfd[1];
 		close(newfd[1]);
 		pipe(newfd);
-		free_cmd(&mini->input);
-		free(mini->input);
+		free_one_input(mini->input);
 		mini->input = tmp;
 	}
 	while(wait(NULL) > 0)

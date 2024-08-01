@@ -22,6 +22,7 @@ SRCS		= parsing/tokenize/bool_lexer.c\
 			  exec/exec.c\
 			  exec/redirect.c\
 			  exec/sort_cmd.c\
+			  exec/heredoc.c\
 			  builtin/echo.c\
 			  builtin/cd.c\
 			  builtin/pwd.c\

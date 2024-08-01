@@ -6,7 +6,7 @@
 /*   By: endoliam <endoliam@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/14 13:20:55 by endoliam          #+#    #+#             */
-/*   Updated: 2024/07/31 19:27:16 by endoliam         ###   ########lyon.fr   */
+/*   Updated: 2024/08/01 13:24:03 by endoliam         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -157,7 +157,11 @@ void 		run_commands(t_minishell *mini);
 void		redirect_input(t_minishell *mini);
 void		redirect_output(t_minishell *mini);
 void		redirect_output_append(t_minishell *mini);
-void		redirect_heredoc(const char *delimiter);
+t_cmd		*redirect(t_minishell *mini);
+
+//					heredoc
+void		heredoc(const char *delimiter);
+void		redirect_heredoc(t_minishell *mini);
 
 //					builtins
 int 		cd(char **cmd, char ***env);

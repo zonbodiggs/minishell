@@ -6,7 +6,7 @@
 /*   By: endoliam <endoliam@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/24 12:59:54 by rtehar            #+#    #+#             */
-/*   Updated: 2024/07/31 19:29:15 by endoliam         ###   ########lyon.fr   */
+/*   Updated: 2024/08/01 13:10:19 by endoliam         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,27 +47,26 @@ void	redirect_output_append(t_minishell *mini)
 	close(fdout);
 	return ;
 }
-
-void	redirect_heredoc(const char *delimiter)
+t_cmd	*redirect(t_minishell *mini)
 {
-	char	*line;
-	int		pipefd[2];
+	t_cmd	*tmp;
 
-	line = NULL;
-	pipe(pipefd);
-	while (1)
+	tmp = mini->input;
+	tmp = tmp->next;
+	if (mini->input && mini->input->redir)
 	{
-		line = readline("> ");
-		if (line == NULL || !ft_strncmp(line, delimiter, ft_strlen(delimiter)))
-		{
-			free(line);
-			break ;
-		}
-		write(pipefd[1], line, ft_strlen(line));
-		write(pipefd[1], "\n", 1);
-		free(line);
+		if (mini->input->redir == IN)
+			redirect_input(mini);
+		else if (mini->input->redir == TRUNC)
+			redirect_output(mini);
+		else if (mini->input->redir == APPEND)
+			redirect_output_append(mini);
+		else if (mini->input->redir == HEREDOC)
+			redirect_heredoc(mini);
+		if (!mini->input->cmd)
+			free_one_input(mini->input);	
 	}
-	dup2(pipefd[0], STDIN_FILENO);
-	close(pipefd[1]);
-	close(pipefd[0]);
+	mini->input = tmp;
+	return (mini->input);
 }
+
