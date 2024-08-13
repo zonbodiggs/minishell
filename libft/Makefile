@@ -1,7 +1,7 @@
 #---------------------------------------------------#
 CC 			= cc
 
-CFLAGS 		= -g3 -Wall -Wextra -Werror
+CFLAGS 		= -g -Wall -Wextra -Werror
 
 NAME 		= libft.a
 #---------------------------------------------------#

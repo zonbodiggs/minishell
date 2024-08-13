@@ -6,7 +6,7 @@
 /*   By: endoliam <endoliam@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/24 12:59:54 by rtehar            #+#    #+#             */
-/*   Updated: 2024/08/01 13:10:19 by endoliam         ###   ########lyon.fr   */
+/*   Updated: 2024/08/13 16:43:42 by endoliam         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ void	redirect_input(t_minishell *mini)
 
 	fdin = open(mini->input->files, O_RDONLY);
 	if (fdin == -1)
-		exit_error_exec(mini, NULL);
+		exit_error_exec(mini);
 	dup2(fdin, STDIN_FILENO);
 	close(fdin);
 	return ;
@@ -30,7 +30,7 @@ void	redirect_output(t_minishell *mini)
 
 	fdout = open(mini->input->files, O_WRONLY | O_CREAT | O_TRUNC, 0644);
 	if (fdout == -1)
-		exit_error_exec(mini, NULL);
+		exit_error_exec(mini);
 	dup2(fdout, STDOUT_FILENO);
 	close(fdout);
 	return ;
@@ -42,17 +42,16 @@ void	redirect_output_append(t_minishell *mini)
 
 	fdout = open(mini->input->files, O_WRONLY | O_CREAT | O_APPEND, 0644);
 	if (fdout == -1)
-		exit_error_exec(mini, NULL);
+		exit_error_exec(mini);
 	dup2(fdout, STDOUT_FILENO);
 	close(fdout);
 	return ;
 }
 t_cmd	*redirect(t_minishell *mini)
 {
-	t_cmd	*tmp;
+	//t_cmd	*tmp;
 
-	tmp = mini->input;
-	tmp = tmp->next;
+	//tmp = mini->input->next;
 	if (mini->input && mini->input->redir)
 	{
 		if (mini->input->redir == IN)
@@ -63,10 +62,10 @@ t_cmd	*redirect(t_minishell *mini)
 			redirect_output_append(mini);
 		else if (mini->input->redir == HEREDOC)
 			redirect_heredoc(mini);
-		if (!mini->input->cmd)
-			free_one_input(mini->input);	
+		//if (!mini->input->cmd && !mini->input->pipe)
+			//free_one_input(mini->input);	
 	}
-	mini->input = tmp;
+	//mini->input = tmp;
 	return (mini->input);
 }
 

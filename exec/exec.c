@@ -6,64 +6,96 @@
 /*   By: endoliam <endoliam@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/24 13:20:21 by rtehar            #+#    #+#             */
-/*   Updated: 2024/08/01 15:13:20 by endoliam         ###   ########lyon.fr   */
+/*   Updated: 2024/08/13 16:42:37 by endoliam         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-t_cmd	*redirect_pipe(t_minishell *mini)
+void	redirect_pipe(t_minishell *mini)
 {
+	bool	free;
+	t_cmd	*tmp;
+
+	free = true;
+	tmp = mini->input->next;
 	while (mini->input && !mini->input->pipe)	
-		mini->input = redirect(mini);
-	if (mini->input)
+	{
+		if (mini->input->cmd)
+			free = false;	
 		redirect(mini);
-	return (mini->input);
+		if (free)
+		{
+			tmp = mini->input->next;
+			free_one_input(mini->input);
+			mini->input = tmp;
+		}
+		else
+			mini->input = mini->input->next;
+	}
+	if (mini->input && mini->input->pipe)
+		redirect(mini);
+	return ;
 }
 
-int		exit_error_exec(t_minishell *mini, t_cmd *cmd)
+int		exit_error_exec(t_minishell *mini)
 {
-	char	*str;
+	//char	*str;
 
-	str = strerror(errno);
-	if (cmd && cmd->cmd)
-		perror(cmd->cmd[0]);
-	ft_printf_fd(2, "%s\n", str);
-	free_one_input(cmd);
+	//if (!cmd)
+	//	exit (0);
+	//str = strerror(errno);
+	//if (cmd && cmd->cmd)
+	//	perror(cmd->cmd[0]);
+	//ft_printf_fd(2, "%s\n", str);
+	//free_one_input(cmd);
 	kill_shell(mini);
 	exit(errno);
 }
+
 t_cmd	*get_pipe_comd(t_cmd *cmd)
 {
-	t_cmd	*tmp;
-
-	tmp = cmd;
-	while (tmp && !tmp->pipe)
+	while (cmd && !cmd->cmd && !cmd->pipe)
 	{
-		if (tmp->cmd)
-			return (tmp);
-		tmp = tmp->next;
+		if (cmd->cmd)
+			return (cmd);
+		cmd = cmd->next;
 	}
-	return (tmp);
+	return (cmd);
 }
+
 void	exec_builtin(t_minishell *mini, t_cmd *cmd)
 {
 	sort_cmd(cmd->cmd, mini->env);
-	free_one_input(cmd);
 	kill_shell(mini);
-	exit(1);
+	exit(0);
 }
+
 int		my_execve(t_minishell *mini)
 {
 	t_cmd	*cmd;
 
 	cmd = get_pipe_comd(mini->input);
-	mini->input = redirect_pipe(mini);
+	redirect_pipe(mini);
+	mini->input = cmd;
 	if (cmd && cmd->cmd && isbuiltin(cmd->cmd[0]) == true)
 		exec_builtin(mini, cmd);
-	if (!cmd| !cmd->cmd || (execve(cmd->cmd[0], cmd->cmd, cmd->t_env) == -1))
-		return (exit_error_exec(mini, cmd)); // utiliser sterrno and perror pour message d'erreur
-	return (127);
+	if (!cmd || !cmd->cmd || (execve(cmd->cmd[0], cmd->cmd, cmd->t_env) == -1))
+		return (exit_error_exec(mini)); // utiliser sterrno and perror pour message d'erreur
+	return (0);
+}
+void	close_all(int *newfd, int *oldfd)
+{
+	if (oldfd)
+	{
+		close(oldfd[0]);
+		close(oldfd[1]);
+	}
+	if (newfd)
+	{
+		close(newfd[0]);
+		close(newfd[1]);
+	}
 }
 
 int		execute_simple_command(t_minishell *mini)
@@ -75,15 +107,13 @@ int		execute_simple_command(t_minishell *mini)
 	pipe(fd);
 	if (pid == 0)
 	{
-		close(fd[0]);
-		close(fd[1]);
+		close_all(fd, NULL);
 		my_execve(mini);
 	}
-	close(fd[0]);
-	close(fd[1]);
+	close_all(fd, NULL);
 	while (wait(NULL) > 0)
 		;
-	return (127);
+	return (0);
 }
 
 int	number_of_command(t_cmd *cmd)
@@ -154,13 +184,6 @@ void		init_fds(int oldfd[2], int newfd[2])
 	ft_memset(newfd, -1, 2 * sizeof(int));
 }
 
-void	close_all(int *newfd, int *oldfd)
-{
-	close(oldfd[0]);
-	close(oldfd[1]);
-	close(newfd[0]);
-	close(newfd[1]);
-}
 void	update_pipeline(int *oldfd, int *newfd)
 {
 	if (oldfd[0] >= 0)
@@ -169,43 +192,52 @@ void	update_pipeline(int *oldfd, int *newfd)
 	oldfd[1] = newfd[1];
 	close(newfd[1]);
 }
+
+t_cmd	*get_next_pipe(t_cmd *cmd)
+{
+	t_cmd	*tmp;
+
+	tmp = cmd->next;
+	while(cmd && !cmd->pipe)
+	{
+		
+		cmd = tmp;
+		if (tmp)
+			tmp = tmp->next;
+	}
+	if (tmp)
+	{
+		tmp = tmp->next;
+		free_one_input(cmd);
+		cmd = tmp;
+	}
+	return (cmd);
+}
+
 int		execute_pipeline(t_minishell *mini)
 {
 	pid_t	pid;
+	t_cmd	*for_free;
 	int		oldfd[2];
 	int		newfd[2];
-	t_cmd	*tmp;
 
 	init_fds(oldfd, newfd);
 	pipe(newfd);
-	tmp = mini->input;
 	while (mini->input)
 	{
-		tmp = tmp->next;
+		for_free = mini->input->next;
 		pid = fork();
 		if (pid == 0)
 			child(mini, oldfd, newfd);
 		update_pipeline(oldfd, newfd);
 		pipe(newfd);
 		free_one_input(mini->input);
-		mini->input = tmp;
+		mini->input = for_free;
 	}
 	while(wait(NULL) > 0)
 		;
 	close_all(newfd, oldfd);
-	return (127);
-}
-
-
-int	get_last_index(char **files)
-{
-    int i = 0;
-
-	if (!files)
-		return (-1);
-    while (files[i])
-        i++;
-    return (i - 1);
+	return (0);
 }
 
 char *run_commands(t_minishell *mini)

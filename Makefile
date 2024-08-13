@@ -1,7 +1,7 @@
 #-----------------------------------------------------------------#
 CC			=	cc
 
-CFLAGS		= -g -Wall -Wextra -Werror #-fsanitize=adress
+CFLAGS		= -g -Wall -Wextra -Werror #-fsanitize=address
 
 LIBFTFLAGS	= -Llibft -lft -L/usr/local/lib -I/usr/local/include -lreadline
 

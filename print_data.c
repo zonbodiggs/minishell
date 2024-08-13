@@ -6,7 +6,7 @@
 /*   By: endoliam <endoliam@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/07 10:23:43 by endoliam          #+#    #+#             */
-/*   Updated: 2024/07/29 15:03:04 by endoliam         ###   ########lyon.fr   */
+/*   Updated: 2024/08/10 17:33:56 by endoliam         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,6 +56,43 @@ void	print_cmd(t_cmd *cmd)
 			printf("there is pipes after\n");
 		cmd = cmd->next;
 	}
+	
+	//print_env(cmd->t_env);
+}
+
+void	print_one_cmd(t_cmd *cmd)
+{
+	if (!cmd)
+		return ;
+	printf("------------------one_cmds-------------------------");
+	printf("\n");
+	printf("adress list = %p ", cmd);
+	int	i =	-1;
+	if (cmd->cmd)
+	{
+		printf("adress cmd = %p ", cmd->cmd);
+		while(cmd->cmd[++i])
+			printf("cmd[%d] = %s ", i, cmd->cmd[i]);
+		printf("\n");
+	}
+	i=-1;
+	if (cmd->files)
+	{
+		printf("adress files = %p ", cmd->files);
+		if (cmd->redir == IN)
+			printf("INFILE = ");
+		else if (cmd->redir == APPEND)
+			printf("OUTFILE APPEND = ");
+		else if (cmd->redir == TRUNC)
+			printf("OUTFILE TRUNC = ");
+		else if (cmd->redir == HEREDOC)
+			printf("OUTFILE HEREDOC = ");
+		printf("files = %s ", cmd->files);
+		printf("\n");
+	}
+	if (cmd->pipe == true)
+		printf("there is pipes after\n");
+	cmd = cmd->next;
 	
 	//print_env(cmd->t_env);
 }

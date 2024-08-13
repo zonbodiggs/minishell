@@ -6,7 +6,7 @@
 /*   By: endoliam <endoliam@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/11 14:35:04 by endoliam          #+#    #+#             */
-/*   Updated: 2024/07/31 19:11:24 by endoliam         ###   ########lyon.fr   */
+/*   Updated: 2024/08/13 15:54:44 by endoliam         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,6 +60,7 @@ void	free_one_input(t_cmd *cmd)
 {
 	free_cmd(&cmd);
 	free(cmd);
+	cmd = NULL;
 }
 void	free_all_input(t_cmd *cmd)
 {

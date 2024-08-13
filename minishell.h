@@ -6,7 +6,7 @@
 /*   By: endoliam <endoliam@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/14 13:20:55 by endoliam          #+#    #+#             */
-/*   Updated: 2024/08/01 14:45:03 by endoliam         ###   ########lyon.fr   */
+/*   Updated: 2024/08/13 16:43:12 by endoliam         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -184,7 +184,7 @@ void		free_one_input(t_cmd *cmd);
 void		free_input(t_cmd **cmd);
 
 //					exit
-int		exit_error_exec(t_minishell *mini, t_cmd *cmd);
+int			exit_error_exec(t_minishell *mini);
 void		kill_shell(t_minishell *shell);
 
 /*******************print*********************/
@@ -194,6 +194,8 @@ void	print_cmd(t_cmd *cmd);
 void	print_lexer(t_lexer *lex);
 void	print_minishell(t_minishell *mini);
 void	print_env(char **env);
+void	print_one_cmd(t_cmd *cmd);
+
 t_lexer		*zap_redirection(t_lexer *lex);
 
 #endif
