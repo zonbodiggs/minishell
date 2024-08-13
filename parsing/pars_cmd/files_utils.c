@@ -6,7 +6,7 @@
 /*   By: endoliam <endoliam@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/29 14:42:36 by endoliam          #+#    #+#             */
-/*   Updated: 2024/08/13 18:58:23 by endoliam         ###   ########lyon.fr   */
+/*   Updated: 2024/08/14 01:33:01 by endoliam         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,7 @@ void	set_input(t_cmd *command, t_lexer *lex)
 			command->redir = TRUNC;
 	}
 }
+
 char	*init_files(t_lexer *lex)
 {
 	char	*file;

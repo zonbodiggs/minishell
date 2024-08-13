@@ -6,7 +6,7 @@
 /*   By: endoliam <endoliam@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/29 11:42:24 by endoliam          #+#    #+#             */
-/*   Updated: 2024/07/24 19:06:54 by endoliam         ###   ########lyon.fr   */
+/*   Updated: 2024/08/14 01:33:58 by endoliam         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,6 +76,7 @@ char	*join_cmd(t_lexer *lex, char *cmd)
 	}
 	return (cmd);
 }
+
 char	*dup_cmd(t_lexer *lex)
 {
 	char	*cmd;
@@ -91,4 +92,3 @@ char	*dup_cmd(t_lexer *lex)
 		exit_cmd("allocation cmd failed\n");
 	return (cmd);
 }
-

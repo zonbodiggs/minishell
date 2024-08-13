@@ -6,7 +6,7 @@
 /*   By: endoliam <endoliam@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/11 14:35:04 by endoliam          #+#    #+#             */
-/*   Updated: 2024/08/13 15:54:44 by endoliam         ###   ########lyon.fr   */
+/*   Updated: 2024/08/14 01:36:38 by endoliam         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ void	free_lexer(t_lexer **lex)
 	if (!lex)
 		return ;
 	tmp = *lex;
-	while(*lex)
+	while (*lex)
 	{
 		tmp = tmp->next;
 		free((*lex)->contain);
@@ -29,6 +29,7 @@ void	free_lexer(t_lexer **lex)
 	}
 	*lex = 0;
 }
+
 void	free_input(t_cmd **cmd)
 {
 	t_cmd		*tmp;
@@ -36,7 +37,7 @@ void	free_input(t_cmd **cmd)
 	if (cmd)
 	{
 		tmp = *cmd;
-		while(*cmd)
+		while (*cmd)
 		{
 			tmp = tmp->next;
 			free_one_input(*cmd);
@@ -45,6 +46,7 @@ void	free_input(t_cmd **cmd)
 		*cmd = NULL;
 	}
 }
+
 void	free_cmd(t_cmd **cmd)
 {
 	if (!cmd || !(*cmd))
@@ -56,22 +58,16 @@ void	free_cmd(t_cmd **cmd)
 	if ((*cmd)->t_env)
 		free_array((*cmd)->t_env);
 }
+
 void	free_one_input(t_cmd *cmd)
 {
 	free_cmd(&cmd);
 	free(cmd);
 	cmd = NULL;
 }
+
 void	free_all_input(t_cmd *cmd)
 {
 	free_input(&cmd);
 	free(cmd);
-}
-void	kill_shell(t_minishell *shell)
-{
-	free_all_input(shell->input);
-	free_array(shell->env);
-	ft_memset(shell, 0, sizeof(shell));
-	free(shell);
-	rl_clear_history();
 }

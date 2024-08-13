@@ -6,7 +6,7 @@
 /*   By: endoliam <endoliam@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/24 18:53:22 by endoliam          #+#    #+#             */
-/*   Updated: 2024/07/29 14:15:41 by endoliam         ###   ########lyon.fr   */
+/*   Updated: 2024/08/14 01:34:40 by endoliam         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,6 +44,7 @@ bool	isbuiltin(char *cmd)
 		return (true);
 	return (false);
 }
+
 bool	isthereredirection(t_lexer *lexer, t_cmd *command)
 {
 	if ((lexer && !isredirection(lexer->lex))
@@ -51,6 +52,6 @@ bool	isthereredirection(t_lexer *lexer, t_cmd *command)
 		&& (command && command->redir != TRUNC)
 		&& (command && command->redir != APPEND)
 		&& (command && command->redir != HEREDOC))
-			return (true);
+		return (true);
 	return (false);
 }

@@ -6,7 +6,7 @@
 /*   By: endoliam <endoliam@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/03 13:32:30 by endoliam          #+#    #+#             */
-/*   Updated: 2024/07/22 17:23:23 by endoliam         ###   ########lyon.fr   */
+/*   Updated: 2024/08/13 23:01:25 by endoliam         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,6 @@ int echo(char **cmd)
 	end_n = 0;
 	if (!cmd)
 		return (-1);
-
 	while (cmd[i] && cmd[i][0] == '-' && cmd[i][1] == 'n')
 	{
 		j = 2;

@@ -6,7 +6,7 @@
 /*   By: endoliam <endoliam@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/20 11:36:33 by endoliam          #+#    #+#             */
-/*   Updated: 2024/07/31 15:23:00 by endoliam         ###   ########lyon.fr   */
+/*   Updated: 2024/08/14 01:34:53 by endoliam         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ char	**init_tab(t_lexer *lex)
 	return (cmd);
 }
 
-t_lexer		*get_cmd(t_cmd *command, t_lexer *lex)
+t_lexer	*get_cmd(t_cmd *command, t_lexer *lex)
 {
 	if (lex && !isoperator_cmd(lex->lex))
 	{
@@ -82,7 +82,7 @@ t_cmd	*init_cmd(char **env, t_lexer **lex)
 	{
 		i++;
 		if (lexer && lexer->lex == PIPES)
-				lexer = lexer->next;
+			lexer = lexer->next;
 		lst_init_cmd(env, &command);
 		lexer = get_cmd(command, lexer);
 		if (lexer && lexer->lex == PIPES)
@@ -94,7 +94,5 @@ t_cmd	*init_cmd(char **env, t_lexer **lex)
 	}
 	command = start;
 	free_lexer(lex);
-	pars_cmd_list(command);
 	return (command);
 }
-

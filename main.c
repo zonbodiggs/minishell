@@ -6,7 +6,7 @@
 /*   By: endoliam <endoliam@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/14 16:09:41 by endoliam          #+#    #+#             */
-/*   Updated: 2024/08/13 17:36:15 by endoliam         ###   ########lyon.fr   */
+/*   Updated: 2024/08/14 01:07:36 by endoliam         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -101,6 +101,7 @@ int		main(int ac, char **av, char **env)
 		// print_lexer(minishell->lex);
 		if (minishell->lex)
 			minishell->input = init_cmd(minishell->env, &minishell->lex);
+		find_heredoc(minishell->input, minishell);
 		//print_cmd(minishell->input);
 		if (minishell->input)
 		{
@@ -112,6 +113,8 @@ int		main(int ac, char **av, char **env)
 		free(minishell->input);
 	}
 	rl_clear_history();
+	free(minishell->exit_code);
+	free_array(minishell->env);
 	free(minishell);
 }
 
