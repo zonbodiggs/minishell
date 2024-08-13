@@ -6,24 +6,24 @@
 /*   By: endoliam <endoliam@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/24 13:20:21 by rtehar            #+#    #+#             */
-/*   Updated: 2024/08/13 16:42:37 by endoliam         ###   ########lyon.fr   */
+/*   Updated: 2024/08/13 19:28:37 by endoliam         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-void	redirect_pipe(t_minishell *mini)
+int	redirect_pipe(t_minishell *mini)
 {
 	bool	free;
 	t_cmd	*tmp;
+	int 	exit;
 
 	free = true;
-	tmp = mini->input->next;
 	while (mini->input && !mini->input->pipe)	
 	{
 		if (mini->input->cmd)
 			free = false;	
-		redirect(mini);
+		exit = redirect(mini);
 		if (free)
 		{
 			tmp = mini->input->next;
@@ -34,14 +34,13 @@ void	redirect_pipe(t_minishell *mini)
 			mini->input = mini->input->next;
 	}
 	if (mini->input && mini->input->pipe)
-		redirect(mini);
-	return ;
+		exit = redirect(mini);
+	return (exit);
 }
 
-int		exit_error_exec(t_minishell *mini)
+int		exit_error_exec(t_minishell *mini, int value)
 {
 	//char	*str;
-
 	//if (!cmd)
 	//	exit (0);
 	//str = strerror(errno);
@@ -50,6 +49,8 @@ int		exit_error_exec(t_minishell *mini)
 	//ft_printf_fd(2, "%s\n", str);
 	//free_one_input(cmd);
 	kill_shell(mini);
+	if (value == 127)
+		exit (value);
 	exit(errno);
 }
 
@@ -74,16 +75,25 @@ void	exec_builtin(t_minishell *mini, t_cmd *cmd)
 int		my_execve(t_minishell *mini)
 {
 	t_cmd	*cmd;
+	int		value;
+	int		value_redir;
 
+	value = 0;
+	value_redir = 0;
 	cmd = get_pipe_comd(mini->input);
-	redirect_pipe(mini);
+	if (cmd->cmd)
+		value = iscmd(cmd->cmd);
+	value_redir = redirect_pipe(mini);
+	if (value_redir != 0)
+		value = value_redir;
 	mini->input = cmd;
 	if (cmd && cmd->cmd && isbuiltin(cmd->cmd[0]) == true)
 		exec_builtin(mini, cmd);
 	if (!cmd || !cmd->cmd || (execve(cmd->cmd[0], cmd->cmd, cmd->t_env) == -1))
-		return (exit_error_exec(mini)); // utiliser sterrno and perror pour message d'erreur
-	return (0);
+		return (exit_error_exec(mini, value));
+	return (value);
 }
+
 void	close_all(int *newfd, int *oldfd)
 {
 	if (oldfd)
@@ -102,6 +112,7 @@ int		execute_simple_command(t_minishell *mini)
 {
 	pid_t	pid;
 	int		fd[2];
+	int		status;
 
 	pid = fork();
 	pipe(fd);
@@ -111,9 +122,9 @@ int		execute_simple_command(t_minishell *mini)
 		my_execve(mini);
 	}
 	close_all(fd, NULL);
-	while (wait(NULL) > 0)
+	while (wait(&status) > 0)
 		;
-	return (0);
+	return (WEXITSTATUS(status));
 }
 
 int	number_of_command(t_cmd *cmd)
@@ -217,6 +228,7 @@ t_cmd	*get_next_pipe(t_cmd *cmd)
 int		execute_pipeline(t_minishell *mini)
 {
 	pid_t	pid;
+	int		status;
 	t_cmd	*for_free;
 	int		oldfd[2];
 	int		newfd[2];
@@ -234,10 +246,10 @@ int		execute_pipeline(t_minishell *mini)
 		free_one_input(mini->input);
 		mini->input = for_free;
 	}
-	while(wait(NULL) > 0)
+	while(wait(&status) > 0)
 		;
 	close_all(newfd, oldfd);
-	return (0);
+	return (WEXITSTATUS(status));
 }
 
 char *run_commands(t_minishell *mini)

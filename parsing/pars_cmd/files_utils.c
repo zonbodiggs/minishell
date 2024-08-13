@@ -6,7 +6,7 @@
 /*   By: endoliam <endoliam@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/29 14:42:36 by endoliam          #+#    #+#             */
-/*   Updated: 2024/07/24 19:05:50 by endoliam         ###   ########lyon.fr   */
+/*   Updated: 2024/08/13 18:58:23 by endoliam         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,15 +48,15 @@ char	*init_files(t_lexer *lex)
 int	isfilevalid_in(char *file)
 {
 	if (access(file, F_OK) == -1)
-		return (-2);
+		return (2);
 	if (access(file, R_OK) == -1)
-		return (-3);
+		return (1);
 	return (0);
 }
 
 int	isfilevalid_out(char *file)
 {
 	if (access(file, F_OK) == 0 && access(file, W_OK) == -1)
-		return (-3);
+		return (2);
 	return (0);
 }

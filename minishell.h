@@ -6,7 +6,7 @@
 /*   By: endoliam <endoliam@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/14 13:20:55 by endoliam          #+#    #+#             */
-/*   Updated: 2024/08/13 16:43:12 by endoliam         ###   ########lyon.fr   */
+/*   Updated: 2024/08/13 19:27:34 by endoliam         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -155,10 +155,10 @@ int 		get_last_index(char **files);
 char 		*run_commands(t_minishell *mini);
 
 //					redirecion
-void		redirect_input(t_minishell *mini);
-void		redirect_output(t_minishell *mini);
-void		redirect_output_append(t_minishell *mini);
-t_cmd		*redirect(t_minishell *mini);
+int		redirect_input(t_minishell *mini);
+int		redirect_output(t_minishell *mini);
+int		redirect_output_append(t_minishell *mini);
+int		redirect(t_minishell *mini);
 
 //					heredoc
 void		heredoc(const char *delimiter);
@@ -184,8 +184,13 @@ void		free_one_input(t_cmd *cmd);
 void		free_input(t_cmd **cmd);
 
 //					exit
-int			exit_error_exec(t_minishell *mini);
+int			exit_error_exec(t_minishell *mini, int value);
 void		kill_shell(t_minishell *shell);
+
+//					signaux
+void	handle_sigquit(int sig);
+void	handle_sigint(int sig);
+
 
 /*******************print*********************/
 

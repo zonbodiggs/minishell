@@ -6,7 +6,7 @@
 /*   By: endoliam <endoliam@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/14 16:09:41 by endoliam          #+#    #+#             */
-/*   Updated: 2024/08/10 17:38:24 by endoliam         ###   ########lyon.fr   */
+/*   Updated: 2024/08/13 17:36:15 by endoliam         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -101,7 +101,7 @@ int		main(int ac, char **av, char **env)
 		// print_lexer(minishell->lex);
 		if (minishell->lex)
 			minishell->input = init_cmd(minishell->env, &minishell->lex);
-		print_cmd(minishell->input);
+		//print_cmd(minishell->input);
 		if (minishell->input)
 		{
 			free(minishell->exit_code);
@@ -115,7 +115,5 @@ int		main(int ac, char **av, char **env)
 	free(minishell);
 }
 
-// mise en place heredoc
-// return value
 // gestion ispace
 // gestion backslash

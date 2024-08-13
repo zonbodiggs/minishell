@@ -6,7 +6,7 @@
 /*   By: endoliam <endoliam@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/12 20:43:01 by endoliam          #+#    #+#             */
-/*   Updated: 2024/08/13 16:44:04 by endoliam         ###   ########lyon.fr   */
+/*   Updated: 2024/08/13 19:26:59 by endoliam         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,9 +38,14 @@ void	redirect_heredoc(t_minishell *mini)
 {
 	int	fdhere;
 
+	if (isfilevalid_in(".heredoc") != 0)
+	{
+		error_files(isfilevalid_in(mini->input->files), mini->input->files);
+		return ;
+	}
 	fdhere = open(".heredoc", O_RDONLY);
 	if (fdhere == -1)
-		exit_error_exec(mini);
+		exit_error_exec(mini, 0);
 	dup2(fdhere, STDIN_FILENO);
 	close(fdhere);
 	unlink(".heredoc");
