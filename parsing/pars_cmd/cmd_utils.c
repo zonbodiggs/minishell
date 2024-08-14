@@ -6,7 +6,7 @@
 /*   By: endoliam <endoliam@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/29 11:42:24 by endoliam          #+#    #+#             */
-/*   Updated: 2024/08/14 01:33:58 by endoliam         ###   ########lyon.fr   */
+/*   Updated: 2024/08/14 15:45:25 by endoliam         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,7 +55,7 @@ int	size_tab_cmd(t_lexer *lex)
 	return (i);
 }
 
-char	*join_cmd(t_lexer *lex, char *cmd)
+char	*join_cmd(t_lexer *lex, char *cmd, t_minishell *mini, t_cmd *command)
 {
 	char	*tmp;
 
@@ -68,16 +68,31 @@ char	*join_cmd(t_lexer *lex, char *cmd)
 				|| lex->lex == DOUBLE_ENV))
 		{
 			tmp = ft_qstrdup(lex->contain);
+			if (!tmp)
+			{
+				free(cmd);
+				free_all_input(command);
+				exit_cmd("allocation join failed\n", mini, 2);
+			}
 			free(lex->contain);
 			lex->contain = tmp;
 		}
 		if (lex && lex->contain && !isoperator_cmd(lex->lex))
-			cmd = join_and_free(cmd, lex->contain);
+		{
+			tmp = join_and_free(cmd, lex->contain);
+			if (!tmp)
+			{
+				free(cmd);
+				return (NULL);
+			}
+			else
+				cmd = tmp;
+		}
 	}
 	return (cmd);
 }
 
-char	*dup_cmd(t_lexer *lex)
+char	*dup_cmd(t_lexer *lex, t_minishell *mini)
 {
 	char	*cmd;
 
@@ -89,6 +104,6 @@ char	*dup_cmd(t_lexer *lex)
 	else
 		cmd = ft_strdup(lex->contain);
 	if (!cmd)
-		exit_cmd("allocation cmd failed\n");
+		exit_cmd("allocation cmd failed\n", mini, 2);
 	return (cmd);
 }

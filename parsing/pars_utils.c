@@ -6,7 +6,7 @@
 /*   By: endoliam <endoliam@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/17 17:04:15 by endoliam          #+#    #+#             */
-/*   Updated: 2024/07/24 14:33:02 by endoliam         ###   ########lyon.fr   */
+/*   Updated: 2024/08/14 15:47:15 by endoliam         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,17 +46,9 @@ void	free_array(char **array)
 	}
 	free(array);
 }
-// printf_fd and exit correctly 
 
-void	exit_cmd(char *msg)
-{
-	ft_putstr_fd(msg, 2);
-	exit (47);
-}
 
-// copy environement and add it to command list
-
-char	**cpy_env(char **env)
+char	**cpy_env(t_minishell *mini, char **env)
 {
 	int		len;	
 	int		i;
@@ -72,8 +64,8 @@ char	**cpy_env(char **env)
 	while (i <= len && env[i])
 	{
 		dest[i] = ft_strdup(env[i]);
-		if (!dest[i])
-			exit_cmd("allocation env failed\n");
+		if (dest[i] == NULL)
+			exit_cmd("allocation env failed\n", mini, 2);
 		i++;
 	}
 	dest[len] = NULL;

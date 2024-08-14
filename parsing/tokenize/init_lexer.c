@@ -6,7 +6,7 @@
 /*   By: endoliam <endoliam@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/17 16:56:51 by endoliam          #+#    #+#             */
-/*   Updated: 2024/08/08 17:03:27 by endoliam         ###   ########lyon.fr   */
+/*   Updated: 2024/08/14 18:43:36 by endoliam         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,17 +52,6 @@ int	create_operator(t_lexer **lexer, char *s, int i, t_minishell mini)
 	while (s[i] && s[i + 1] && isispace(s[i + 1]))
 		i++;
 	return (i);
-}
-
-t_lexer	*lexer_error_exit(int i, t_lexer *lexer, t_minishell *mini)
-{
-	free_lexer(&lexer);
-	if (i == -2)
-	{
-		kill_shell(mini);
-		exit(42);
-	}
-	return (NULL);
 }
 
 t_lexer	*create_lexer(char *s, t_minishell *mini)

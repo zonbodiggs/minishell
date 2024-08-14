@@ -6,33 +6,14 @@
 /*   By: endoliam <endoliam@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/03 13:32:30 by endoliam          #+#    #+#             */
-/*   Updated: 2024/08/13 23:01:25 by endoliam         ###   ########lyon.fr   */
+/*   Updated: 2024/08/14 12:54:44 by rtehar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-int echo(char **cmd)
+static void	print_echo(char **cmd, size_t i, int end_n)
 {
-	size_t	i;
-	size_t	j;
-	int		end_n;
-
-	i = 1;
-	end_n = 0;
-	if (!cmd)
-		return (-1);
-	while (cmd[i] && cmd[i][0] == '-' && cmd[i][1] == 'n')
-	{
-		j = 2;
-		while (cmd[i][j] == 'n')
-			j++;
-		if (cmd[i][j] != '\0')
-			break;
-		i++;
-		end_n = 1;
-	}
-
 	while (cmd[i])
 	{
 		printf("%s", cmd[i]);
@@ -42,5 +23,29 @@ int echo(char **cmd)
 	}
 	if (end_n == 0)
 		printf("%c", '\n');
+}
+
+int	echo(char **cmd)
+{
+	size_t	i;
+	size_t	j;
+	int		end_n;
+
+	i = 1;
+	j = 0;
+	end_n = 0;
+	if (!cmd)
+		return (-1);
+	while (cmd[i] && cmd[i][0] == '-' && cmd[i][1] == 'n')
+	{
+		j = 2;
+		while (cmd[i][j] == 'n')
+			j++;
+		if (cmd[i][j] != '\0')
+			break ;
+		i++;
+		end_n = 1;
+	}
+	print_echo(cmd, i, end_n);
 	return (0);
 }

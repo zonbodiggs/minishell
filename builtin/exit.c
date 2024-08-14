@@ -6,14 +6,13 @@
 /*   By: endoliam <endoliam@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/11 13:56:11 by endoliam          #+#    #+#             */
-/*   Updated: 2024/06/11 14:35:21 by endoliam         ###   ########lyon.fr   */
+/*   Updated: 2024/08/01 14:26:22 by rtehar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-
-void exit_shell(t_minishell *shell, char **cmd)
+void	exit_shell(t_minishell *shell, char **cmd)
 {
 	int	exit_code;
 
@@ -29,7 +28,7 @@ void exit_shell(t_minishell *shell, char **cmd)
 		else if (cmd[2])
 		{
 			printf("%s", "exit: too many arguments\n");
-			return;
+			return ;
 		}
 	}
 	kill_shell(shell);

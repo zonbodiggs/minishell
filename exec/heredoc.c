@@ -6,16 +6,34 @@
 /*   By: endoliam <endoliam@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/12 20:43:01 by endoliam          #+#    #+#             */
-/*   Updated: 2024/08/14 01:16:35 by endoliam         ###   ########lyon.fr   */
+/*   Updated: 2024/08/14 15:44:27 by endoliam         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
+bool	is_final_heredoc(t_cmd *command)
+{
+	t_cmd *cmd;
+
+	if (!command)
+		return (true);
+	cmd = command->next;
+	while (cmd)
+	{
+		if (cmd && cmd->redir && cmd->redir == HEREDOC)
+			return (false);
+		cmd = cmd->next;
+	}
+	return (true);
+}
+
 int	redirect_heredoc(t_minishell *mini)
 {
 	int	fdhere;
 
+	g_signal = 0;
+	// SIGINT signql heredoc ioctl
 	if (isfilevalid_in(".heredoc") != 0)
 		return (error_files(isfilevalid_in(".heredoc"), ".heredoc"));
 	fdhere = open(".heredoc", O_RDONLY);
@@ -23,7 +41,8 @@ int	redirect_heredoc(t_minishell *mini)
 		exit_error_exec(mini, 0);
 	dup2(fdhere, STDIN_FILENO);
 	close(fdhere);
-	unlink(".heredoc");
+	if (is_final_heredoc(mini->input))
+		unlink(".heredoc");
 	return (0);
 }
 
@@ -34,6 +53,7 @@ void	heredoc(const char *delimiter, t_minishell *mini)
 
 	line = NULL;
 	fd = open(".heredoc", O_WRONLY | O_CREAT | O_TRUNC, 0644);
+	ft_printf_fd(2, "delimiteur = %s\n", delimiter);
 	while (1)
 	{
 		line = readline("> ");
@@ -44,7 +64,7 @@ void	heredoc(const char *delimiter, t_minishell *mini)
 		}
 		if (is_env_var(line))
 			line = init_env_var(line, *mini);
-		if (fd != -1 && isfilevalid_out(".heredoc"))
+		if (fd != -1 || isfilevalid_out(".heredoc"))
 		{
 			write(fd, line, ft_strlen(line));
 			write(fd, "\n", 1);
@@ -64,8 +84,15 @@ void	find_heredoc(t_cmd	*command, t_minishell *mini)
 		return ;
 	while (cmd)
 	{
-		if (command->redir == HEREDOC)
-			heredoc(command->files, mini);
-		cmd = cmd->next;
+		if (cmd && cmd->redir == HEREDOC)
+		{
+			if (access(".heredoc", F_OK) != 0)
+				unlink(".heredoc");
+			heredoc(cmd->files, mini);
+		}
+			cmd = cmd->next;
 	}
 }
+//quote 
+// ctr + c stop tout
+// ctr + d stop 1seul here

@@ -6,13 +6,11 @@
 /*   By: endoliam <endoliam@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/29 14:42:36 by endoliam          #+#    #+#             */
-/*   Updated: 2024/08/14 01:33:01 by endoliam         ###   ########lyon.fr   */
+/*   Updated: 2024/08/14 15:45:36 by endoliam         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../minishell.h"
-
-// set enum redirection of command
 
 void	set_input(t_cmd *command, t_lexer *lex)
 {
@@ -32,14 +30,23 @@ void	set_input(t_cmd *command, t_lexer *lex)
 	}
 }
 
-char	*init_files(t_lexer *lex)
+char	*init_files(t_cmd *command, t_lexer *lex, t_minishell *mini)
 {
 	char	*file;
 
-	file = ft_strdup(lex->contain);
+	if (lex->lex == SINGLE_Q || lex->lex == DOUBLE_Q
+		|| lex->lex == SINGLE_ENV || lex->lex == DOUBLE_ENV)
+		file = ft_qstrdup(lex->contain);
+	else
+		file = ft_strdup(lex->contain);
+	if (!file)
+	{
+		free_all_input(command);
+		exit_cmd("allocation file failed\n", mini, 2);
+	}
 	if (lex->spaces == false)
 	{
-		file = join_cmd(lex, file);
+		file = join_cmd(lex, file, mini, command);
 		while (lex && !lex->spaces && !isoperator_cmd(lex->lex))
 			lex = lex->next;
 	}

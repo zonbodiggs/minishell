@@ -6,13 +6,13 @@
 /*   By: endoliam <endoliam@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/20 11:36:33 by endoliam          #+#    #+#             */
-/*   Updated: 2024/08/14 01:34:53 by endoliam         ###   ########lyon.fr   */
+/*   Updated: 2024/08/14 16:17:46 by endoliam         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../minishell.h"
 
-char	**init_tab(t_lexer *lex)
+char	**init_tab(t_cmd *command, t_lexer *lex, t_minishell *mini)
 {
 	int		len;
 	int		i;
@@ -22,13 +22,22 @@ char	**init_tab(t_lexer *lex)
 	len = size_tab_cmd(lex);
 	cmd = ft_calloc(len + 1, sizeof(char *));
 	if (!cmd)
-		exit_cmd("allocation t_cmd failed\n");
+	{	
+		free_all_input(command);
+		exit_cmd("allocation t_cmd failed\n", mini, 2);
+	}
 	while (lex && i < len)
 	{
-		cmd[i] = dup_cmd(lex);
+		cmd[i] = dup_cmd(lex, mini);
 		if (lex->spaces == false)
 		{
-			cmd[i] = join_cmd(lex, cmd[i]);
+			cmd[i] = join_cmd(lex, cmd[i], mini, command);
+			if (!cmd[i])
+			{
+				free(cmd);
+				free_all_input(command);
+				exit_cmd("allocation t_cmd failed\n", mini, 2);
+			}
 			while (lex && !lex->spaces && !isoperator_cmd(lex->lex))
 				lex = lex->next;
 		}
@@ -38,11 +47,11 @@ char	**init_tab(t_lexer *lex)
 	return (cmd);
 }
 
-t_lexer	*get_cmd(t_cmd *command, t_lexer *lex)
+t_lexer	*get_cmd(t_cmd *command, t_lexer *lex, t_minishell *mini)
 {
 	if (lex && !isoperator_cmd(lex->lex))
 	{
-		command->cmd = init_tab(lex);
+		command->cmd = init_tab(command, lex, mini);
 		while (lex && isoperator_cmd(lex->lex) == false)
 			lex = lex->next;
 	}
@@ -52,7 +61,7 @@ t_lexer	*get_cmd(t_cmd *command, t_lexer *lex)
 		if (lex->next)
 		{
 			lex = lex->next;
-			command->files = init_files(lex);
+			command->files = init_files(command, lex, mini);
 			while (lex && !lex->spaces && !isoperator_cmd(lex->lex))
 				lex = lex->next;
 			if (lex && lex->next && !isoperator_cmd(lex->lex))
@@ -65,7 +74,7 @@ t_lexer	*get_cmd(t_cmd *command, t_lexer *lex)
 	return (lex);
 }
 
-t_cmd	*init_cmd(char **env, t_lexer **lex)
+t_cmd	*init_cmd(t_minishell *mini, t_lexer **lex)
 {
 	t_cmd		*command;
 	t_cmd		*start;
@@ -76,15 +85,14 @@ t_cmd	*init_cmd(char **env, t_lexer **lex)
 		return (NULL);
 	i = 0;
 	command = NULL;
-	start = NULL;
 	lexer = *lex;
 	while (lexer)
 	{
 		i++;
 		if (lexer && lexer->lex == PIPES)
 			lexer = lexer->next;
-		lst_init_cmd(env, &command);
-		lexer = get_cmd(command, lexer);
+		lst_init_cmd(mini, &command);
+		lexer = get_cmd(command, lexer, mini);
 		if (lexer && lexer->lex == PIPES)
 			command->pipe = true;
 		if (i == 1)

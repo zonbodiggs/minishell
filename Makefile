@@ -27,9 +27,11 @@ SRCS		= parsing/tokenize/bool_lexer.c\
 			  exec/heredoc.c\
 			  builtin/echo.c\
 			  builtin/cd.c\
+			  builtin/cd_utile.c\
 			  builtin/pwd.c\
 			  builtin/env.c\
 			  builtin/export.c\
+			  builtin/export_utile.c\
 			  builtin/unset.c\
 			  builtin/exit.c\
 			  print_data.c\

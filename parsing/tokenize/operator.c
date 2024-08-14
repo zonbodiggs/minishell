@@ -6,7 +6,7 @@
 /*   By: endoliam <endoliam@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/18 17:02:49 by endoliam          #+#    #+#             */
-/*   Updated: 2024/07/24 14:49:09 by endoliam         ###   ########lyon.fr   */
+/*   Updated: 2024/08/14 18:41:56 by endoliam         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,8 +24,34 @@ void	init_redirection(t_lexer **lexer, char c, int flag, t_minishell mini)
 		lst_init_lexer(lexer, ">>", 0, mini);
 }
 
+bool	is_before(char *s, int start)
+{
+	start--;
+	while (start >= 0 && s[start])
+	{
+		if (!isispace(s[start]))
+			return(true);
+		start--;
+	}
+	return (false);
+}
+bool	is_after(char *s,  int start)
+{
+	start++;
+	while (s[start])
+	{
+		if (!isispace(s[start]))
+			return(true);
+		start++;
+	}
+	return (false);
+}
+
 int	find_redirection(t_lexer **lexer, char *s, int start, t_minishell mini)
 {
+	if (!is_after(s, start))
+		return (exit_failure("syntax error near unexpected token"
+					, s[start]));
 	if (s[start + 1] && s[start + 1] != s[start])
 		init_redirection(lexer, s[start], 1, mini);
 	else if (s[start + 1] && s[start + 1] == s[start])
@@ -49,6 +75,8 @@ int	init_operator(t_lexer **lexer, char *s, int start, t_minishell mini)
 		return (exit_failure("syntax error near unexpected token", c));
 	if (c == '|')
 	{
+		if (!is_after(s, start) || !is_before(s, start))
+			return (exit_failure("syntax error near unexpected token", c));
 		if (!s[start + 1] || (s[start + 1] && s[start + 1] == '|'))
 			return (exit_failure("syntax error near unexpected token", c));
 		lst_init_lexer(lexer, "|", 0, mini);

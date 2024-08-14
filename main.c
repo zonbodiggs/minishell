@@ -6,11 +6,13 @@
 /*   By: endoliam <endoliam@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/14 16:09:41 by endoliam          #+#    #+#             */
-/*   Updated: 2024/08/14 01:07:36 by endoliam         ###   ########lyon.fr   */
+/*   Updated: 2024/08/14 18:59:45 by endoliam         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+int	g_signal;
 
 void	handle_sigint(int sig)
 {
@@ -77,18 +79,21 @@ int		main(int ac, char **av, char **env)
 	char 		*buffer;
 	t_minishell *minishell;
 
+
 	(void)av;	
 	if (ac != 1)
 	{	
 		ft_printf_fd(2, "too many arguments\n");
 		exit (2);
 	}
-	signal(SIGINT, handle_sigint);
-	signal(SIGQUIT, handle_sigquit);
 	minishell = ft_calloc(1, sizeof(t_minishell));
-	minishell->env = cpy_env(env);
+	minishell->env = cpy_env(minishell, env);
+	//si pas env rajout PWD fins SHLVL+=1
 	while(1)
 	{
+		g_signal = 0;
+		signal(SIGINT, handle_sigint);
+		signal(SIGQUIT, SIG_IGN);
 		buffer = readline("minishell> ");
 		if (!buffer)
 		{
@@ -100,9 +105,9 @@ int		main(int ac, char **av, char **env)
 		minishell->lex = create_lexer(buffer, minishell);
 		// print_lexer(minishell->lex);
 		if (minishell->lex)
-			minishell->input = init_cmd(minishell->env, &minishell->lex);
+			minishell->input = init_cmd(minishell, &minishell->lex);
 		find_heredoc(minishell->input, minishell);
-		//print_cmd(minishell->input);
+		print_cmd(minishell->input);
 		if (minishell->input)
 		{
 			free(minishell->exit_code);
@@ -118,5 +123,13 @@ int		main(int ac, char **av, char **env)
 	free(minishell);
 }
 
-// gestion ispace
-// gestion backslash
+// gestion backslash a voir
+// "" = pas permission denied mais cmd not fount
+// Leak avec cmd | ""
+// cat < | hey prend | pour un infile
+// PWD chelou sans = apres des CD, oldpwd a pas de =
+// Code erreur de /bla/bin = 2 au lieu de 127
+// ./directory -> Is a directory, code 126 
+// Prendre le statut d'exit seulement du dernier enfant cree
+// echo << bye << bla | cat heredoc no such file ?
+// Retour erreur exit / autres btin

@@ -1,57 +1,81 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   unset.c                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: rtehar <marvin@42.fr>                      +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/08/01 14:31:23 by rtehar            #+#    #+#             */
+/*   Updated: 2024/08/14 14:32:54 by rtehar           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../minishell.h"
 
-static void remove_var(char ***env, int index)
+static int	put_new_env(char **new_env, char ***env, int index)
 {
-	int i = 0;
-	int j = 0;
-	char **new_env;
+	int	i;
+	int	j;
 
+	i = 0;
+	j = 0;
+	while ((*env)[i])
+	{
+		if (i != index)
+		{
+			new_env[j] = (*env)[i];
+			j++;
+		}
+		else
+			free((*env)[i]);
+		i++;
+	}
+	return (j);
+}
+
+static void	remove_var(char ***env, int index)
+{
+	int		i;
+	char	**new_env;
+
+	i = 0;
 	while ((*env)[i])
 		i++;
 	new_env = malloc(i * sizeof(char *));
 	if (!new_env)
 	{
 		perror("malloc");
-		return;
+		return ;
 	}
-	i = 0;
-	while ((*env)[i])
-	{
-		if (i != index)
-		{
-		    new_env[j] = (*env)[i];
-		    j++;
-		}
-		else
-		{
-		    free((*env)[i]);
-		}
-		i++;
-	}
-	new_env[j] = NULL;
+	i = put_new_env(new_env, env, index);
+	new_env[i] = NULL;
 	free(*env);
 	*env = new_env;
 }
 
-static int find_var_index(char **env, const char *var)
+static int	find_var_index(char **env, const char *var)
 {
-	int i = 0;
-	int len = ft_strlen(var);
+	int	i;
+	int	len;
 
+	len = ft_strlen(var);
+	i = 0;
 	while (env[i])
 	{
 		if (ft_strncmp(env[i], var, len) == 0 && env[i][len] == '=')
-			return i;
+			return (i);
 		i++;
 	}
-	return -1;
+	return (-1);
 }
 
-int unset_variable(char **cmd, char ***env)
+int	unset_variable(char **cmd, char ***env)
 {
-	int i = 1;
-	int index;
-	printf("\n\n\n\n\n\n%s\n\n\n\n\n\n\n", "testtesttesttesttesttesttesttesttesttesttesttest");
+	int	i;
+	int	index;
+
+	i = 1;
+	index = 0;
 	while (cmd[i])
 	{
 		index = find_var_index(*env, cmd[i]);

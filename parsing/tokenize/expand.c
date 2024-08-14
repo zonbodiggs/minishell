@@ -6,7 +6,7 @@
 /*   By: endoliam <endoliam@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/11 18:58:41 by endoliam          #+#    #+#             */
-/*   Updated: 2024/08/01 14:13:43 by endoliam         ###   ########lyon.fr   */
+/*   Updated: 2024/08/14 15:46:44 by endoliam         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,12 @@ char	*join_and_free(char *s1, char *s2)
 	if (!s2)
 		return (s1);
 	res = ft_strjoin(s1, s2);
+	if (!res)
+	{
+		free(s1);
+		free(s2);
+		return (NULL);
+	}
 	free(s1);
 	return (res);
 }
@@ -32,7 +38,8 @@ static char	*find_expand(char *s)
 	i = 0;
 	tmp = ft_strchr(s, '$');
 	i++;
-	while (tmp[i] && !isispace(tmp[i]) && tmp[i] != '"' && tmp[i] != '$')
+	while (tmp[i] && !isispace(tmp[i]) && tmp[i] != '"'
+		&& tmp[i] != 39 && tmp[i] != '$')
 		i++;
 	res = ft_substr(tmp, 0, i);
 	return (res);

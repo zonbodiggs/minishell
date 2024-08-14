@@ -6,7 +6,7 @@
 /*   By: endoliam <endoliam@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/29 12:32:33 by endoliam          #+#    #+#             */
-/*   Updated: 2024/08/14 01:32:36 by endoliam         ###   ########lyon.fr   */
+/*   Updated: 2024/08/14 19:03:52 by endoliam         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,7 @@ int	set_and_check(char **cmd, t_minishell *mini)
 	char	**path;
 	char	*cmd_path;
 
+	i = 0;
 	path = ft_split(mygetenv("PATH", *mini), ':');
 	if (!path)
 		return (0);
@@ -41,7 +42,10 @@ int	set_and_check(char **cmd, t_minishell *mini)
 
 int	iscmd(char **cmd, t_minishell *mini)
 {
-	if (isbuiltin(cmd[0]) == true || !ft_strncmp(cmd[0], "./", 2))
+	if (!cmd[0])
+		return (127);
+	print_cmd(mini->input);
+	if (isbuiltin(cmd[0]) == true || !ft_strncmp(cmd[0], "./", 2) || ft_strrchr(cmd[0], '/'))
 		return (0);
 	if (!cmd || !mygetenv("PATH", *mini))
 		return (127);

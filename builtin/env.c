@@ -6,13 +6,13 @@
 /*   By: endoliam <endoliam@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/11 13:55:59 by endoliam          #+#    #+#             */
-/*   Updated: 2024/06/11 13:56:04 by endoliam         ###   ########lyon.fr   */
+/*   Updated: 2024/08/01 14:25:22 by rtehar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-int env_shell(char **env)
+int	env_shell(char **env)
 {
 	int	i;
 
@@ -22,5 +22,5 @@ int env_shell(char **env)
 		printf("%s\n", env[i]);
 		i++;
 	}
-	return 0;
+	return (0);
 }

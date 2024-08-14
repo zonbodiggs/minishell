@@ -6,7 +6,7 @@
 /*   By: endoliam <endoliam@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/24 13:20:21 by rtehar            #+#    #+#             */
-/*   Updated: 2024/08/14 01:43:25 by endoliam         ###   ########lyon.fr   */
+/*   Updated: 2024/08/14 19:00:19 by endoliam         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,7 @@ int	prepare_execution(t_minishell *mini, t_cmd	*cmd)
 
 	value = 0;
 	value_redir = 0;
-	if (cmd && cmd->cmd)
+	if (cmd)
 		value = iscmd(cmd->cmd, mini);
 	if (value == 2)
 		ft_printf_fd(2, "malloc alocation failed\n");

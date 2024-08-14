@@ -6,7 +6,7 @@
 /*   By: endoliam <endoliam@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/13 22:48:23 by endoliam          #+#    #+#             */
-/*   Updated: 2024/08/14 01:14:20 by endoliam         ###   ########lyon.fr   */
+/*   Updated: 2024/08/14 16:53:31 by endoliam         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,6 +39,8 @@ void	child(t_minishell *mini, int oldfd[2], int newfd[2])
 {
 	t_cmd	*cmd;
 
+	//sigint 
+	//sigquit vers mm fonction
 	cmd = mini->input;
 	if (oldfd[0] == -1 && oldfd[1] == -1)
 		dup2(newfd[1], STDOUT_FILENO);
@@ -48,6 +50,7 @@ void	child(t_minishell *mini, int oldfd[2], int newfd[2])
 	{
 		dup2(oldfd[0], STDIN_FILENO);
 		dup2(newfd[1], STDOUT_FILENO);
+		close(oldfd[0]);
 	}
 	close_all(newfd, NULL);
 	if (oldfd[0] != -1)
@@ -76,8 +79,10 @@ int	execute_pipeline(t_minishell *mini)
 		free_one_input(mini->input);
 		mini->input = for_free;
 	}
+	// init_signal ignoe sigquit redirige sigint 
 	while (wait(&status) > 0)
 		;
+		//if pid === wait alors ->choper exit statue et continuer a wait les auters 
 	close_all(newfd, oldfd);
 	return (WEXITSTATUS(status));
 }
