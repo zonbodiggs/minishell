@@ -6,7 +6,7 @@
 /*   By: endoliam <endoliam@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/23 14:43:05 by rtehar            #+#    #+#             */
-/*   Updated: 2024/08/14 01:43:32 by endoliam         ###   ########lyon.fr   */
+/*   Updated: 2024/08/15 16:31:32 by endoliam         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,9 +14,11 @@
 
 void	exec_builtin(t_minishell *mini, t_cmd *cmd)
 {
-	sort_cmd(cmd->cmd, mini->env);
+	int	exit_code;
+
+	exit_code = sort_cmd(cmd->cmd, mini->env);
 	kill_shell(mini);
-	exit(0);
+	exit(exit_code);
 }
 
 int	sort_cmd(char **cmd, char **env)

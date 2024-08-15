@@ -6,7 +6,7 @@
 /*   By: endoliam <endoliam@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/14 16:09:41 by endoliam          #+#    #+#             */
-/*   Updated: 2024/08/14 18:59:45 by endoliam         ###   ########lyon.fr   */
+/*   Updated: 2024/08/15 16:34:55 by endoliam         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,6 +59,7 @@ void run_builtin(char **cmd, t_minishell *mini)
 		export_variable(cmd, &mini->env);
 	if (cmd && ft_strlen(cmd[0]) == 5 && ft_strncmp(cmd[0], "unset", ft_strlen(cmd[0])) == 0)
 		unset_variable(cmd, &mini->env);
+	
 }
 
 void	sort_builtin(t_minishell *mini)
@@ -73,11 +74,17 @@ void	sort_builtin(t_minishell *mini)
 	}
 	return ;
 }
-
+t_minishell	*init_shell(t_minishell *minishell, char **env)
+{
+	minishell = ft_calloc(1, sizeof(t_minishell));
+	minishell->env = cpy_env(minishell, env);
+	//si pas env rajout PWD fins SHLVL+=1
+	return (minishell);
+}
 int		main(int ac, char **av, char **env)
 {
 	char 		*buffer;
-	t_minishell *minishell;
+	t_minishell *minishell = NULL;
 
 
 	(void)av;	
@@ -86,15 +93,18 @@ int		main(int ac, char **av, char **env)
 		ft_printf_fd(2, "too many arguments\n");
 		exit (2);
 	}
-	minishell = ft_calloc(1, sizeof(t_minishell));
-	minishell->env = cpy_env(minishell, env);
-	//si pas env rajout PWD fins SHLVL+=1
+	minishell = init_shell(minishell, env);
+	minishell->exit_code = ft_itoa(0);
 	while(1)
 	{
 		g_signal = 0;
 		signal(SIGINT, handle_sigint);
 		signal(SIGQUIT, SIG_IGN);
-		buffer = readline("minishell> ");
+		printf("%s%s%s@%sminishell%s ~%s %s[%s%s%s]\n\x1b[0m", "\x1b[36m",mygetenv("USER",
+				*minishell), "\x1b[93m", "\x1b[32m", "\x1b[35m" ,mygetenv("PWD",
+				*minishell), "\x1b[93m", "\x1b[31m",
+				minishell->exit_code, "\x1b[93m");
+		buffer = readline("> ");
 		if (!buffer)
 		{
 			write(1, "exit\n", 5);
@@ -103,11 +113,10 @@ int		main(int ac, char **av, char **env)
 		if (buffer && buffer[0])
 			add_history(buffer);
 		minishell->lex = create_lexer(buffer, minishell);
-		// print_lexer(minishell->lex);
 		if (minishell->lex)
 			minishell->input = init_cmd(minishell, &minishell->lex);
 		find_heredoc(minishell->input, minishell);
-		print_cmd(minishell->input);
+		// print_cmd(minishell->input);
 		if (minishell->input)
 		{
 			free(minishell->exit_code);
@@ -126,10 +135,9 @@ int		main(int ac, char **av, char **env)
 // gestion backslash a voir
 // "" = pas permission denied mais cmd not fount
 // Leak avec cmd | ""
-// cat < | hey prend | pour un infile
-// PWD chelou sans = apres des CD, oldpwd a pas de =
-// Code erreur de /bla/bin = 2 au lieu de 127
-// ./directory -> Is a directory, code 126 
 // Prendre le statut d'exit seulement du dernier enfant cree
 // echo << bye << bla | cat heredoc no such file ?
 // Retour erreur exit / autres btin
+// here doc : CTRL+D = donne le delimiteur ^^
+// prompt sur meme lign que error : ls > in | cat < in > out2 | rev < out2
+// droit de sortie lorsque l'on est sur un fichier sans droit

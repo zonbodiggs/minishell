@@ -6,7 +6,7 @@
 /*   By: endoliam <endoliam@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/12 20:43:01 by endoliam          #+#    #+#             */
-/*   Updated: 2024/08/14 15:44:27 by endoliam         ###   ########lyon.fr   */
+/*   Updated: 2024/08/15 16:47:48 by endoliam         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,7 +86,7 @@ void	find_heredoc(t_cmd	*command, t_minishell *mini)
 	{
 		if (cmd && cmd->redir == HEREDOC)
 		{
-			if (access(".heredoc", F_OK) != 0)
+			if (access(".heredoc", F_OK) == 0)
 				unlink(".heredoc");
 			heredoc(cmd->files, mini);
 		}

@@ -6,7 +6,7 @@
 /*   By: endoliam <endoliam@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/17 17:20:55 by endoliam          #+#    #+#             */
-/*   Updated: 2024/07/29 12:14:23 by endoliam         ###   ########lyon.fr   */
+/*   Updated: 2024/08/15 12:12:23 by endoliam         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,6 +52,12 @@ bool	isoperator(char c)
 		|| (c == '<')
 		|| (c == 39)
 		|| (c == '"'))
+		return (true);
+	return (false);
+}
+bool	is_quote(char c)
+{
+	if ((c == 39) || (c == '"'))
 		return (true);
 	return (false);
 }

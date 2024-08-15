@@ -6,7 +6,7 @@
 /*   By: endoliam <endoliam@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/24 18:53:22 by endoliam          #+#    #+#             */
-/*   Updated: 2024/08/14 01:34:40 by endoliam         ###   ########lyon.fr   */
+/*   Updated: 2024/08/15 14:35:26 by endoliam         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,13 +34,13 @@ bool	isbuiltin(char *cmd)
 {
 	if (!cmd || !cmd[0])
 		return (false);
-	if (!ft_strncmp(cmd, "echo", ft_strlen(cmd))
-		|| !ft_strncmp(cmd, "pwd", ft_strlen(cmd))
-		|| !ft_strncmp(cmd, "cd", ft_strlen(cmd))
-		|| !ft_strncmp(cmd, "export", ft_strlen(cmd))
-		|| !ft_strncmp(cmd, "unset", ft_strlen(cmd))
-		|| !ft_strncmp(cmd, "env", ft_strlen(cmd))
-		|| !ft_strncmp(cmd, "exit", ft_strlen(cmd)))
+	if (!ft_strcmp(cmd, "echo")
+		|| !ft_strcmp(cmd, "pwd")
+		|| !ft_strcmp(cmd, "cd")
+		|| !ft_strcmp(cmd, "export")
+		|| !ft_strcmp(cmd, "unset")
+		|| !ft_strcmp(cmd, "env")
+		|| !ft_strcmp(cmd, "exit"))
 		return (true);
 	return (false);
 }

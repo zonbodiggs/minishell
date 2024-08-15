@@ -6,7 +6,7 @@
 /*   By: endoliam <endoliam@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/14 13:20:55 by endoliam          #+#    #+#             */
-/*   Updated: 2024/08/14 18:47:14 by endoliam         ###   ########lyon.fr   */
+/*   Updated: 2024/08/15 13:50:12 by endoliam         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -103,6 +103,7 @@ bool		final_space(char *s);
 bool		isoperator(char c);
 bool		is_env_var(char *s);
 bool		isispace(char c);
+bool		is_quote(char c);
 
 //				expand
 char		*init_env_var(char *s, t_minishell mini);
@@ -139,6 +140,7 @@ bool		isoperator_cmd(t_lexer_type lex_type);
 bool		isredirection(t_lexer_type lex_type);
 bool		isbuiltin(char *cmd);
 bool		isthereredirection(t_lexer *lexer, t_cmd *command);
+bool		is_directory(char *cmd);
 
 // 				files utils 
 void		set_input(t_cmd *command, t_lexer *lex);

@@ -6,7 +6,7 @@
 /*   By: endoliam <endoliam@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/13 22:57:47 by endoliam          #+#    #+#             */
-/*   Updated: 2024/08/14 18:46:29 by endoliam         ###   ########lyon.fr   */
+/*   Updated: 2024/08/15 16:37:15 by endoliam         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,13 @@ t_lexer	*lexer_error_exit(int i, t_lexer *lexer, t_minishell *mini)
 		exit(2);
 	}
 	else
+	{
+		free_lexer(&mini->lex);
+		free_lexer(&lexer);
+		if (mini->exit_code)
+			free(mini->exit_code);
 		mini->exit_code = ft_itoa(2);
+	}
 	return (NULL);
 }
 
@@ -33,8 +39,7 @@ void	kill_shell(t_minishell *shell)
 	free(shell);
 	rl_clear_history();
 }
-
-int	exit_error_exec(t_minishell *mini, int value)
+int	get_exit_code(t_minishell *mini, int value)
 {
 	char	*str;
 
@@ -42,13 +47,37 @@ int	exit_error_exec(t_minishell *mini, int value)
 	{
 		value = errno;
 		str = strerror(value);
-		ft_printf_fd(2, "minishell : %s\n", str);
+		if (mini->input->cmd)
+			ft_printf_fd(2, "minishell error : '%s' ", mini->input->cmd[0]);
+		ft_printf_fd(2, "%s\n", str);
+		if (value == 13)
+			value = 126;
+		return (value);
 	}
-	else if (value == 127)
-		ft_printf_fd(2, "minishell : command '%s' not found\n",
-			mini->input->cmd[0]);
+	else if ((mini->input && mini->input->cmd && value == 127 ))
+	{
+		if (!ft_strncmp(mini->input->cmd[0], "./", 2)
+				&& is_directory(mini->input->cmd[0] + 2))
+		{	
+			ft_printf_fd(2, "minishell error :'%s' is a directory\n",
+				mini->input->cmd[0] + 2);
+				return (126);
+		}
+		else
+			ft_printf_fd(2, "minishell error : command '%s' not found\n",
+				mini->input->cmd[0]);
+	}
+	return (value);
+}
+int	exit_error_exec(t_minishell *mini, int value)
+{
+	int exit_code;
+
+	// if (value != 0 && errno !=0)
+	// 	ft_printf_fd(2, "minishell error : ");
+	exit_code = get_exit_code(mini, value);
 	kill_shell(mini);
-	exit(value);
+	exit(exit_code);
 }
 
 void		exit_cmd(char *msg, t_minishell *mini, int value)

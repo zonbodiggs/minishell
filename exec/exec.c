@@ -6,7 +6,7 @@
 /*   By: endoliam <endoliam@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/24 13:20:21 by rtehar            #+#    #+#             */
-/*   Updated: 2024/08/14 19:00:19 by endoliam         ###   ########lyon.fr   */
+/*   Updated: 2024/08/15 16:44:43 by endoliam         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,7 +67,7 @@ int	my_execve(t_minishell *mini)
 	mini->input = cmd;
 	if (value == 0 && cmd && cmd->cmd && isbuiltin(cmd->cmd[0]) == true)
 		exec_builtin(mini, cmd);
-	if (value == 127 || !cmd || !cmd->cmd
+	if (value != 0 || !cmd || !cmd->cmd
 		|| (execve(cmd->cmd[0], cmd->cmd, cmd->t_env) == -1))
 		return (exit_error_exec(mini, value));
 	return (value);
@@ -86,5 +86,7 @@ char	*run_commands(t_minishell *mini)
 		exit_code = execute_simple_command(mini);
 	else
 		exit_code = execute_pipeline(mini);
+	if (isfilevalid_in(".heredoc") != 0)
+		ft_printf_fd(2, "SALUT SALUT SALUT SALUT\n\n\n\n");
 	return (ft_itoa(exit_code));
 }
