@@ -6,7 +6,7 @@
 /*   By: endoliam <endoliam@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/14 16:09:41 by endoliam          #+#    #+#             */
-/*   Updated: 2024/08/15 16:34:55 by endoliam         ###   ########lyon.fr   */
+/*   Updated: 2024/08/15 21:42:29 by endoliam         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,7 +86,7 @@ int		main(int ac, char **av, char **env)
 	char 		*buffer;
 	t_minishell *minishell = NULL;
 
-
+	printf("%sWelcome to minishell an interactive 42 shell project\nhave good time :)\n\x1b[49m", "\x1b[42m");
 	(void)av;	
 	if (ac != 1)
 	{	
@@ -100,8 +100,8 @@ int		main(int ac, char **av, char **env)
 		g_signal = 0;
 		signal(SIGINT, handle_sigint);
 		signal(SIGQUIT, SIG_IGN);
-		printf("%s%s%s@%sminishell%s ~%s %s[%s%s%s]\n\x1b[0m", "\x1b[36m",mygetenv("USER",
-				*minishell), "\x1b[93m", "\x1b[32m", "\x1b[35m" ,mygetenv("PWD",
+		printf("%s%s%s@%sshell rtehar+endoliam%s ~%s %s[%s%s%s]\n\x1b[0m", "\x1b[36m",mygetenv("USER",
+				*minishell), "\x1b[93m", "\x1b[32m", "\x1b[95m" ,mygetenv("PWD",
 				*minishell), "\x1b[93m", "\x1b[31m",
 				minishell->exit_code, "\x1b[93m");
 		buffer = readline("> ");
@@ -113,10 +113,11 @@ int		main(int ac, char **av, char **env)
 		if (buffer && buffer[0])
 			add_history(buffer);
 		minishell->lex = create_lexer(buffer, minishell);
+		//print_lexer(minishell->lex);
 		if (minishell->lex)
 			minishell->input = init_cmd(minishell, &minishell->lex);
 		find_heredoc(minishell->input, minishell);
-		// print_cmd(minishell->input);
+		//print_cmd(minishell->input);
 		if (minishell->input)
 		{
 			free(minishell->exit_code);
@@ -132,12 +133,8 @@ int		main(int ac, char **av, char **env)
 	free(minishell);
 }
 
-// gestion backslash a voir
-// "" = pas permission denied mais cmd not fount
 // Leak avec cmd | ""
 // Prendre le statut d'exit seulement du dernier enfant cree
-// echo << bye << bla | cat heredoc no such file ?
 // Retour erreur exit / autres btin
 // here doc : CTRL+D = donne le delimiteur ^^
-// prompt sur meme lign que error : ls > in | cat < in > out2 | rev < out2
 // droit de sortie lorsque l'on est sur un fichier sans droit

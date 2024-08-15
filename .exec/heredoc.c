@@ -6,7 +6,7 @@
 /*   By: endoliam <endoliam@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/12 20:43:01 by endoliam          #+#    #+#             */
-/*   Updated: 2024/08/15 21:33:50 by endoliam         ###   ########lyon.fr   */
+/*   Updated: 2024/08/15 20:47:25 by endoliam         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ int	redirect_heredoc(t_minishell *mini)
 
 	g_signal = 0;
 	// SIGINT signql heredoc ioctl
-	if (isfilevalid_in(".heredoc"))
+	if (isfilevalid_in(".heredoc") != 0)
 		return (error_files(isfilevalid_in(".heredoc"), ".heredoc"));
 	fdhere = open(".heredoc", O_RDONLY);
 	if (fdhere == -1)
@@ -57,7 +57,7 @@ void	heredoc(const char *delimiter, t_minishell *mini)
 	while (1)
 	{
 		line = readline("> ");
-		if (line == NULL || !ft_strcmp(line, delimiter))
+		if (line == NULL || !ft_strncmp(line, delimiter, ft_strlen(delimiter)))
 		{
 			free(line);
 			break ;
@@ -86,7 +86,7 @@ void	find_heredoc(t_cmd	*command, t_minishell *mini)
 	{
 		if (cmd && cmd->redir == HEREDOC)
 		{
-			if (access(".heredoc", F_OK) == 0)
+			if (access(".heredoc", F_OK) != 0)
 				unlink(".heredoc");
 			heredoc(cmd->files, mini);
 		}

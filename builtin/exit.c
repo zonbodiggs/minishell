@@ -6,7 +6,7 @@
 /*   By: endoliam <endoliam@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/11 13:56:11 by endoliam          #+#    #+#             */
-/*   Updated: 2024/08/01 14:26:22 by rtehar           ###   ########.fr       */
+/*   Updated: 2024/08/15 20:33:58 by endoliam         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,7 @@ void	exit_shell(t_minishell *shell, char **cmd)
 		}
 	}
 	kill_shell(shell);
+	printf("%syou exit shell 42 project from rtehar and endoliam thanks for your time\nhave good day/night :)\n\x1b[49m", "\x1b[42m");
 	printf("exit\n");
 	exit(exit_code);
 }

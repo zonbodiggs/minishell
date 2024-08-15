@@ -6,7 +6,7 @@
 /*   By: endoliam <endoliam@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/13 22:48:23 by endoliam          #+#    #+#             */
-/*   Updated: 2024/08/15 21:17:07 by endoliam         ###   ########lyon.fr   */
+/*   Updated: 2024/08/15 20:54:08 by endoliam         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,11 +50,10 @@ void	child(t_minishell *mini, int oldfd[2], int newfd[2])
 	{
 		dup2(oldfd[0], STDIN_FILENO);
 		dup2(newfd[1], STDOUT_FILENO);
-		close(oldfd[0]);
 	}
-	close_all(newfd, NULL);
-	if (oldfd[0] != -1)
-		close(oldfd[0]);
+	close_all(newfd, oldfd);
+	 if (oldfd[0] != -1)
+	 	close(oldfd[0]);
 	my_execve(mini);
 }
 

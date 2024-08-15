@@ -6,7 +6,7 @@
 /*   By: endoliam <endoliam@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/13 22:57:47 by endoliam          #+#    #+#             */
-/*   Updated: 2024/08/15 16:37:15 by endoliam         ###   ########lyon.fr   */
+/*   Updated: 2024/08/15 21:10:58 by endoliam         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,7 @@ int	get_exit_code(t_minishell *mini, int value)
 	{
 		value = errno;
 		str = strerror(value);
-		if (mini->input->cmd)
+		if (mini->input &&mini->input->cmd)
 			ft_printf_fd(2, "minishell error : '%s' ", mini->input->cmd[0]);
 		ft_printf_fd(2, "%s\n", str);
 		if (value == 13)

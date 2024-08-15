@@ -6,12 +6,11 @@
 /*   By: endoliam <endoliam@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/29 12:32:33 by endoliam          #+#    #+#             */
-/*   Updated: 2024/08/15 21:06:37 by endoliam         ###   ########lyon.fr   */
+/*   Updated: 2024/08/14 19:03:52 by endoliam         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../minishell.h"
-#include <dirent.h>
 
 int	set_and_check(char **cmd, t_minishell *mini)
 {
@@ -20,8 +19,6 @@ int	set_and_check(char **cmd, t_minishell *mini)
 	char	*cmd_path;
 
 	i = 0;
-	if (!cmd || !*cmd || !cmd[0][0])
-		return (127);
 	path = ft_split(mygetenv("PATH", *mini), ':');
 	if (!path)
 		return (0);
@@ -42,37 +39,14 @@ int	set_and_check(char **cmd, t_minishell *mini)
 	free_array(path);
 	return (127);
 }
-bool	is_directory(char *cmd)
-{
-	DIR	 *dir;
-
-	dir = opendir(cmd);
-	if (dir)
-	{
-		closedir(dir);
-		return (true);
-	}
-	return (false);
-}
 
 int	iscmd(char **cmd, t_minishell *mini)
 {
-	if (!cmd || !cmd[0])
+	if (!cmd[0])
 		return (127);
-	if (!ft_strncmp(cmd[0], "./", 2))
-	{
-		if (!is_directory(cmd[0] + 2))
-			return (0);
-		return (127);
-	}
-	else if (ft_strrchr(cmd[0], '/'))
-	{
-		if (access(cmd[0], F_OK) == 0)
-			return (0);
-		return (127);
-	}
-	if (isbuiltin(cmd[0]) == true)
-		return (0);	
+	print_cmd(mini->input);
+	if (isbuiltin(cmd[0]) == true || !ft_strncmp(cmd[0], "./", 2) || ft_strrchr(cmd[0], '/'))
+		return (0);
 	if (!cmd || !mygetenv("PATH", *mini))
 		return (127);
 	return (set_and_check(cmd, mini));
