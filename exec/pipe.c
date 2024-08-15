@@ -6,11 +6,13 @@
 /*   By: endoliam <endoliam@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/13 22:48:23 by endoliam          #+#    #+#             */
-/*   Updated: 2024/08/15 21:17:07 by endoliam         ###   ########lyon.fr   */
+/*   Updated: 2024/08/15 23:27:33 by endoliam         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
+#include <sys/types.h>
+#include <sys/wait.h>
 
 void	update_pipeline(int *oldfd, int *newfd)
 {
@@ -82,7 +84,6 @@ int	execute_pipeline(t_minishell *mini)
 	// init_signal ignoe sigquit redirige sigint 
 	while (wait(&status) > 0)
 		;
-		//if pid === wait alors ->choper exit statue et continuer a wait les auters 
 	close_all(newfd, oldfd);
 	return (WEXITSTATUS(status));
 }

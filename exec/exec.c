@@ -6,7 +6,7 @@
 /*   By: endoliam <endoliam@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/24 13:20:21 by rtehar            #+#    #+#             */
-/*   Updated: 2024/08/15 21:36:25 by endoliam         ###   ########lyon.fr   */
+/*   Updated: 2024/08/15 23:13:54 by endoliam         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,8 +49,6 @@ int	prepare_execution(t_minishell *mini, t_cmd	*cmd)
 	value_redir = 0;
 	if (cmd)
 		value = iscmd(cmd->cmd, mini);
-	if (value == 2)
-		ft_printf_fd(2, "malloc alocation failed\n");
 	value_redir = redirect_pipe(mini);
 	if (value_redir != 0)
 		value = value_redir;
@@ -82,7 +80,7 @@ char	*run_commands(t_minishell *mini)
 	if (!mini->input)
 		return (0);
 	i = number_of_command(mini->input);
-	if (!mini->input->next || i <= 1)
+	if (!mini->input->next || i == 0)
 		exit_code = execute_simple_command(mini);
 	else
 		exit_code = execute_pipeline(mini);

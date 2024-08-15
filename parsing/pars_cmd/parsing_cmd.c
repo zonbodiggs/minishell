@@ -6,7 +6,7 @@
 /*   By: endoliam <endoliam@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/29 12:32:33 by endoliam          #+#    #+#             */
-/*   Updated: 2024/08/15 21:06:37 by endoliam         ###   ########lyon.fr   */
+/*   Updated: 2024/08/15 23:32:55 by endoliam         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,8 +81,8 @@ int	iscmd(char **cmd, t_minishell *mini)
 int	error_files(int flag, char *file)
 {
 	if (flag == 2)
-		ft_printf_fd(2, "minishell :'%s' No such file or directory\n", file);
+		ft_printf_fd(2, "minishell error :'%s' No such file or directory\n", file);
 	else if (flag == 1)
-		ft_printf_fd(2, "minishell : permision denied %s\n", file);
+		ft_printf_fd(2, "minishell error :'%s' permision denied\n", file);
 	return (flag);
 }

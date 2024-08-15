@@ -6,7 +6,7 @@
 /*   By: endoliam <endoliam@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/13 22:54:41 by endoliam          #+#    #+#             */
-/*   Updated: 2024/08/14 01:11:53 by endoliam         ###   ########lyon.fr   */
+/*   Updated: 2024/08/15 23:18:38 by endoliam         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ int	number_of_command(t_cmd *cmd)
 	start = cmd;
 	while (start)
 	{
-		if (start->cmd)
+		if (start && start->pipe)
 			i++;
 		start = start->next;
 	}
@@ -34,10 +34,9 @@ bool	is_last_cmd(t_cmd	*cmd)
 {
 	if (!cmd->next)
 		return (true);
-	cmd = cmd->next;
 	while (cmd)
 	{
-		if (cmd->cmd)
+		if (cmd && cmd->pipe)
 			return (false);
 		cmd = cmd->next;
 	}

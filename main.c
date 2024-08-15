@@ -6,7 +6,7 @@
 /*   By: endoliam <endoliam@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/14 16:09:41 by endoliam          #+#    #+#             */
-/*   Updated: 2024/08/15 21:42:29 by endoliam         ###   ########lyon.fr   */
+/*   Updated: 2024/08/15 23:28:16 by endoliam         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -133,8 +133,6 @@ int		main(int ac, char **av, char **env)
 	free(minishell);
 }
 
-// Leak avec cmd | ""
-// Prendre le statut d'exit seulement du dernier enfant cree
 // Retour erreur exit / autres btin
 // here doc : CTRL+D = donne le delimiteur ^^
 // droit de sortie lorsque l'on est sur un fichier sans droit
