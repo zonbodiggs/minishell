@@ -6,7 +6,7 @@
 /*   By: endoliam <endoliam@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/11 13:56:32 by endoliam          #+#    #+#             */
-/*   Updated: 2024/08/14 14:42:51 by rtehar           ###   ########.fr       */
+/*   Updated: 2024/08/16 16:11:54 by endoliam         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,6 +97,8 @@ int	export_variable(char **cmd, char ***env)
 	char	*new_var;
 
 	new_var = cmd[1];
+	if (!*env)
+		*env = ft_calloc(2, sizeof(char *));
 	if (cmd[1] == NULL)
 	{
 		list_env_vars(*env);

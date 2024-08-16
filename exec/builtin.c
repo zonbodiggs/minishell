@@ -6,7 +6,7 @@
 /*   By: endoliam <endoliam@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/23 14:43:05 by rtehar            #+#    #+#             */
-/*   Updated: 2024/08/16 11:33:49 by endoliam         ###   ########lyon.fr   */
+/*   Updated: 2024/08/16 15:46:42 by endoliam         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ int	sort_cmd(char **cmd, char **env)
 		return (pwd());
 	else if (ft_strcmp(cmd[0], "env") == 0 && ft_strlen(cmd[0]) == 3)
 		return (env_shell(env));
-	else if (ft_strcmp(cmd[0], "export") == 0 && ft_strlen(cmd[0]) == 6)
-		return (export_variable(cmd, &env));
+	//else if (ft_strcmp(cmd[0], "export") == 0 && ft_strlen(cmd[0]) == 6)
+	//	return (export_variable(cmd, &env));
 	return (127);
 }
