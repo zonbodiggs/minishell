@@ -6,7 +6,7 @@
 /*   By: endoliam <endoliam@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/13 22:57:47 by endoliam          #+#    #+#             */
-/*   Updated: 2024/08/15 23:20:07 by endoliam         ###   ########lyon.fr   */
+/*   Updated: 2024/08/16 11:36:36 by endoliam         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,7 +56,7 @@ int	get_exit_code(t_minishell *mini, int value)
 	}
 	else if ((mini->input && mini->input->cmd && value == 127 && is_last_cmd(mini->input)))
 	{
-		if (!ft_strncmp(mini->input->cmd[0], "./", 2)
+		if (!ft_strcmp(mini->input->cmd[0], "./")
 				&& is_directory(mini->input->cmd[0] + 2))
 		{	
 			ft_printf_fd(2, "minishell error :'%s' is a directory\n",

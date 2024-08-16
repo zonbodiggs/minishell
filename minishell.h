@@ -6,7 +6,7 @@
 /*   By: endoliam <endoliam@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/14 13:20:55 by endoliam          #+#    #+#             */
-/*   Updated: 2024/08/15 21:03:18 by endoliam         ###   ########lyon.fr   */
+/*   Updated: 2024/08/16 13:18:45 by endoliam         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@
 # include <signal.h>
 # include <sys/types.h>
 # include <errno.h>
-
+# include <limits.h>
 extern int			g_signal;
 
 typedef enum e_enum

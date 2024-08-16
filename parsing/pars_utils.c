@@ -6,7 +6,7 @@
 /*   By: endoliam <endoliam@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/17 17:04:15 by endoliam          #+#    #+#             */
-/*   Updated: 2024/08/14 15:47:15 by endoliam         ###   ########lyon.fr   */
+/*   Updated: 2024/08/16 13:26:52 by endoliam         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,7 +56,7 @@ char	**cpy_env(t_minishell *mini, char **env)
 
 	i = 0;
 	len = 0;
-	if (!env)
+	if (!env || !*env)
 		return (NULL);
 	while (env[len])
 		len++;

@@ -6,7 +6,7 @@
 /*   By: endoliam <endoliam@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/14 16:09:41 by endoliam          #+#    #+#             */
-/*   Updated: 2024/08/15 23:28:16 by endoliam         ###   ########lyon.fr   */
+/*   Updated: 2024/08/16 14:00:31 by endoliam         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,13 +51,13 @@ char	*mygetenv(char *s, t_minishell mini)
 
 void run_builtin(char **cmd, t_minishell *mini)
 {
-	if (cmd && ft_strlen(cmd[0]) == 4 && ft_strncmp(cmd[0], "exit", ft_strlen(cmd[0])) == 0)
+	if (cmd && ft_strlen(cmd[0]) == 4 && !ft_strcmp(cmd[0], "exit"))
 		exit_shell(mini, cmd);
-	if (cmd && ft_strlen(cmd[0]) == 2 && ft_strncmp(cmd[0], "cd", ft_strlen(cmd[0])) == 0)
-			cd(cmd, &mini->env);
-	if (cmd && ft_strlen(cmd[0]) == 6 && ft_strncmp(cmd[0], "export", ft_strlen(cmd[0])) == 0)
+	if (cmd && ft_strlen(cmd[0]) == 2 && !ft_strcmp(cmd[0], "cd"))
+		cd(cmd, &mini->env);
+	if (cmd && ft_strlen(cmd[0]) == 6 && !ft_strcmp(cmd[0], "export"))
 		export_variable(cmd, &mini->env);
-	if (cmd && ft_strlen(cmd[0]) == 5 && ft_strncmp(cmd[0], "unset", ft_strlen(cmd[0])) == 0)
+	if (cmd && ft_strlen(cmd[0]) == 5 && !ft_strcmp(cmd[0], "unset"))
 		unset_variable(cmd, &mini->env);
 	
 }
@@ -74,25 +74,62 @@ void	sort_builtin(t_minishell *mini)
 	}
 	return ;
 }
+char	**add_env(void)
+{
+	char **env;
+	char cwd[PATH_MAX];
+ 
+	env = ft_calloc(3, sizeof(char *));
+	if (!env)
+		exit(42); // protect malloc
+	env[0] = ft_strjoin("PWD=",getcwd(cwd, sizeof(cwd)));
+	env[1] = ft_strdup("SHLVL=1");
+	env[2] = NULL;
+	return (env);
+
+}
 t_minishell	*init_shell(t_minishell *minishell, char **env)
 {
+	char	*lvl;
+
 	minishell = ft_calloc(1, sizeof(t_minishell));
 	minishell->env = cpy_env(minishell, env);
+	if (!minishell->env || !*minishell->env)
+		minishell->env = add_env();
+	lvl = mygetenv("SHLVL", *minishell);
+	if (ft_strlen(lvl) == 1)
+		lvl[0]++;
+	printf("%s\n", lvl);
 	//si pas env rajout PWD fins SHLVL+=1
+	(void)env;
 	return (minishell);
+}
+void	prompt(t_minishell	*minishell)
+{
+	char *user;
+
+	user = mygetenv("USER", *minishell);
+	if (!user)
+		user = "ghost_user";
+	printf("%s%s%s@%sshell rtehar+endoliam%s ~%s %s[%s%s%s]\x1b[0m\n",
+				"\x1b[36m",user, "\x1b[93m", "\x1b[32m",
+				"\x1b[95m" ,mygetenv("PWD",
+				*minishell), "\x1b[93m", "\x1b[31m",
+				minishell->exit_code, "\x1b[93m");
 }
 int		main(int ac, char **av, char **env)
 {
 	char 		*buffer;
 	t_minishell *minishell = NULL;
 
-	printf("%sWelcome to minishell an interactive 42 shell project\nhave good time :)\n\x1b[49m", "\x1b[42m");
 	(void)av;	
 	if (ac != 1)
 	{	
 		ft_printf_fd(2, "too many arguments\n");
 		exit (2);
 	}
+	printf("%sWelcome to minishell an interactive 42 shell project\x1b[49m\n", "\x1b[42m");
+	printf("%shave good time :)\x1b[49m\n", "\x1b[42m");
 	minishell = init_shell(minishell, env);
 	minishell->exit_code = ft_itoa(0);
 	while(1)
@@ -100,10 +137,7 @@ int		main(int ac, char **av, char **env)
 		g_signal = 0;
 		signal(SIGINT, handle_sigint);
 		signal(SIGQUIT, SIG_IGN);
-		printf("%s%s%s@%sshell rtehar+endoliam%s ~%s %s[%s%s%s]\n\x1b[0m", "\x1b[36m",mygetenv("USER",
-				*minishell), "\x1b[93m", "\x1b[32m", "\x1b[95m" ,mygetenv("PWD",
-				*minishell), "\x1b[93m", "\x1b[31m",
-				minishell->exit_code, "\x1b[93m");
+		prompt(minishell);
 		buffer = readline("> ");
 		if (!buffer)
 		{

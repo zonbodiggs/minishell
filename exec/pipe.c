@@ -6,7 +6,7 @@
 /*   By: endoliam <endoliam@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/13 22:48:23 by endoliam          #+#    #+#             */
-/*   Updated: 2024/08/15 23:27:33 by endoliam         ###   ########lyon.fr   */
+/*   Updated: 2024/08/16 12:53:31 by endoliam         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,14 +52,29 @@ void	child(t_minishell *mini, int oldfd[2], int newfd[2])
 	{
 		dup2(oldfd[0], STDIN_FILENO);
 		dup2(newfd[1], STDOUT_FILENO);
-		close(oldfd[0]);
 	}
 	close_all(newfd, NULL);
 	if (oldfd[0] != -1)
 		close(oldfd[0]);
 	my_execve(mini);
 }
+int	my_wait(int status, int pid)
+{
+	int exit_code;
+	int	i;
 
+	i = 0;
+	exit_code = 0;
+	while (wait(&status) > 0)
+	{
+		if (waitpid(pid, &status, 0) == pid)
+		{
+			exit_code = status;
+			i++;
+		}
+	}
+	return (exit_code);
+}
 int	execute_pipeline(t_minishell *mini)
 {
 	pid_t	pid;
@@ -68,6 +83,7 @@ int	execute_pipeline(t_minishell *mini)
 	int		oldfd[2];
 	int		newfd[2];
 
+	status = 0;
 	init_fds(oldfd, newfd);
 	pipe(newfd);
 	while (mini->input)
@@ -81,9 +97,8 @@ int	execute_pipeline(t_minishell *mini)
 		free_one_input(mini->input);
 		mini->input = for_free;
 	}
+	status = my_wait(status, pid);
 	// init_signal ignoe sigquit redirige sigint 
-	while (wait(&status) > 0)
-		;
 	close_all(newfd, oldfd);
 	return (WEXITSTATUS(status));
 }

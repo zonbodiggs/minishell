@@ -6,7 +6,7 @@
 /*   By: endoliam <endoliam@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/29 12:32:33 by endoliam          #+#    #+#             */
-/*   Updated: 2024/08/15 23:32:55 by endoliam         ###   ########lyon.fr   */
+/*   Updated: 2024/08/16 11:44:32 by endoliam         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,7 +59,7 @@ int	iscmd(char **cmd, t_minishell *mini)
 {
 	if (!cmd || !cmd[0])
 		return (127);
-	if (!ft_strncmp(cmd[0], "./", 2))
+	if (!ft_strcmp(cmd[0], "./"))
 	{
 		if (!is_directory(cmd[0] + 2))
 			return (0);
