@@ -6,7 +6,7 @@
 /*   By: endoliam <endoliam@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/13 22:57:47 by endoliam          #+#    #+#             */
-/*   Updated: 2024/08/16 11:36:36 by endoliam         ###   ########lyon.fr   */
+/*   Updated: 2024/08/16 16:56:01 by endoliam         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,8 +73,6 @@ int	exit_error_exec(t_minishell *mini, int value)
 {
 	int exit_code;
 
-	// if (value != 0 && errno !=0)
-	// 	ft_printf_fd(2, "minishell error : ");
 	exit_code = get_exit_code(mini, value);
 	kill_shell(mini);
 	exit(exit_code);

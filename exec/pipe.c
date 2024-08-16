@@ -6,7 +6,7 @@
 /*   By: endoliam <endoliam@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/13 22:48:23 by endoliam          #+#    #+#             */
-/*   Updated: 2024/08/16 12:53:31 by endoliam         ###   ########lyon.fr   */
+/*   Updated: 2024/08/16 17:26:24 by endoliam         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ void	close_all(int *newfd, int *oldfd)
 		close(newfd[1]);
 	}
 }
-
+// cat Makefile | cat <free.c
 void	child(t_minishell *mini, int oldfd[2], int newfd[2])
 {
 	t_cmd	*cmd;

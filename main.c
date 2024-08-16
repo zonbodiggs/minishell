@@ -6,7 +6,7 @@
 /*   By: endoliam <endoliam@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/14 16:09:41 by endoliam          #+#    #+#             */
-/*   Updated: 2024/08/16 16:30:22 by endoliam         ###   ########lyon.fr   */
+/*   Updated: 2024/08/16 18:24:21 by endoliam         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,13 +17,14 @@ int	g_signal;
 void	handle_sigint(int sig)
 {
 	(void)sig;
-	write(1, "\nminishell> ", 12);
+	write(1, "\n~", 2);
 }
 
 void	handle_sigquit(int sig)
 {
 	(void)sig;
 }
+
 char	*mygetenv(char *s, t_minishell mini)
 {
 	int		i;
@@ -49,48 +50,70 @@ char	*mygetenv(char *s, t_minishell mini)
 	return (NULL);
 }
 
-void run_builtin(char **cmd, t_minishell *mini)
+void	add_pwd(t_minishell *minishell)
+{
+	char	cwd[PATH_MAX];
+	char	*p;
+	char	**pwd;
+	
+	p = ft_strjoin("export,PWD=",getcwd(cwd, sizeof(cwd)));
+	pwd = ft_split( p, ',');
+	export_variable(pwd , &minishell->env);
+	free(p);
+	free_array(pwd);
+}
+
+int run_builtin(char **cmd, t_minishell *mini)
 {
 	if (cmd && !ft_strcmp(cmd[0], "exit"))
 		exit_shell(mini, cmd);
 	if (cmd && !ft_strcmp(cmd[0], "cd"))
-		cd(cmd, &mini->env);
+	{
+		if (!mygetenv("PWD", *mini))
+			add_pwd(mini);
+		return (cd(cmd, &mini->env));
+	}
 	if (cmd && !ft_strcmp(cmd[0], "export"))
-		export_variable(cmd, &mini->env);
+		return (export_variable(cmd, &mini->env));
 	if (cmd &&  !ft_strcmp(cmd[0], "unset"))
-		unset_variable(cmd, &mini->env);
+		return (unset_variable(cmd, &mini->env));
+	return (-1);
 }
 
-void	sort_builtin(t_minishell *mini)
+int	sort_builtin(t_minishell *mini)
 {
 	t_cmd	*cmd;
+	int		exit_code;
 
 	cmd = mini->input;
 	while (cmd && cmd->cmd)
 	{
-		run_builtin(cmd->cmd, mini);
+		exit_code = run_builtin(cmd->cmd, mini);
 		cmd = cmd->next;
 	}
-	return ;
+	if (exit_code != -1)
+		mini->exit_code = ft_itoa(exit_code);
+	return (exit_code);
 }
+
 void	add_env(t_minishell *minishell)
 {
 	char	**shl;
-	char	**pwd;
-	char	*p;
-	char	cwd[PATH_MAX];
+	char	**path;
 
-	p = ft_strjoin("export,PWD=",getcwd(cwd, sizeof(cwd)));
-	pwd = ft_split( p, ',');
 	shl = ft_split("export,SHLVL=1", ',');
+	path = ft_split("export,PATH=/.local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin", ',');
 	if (!minishell->env || !mygetenv("PWD", *minishell))
-		export_variable(pwd , &minishell->env);
+		add_pwd(minishell);
 	if (!minishell->env || !mygetenv("SHLVL", *minishell))
 		export_variable(shl , &minishell->env);
+	if (!minishell->env || !mygetenv("PATH", *minishell))
+		export_variable(path , &minishell->env);
 	free_array(shl);
-	free_array(pwd);
-	free(p);
+	free_array(path);
+
 }
+
 void	update_shlvl(t_minishell *minishell)
 {
 	char	*lvl;
@@ -108,6 +131,7 @@ void	update_shlvl(t_minishell *minishell)
 	printf("%s\n", mygetenv("SHLVL", *minishell));
 	free(lvl);
 }
+
 t_minishell	*init_shell(t_minishell *minishell, char **env)
 {
 	minishell = ft_calloc(1, sizeof(t_minishell));
@@ -117,22 +141,24 @@ t_minishell	*init_shell(t_minishell *minishell, char **env)
 		minishell->env = cpy_env(minishell, env);
 	add_env(minishell);
 	update_shlvl(minishell);
-	(void)env;
 	return (minishell);
 }
+
 void	prompt(t_minishell	*minishell)
 {
 	char *user;
+	char cwd[PATH_MAX];
 
+	getcwd(cwd, sizeof(cwd));
 	user = mygetenv("USER", *minishell);
 	if (!user)
 		user = "ghost_user";
-	printf("%s%s%s@%sshell rtehar+endoliam%s ~%s %s[%s%s%s]\x1b[0m\n",
-				"\x1b[36m",user, "\x1b[93m", "\x1b[32m",
-				"\x1b[95m" ,mygetenv("PWD",
-				*minishell), "\x1b[93m", "\x1b[31m",
+	printf("%s%s%s@%sshell-rtehar+endoliam:%s~%s %s[%s%s%s]\x1b[0m\x1b[02;0m\n",
+				"\x1b[1;35m",user, "\x1b[93m", "\x1b[32m",
+				"\x1b[95m" ,cwd, "\x1b[93m", "\x1b[31m",
 				minishell->exit_code, "\x1b[93m");
 }
+
 int		main(int ac, char **av, char **env)
 {
 	char 		*buffer;
@@ -144,8 +170,8 @@ int		main(int ac, char **av, char **env)
 		ft_printf_fd(2, "too many arguments\n");
 		exit (2);
 	}
-	printf("%sWelcome to minishell an interactive 42 shell project\x1b[49m\n", "\x1b[42m");
-	printf("%shave good time :) !\x1b[49m\n", "\x1b[42m");
+	printf("%sWelcome to minishell an interactive 42 shell project\x1b[49m\n", "\x1b[40m");
+	printf("%shave good time :) !\x1b[49m\n", "\x1b[40m");
 	minishell = init_shell(minishell, env);
 	minishell->exit_code = ft_itoa(0);
 	while(1)
@@ -171,8 +197,8 @@ int		main(int ac, char **av, char **env)
 		if (minishell->input)
 		{
 			free(minishell->exit_code);
-			sort_builtin(minishell);
-			minishell->exit_code = run_commands(minishell);
+			if (sort_builtin(minishell) == -1)
+				minishell->exit_code = run_commands(minishell);
 		}
 		free_input(&minishell->input);
 		free(minishell->input);
@@ -183,6 +209,5 @@ int		main(int ac, char **av, char **env)
 	free(minishell);
 }
 
-// Retour erreur exit / autres btin
 // here doc : CTRL+D = donne le delimiteur ^^
 // droit de sortie lorsque l'on est sur un fichier sans droit
