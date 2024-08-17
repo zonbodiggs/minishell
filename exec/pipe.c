@@ -6,7 +6,7 @@
 /*   By: endoliam <endoliam@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/13 22:48:23 by endoliam          #+#    #+#             */
-/*   Updated: 2024/08/16 17:26:24 by endoliam         ###   ########lyon.fr   */
+/*   Updated: 2024/08/17 04:14:53 by endoliam         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,6 +43,7 @@ void	child(t_minishell *mini, int oldfd[2], int newfd[2])
 
 	//sigint 
 	//sigquit vers mm fonction
+	set_exec_signal();
 	cmd = mini->input;
 	if (oldfd[0] == -1 && oldfd[1] == -1)
 		dup2(newfd[1], STDOUT_FILENO);
@@ -86,8 +87,10 @@ int	execute_pipeline(t_minishell *mini)
 	status = 0;
 	init_fds(oldfd, newfd);
 	pipe(newfd);
+	set_input_signal();
 	while (mini->input)
 	{
+		set_exec_signal();
 		for_free = mini->input->next;
 		pid = fork();
 		if (pid == 0)
@@ -111,8 +114,10 @@ int	execute_simple_command(t_minishell *mini)
 
 	pid = fork();
 	pipe(fd);
+	set_input_signal();
 	if (pid == 0)
 	{
+		set_exec_signal();
 		close_all(fd, NULL);
 		my_execve(mini);
 	}

@@ -6,7 +6,7 @@
 /*   By: endoliam <endoliam@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/17 17:20:55 by endoliam          #+#    #+#             */
-/*   Updated: 2024/08/15 12:12:23 by endoliam         ###   ########lyon.fr   */
+/*   Updated: 2024/08/16 20:07:28 by endoliam         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,8 +26,7 @@ bool	isword(char *s, int start)
 		if ((start > 0 && isoperator(s[start]) == false
 				&& isoperator(s[start - 1]) == true)
 			|| (start == 0 && !isispace(s[start]))
-			|| (start > 0 && !isispace(s[start]) && s[start] != '|'
-				&& !isispace(s[start])))
+			|| (start > 0 && !isispace(s[start]) && s[start] != '|'))
 			return (true);
 	}
 	return (false);

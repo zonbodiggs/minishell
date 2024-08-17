@@ -6,7 +6,7 @@
 /*   By: endoliam <endoliam@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/24 13:20:21 by rtehar            #+#    #+#             */
-/*   Updated: 2024/08/16 12:34:09 by endoliam         ###   ########lyon.fr   */
+/*   Updated: 2024/08/17 03:55:39 by endoliam         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,6 +47,8 @@ int	prepare_execution(t_minishell *mini, t_cmd	*cmd)
 
 	value = 0;
 	value_redir = 0;
+	if (g_signal == 130)
+		return (g_signal);
 	if (cmd)
 		value = iscmd(cmd->cmd, mini);
 	value_redir = redirect_pipe(mini);
@@ -84,5 +86,8 @@ char	*run_commands(t_minishell *mini)
 		exit_code = execute_simple_command(mini);
 	else
 		exit_code = execute_pipeline(mini);
+	printf("signal = %d\n", g_signal);
+	if (g_signal == 130)
+		return (ft_itoa(130));
 	return (ft_itoa(exit_code));
 }

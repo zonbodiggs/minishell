@@ -6,7 +6,7 @@
 /*   By: endoliam <endoliam@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/29 11:42:24 by endoliam          #+#    #+#             */
-/*   Updated: 2024/08/14 15:45:25 by endoliam         ###   ########lyon.fr   */
+/*   Updated: 2024/08/16 21:12:26 by endoliam         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,8 +64,7 @@ char	*join_cmd(t_lexer *lex, char *cmd, t_minishell *mini, t_cmd *command)
 	{
 		lex = lex->next;
 		if (lex && !isredirection(lex->lex) && (lex->lex == SINGLE_Q
-				|| lex->lex == DOUBLE_Q || lex->lex == SINGLE_ENV
-				|| lex->lex == DOUBLE_ENV))
+				|| lex->lex == DOUBLE_Q || lex->lex == SINGLE_ENV))
 		{
 			tmp = ft_qstrdup(lex->contain);
 			if (!tmp)
@@ -99,7 +98,7 @@ char	*dup_cmd(t_lexer *lex, t_minishell *mini)
 	if (!lex)
 		return (NULL);
 	if (lex->lex == SINGLE_Q || lex->lex == DOUBLE_Q
-		|| lex->lex == SINGLE_ENV || lex->lex == DOUBLE_ENV)
+		|| lex->lex == SINGLE_ENV)
 		cmd = ft_qstrdup(lex->contain);
 	else
 		cmd = ft_strdup(lex->contain);

@@ -6,7 +6,7 @@
 /*   By: endoliam <endoliam@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/29 12:32:33 by endoliam          #+#    #+#             */
-/*   Updated: 2024/08/16 11:44:32 by endoliam         ###   ########lyon.fr   */
+/*   Updated: 2024/08/17 02:56:53 by endoliam         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,8 +20,6 @@ int	set_and_check(char **cmd, t_minishell *mini)
 	char	*cmd_path;
 
 	i = 0;
-	if (!cmd || !*cmd || !cmd[0][0])
-		return (127);
 	path = ft_split(mygetenv("PATH", *mini), ':');
 	if (!path)
 		return (0);
@@ -42,6 +40,7 @@ int	set_and_check(char **cmd, t_minishell *mini)
 	free_array(path);
 	return (127);
 }
+
 bool	is_directory(char *cmd)
 {
 	DIR	 *dir;
@@ -57,9 +56,14 @@ bool	is_directory(char *cmd)
 
 int	iscmd(char **cmd, t_minishell *mini)
 {
-	if (!cmd || !cmd[0])
+	if (!cmd || !*cmd || !cmd[0][0])
 		return (127);
-	if (!ft_strcmp(cmd[0], "./"))
+	if (!ft_strcmp(cmd[0], "minishell"))
+	{
+		free(cmd[0]);
+		cmd[0] = ft_strdup("./minishell");
+	}
+	if (!ft_strncmp(cmd[0], "./", 2))
 	{
 		if (!is_directory(cmd[0] + 2))
 			return (0);
@@ -81,8 +85,12 @@ int	iscmd(char **cmd, t_minishell *mini)
 int	error_files(int flag, char *file)
 {
 	if (flag == 2)
-		ft_printf_fd(2, "minishell error :'%s' No such file or directory\n", file);
+		ft_printf_fd(2, "[%s%d\x1b[5;0m] : %s << %s >> %s\n","\x1b[5;31m",
+					flag, "\x1b[1;35mminishell error\x1b[0m :", file,
+					" No such file or directory");
 	else if (flag == 1)
-		ft_printf_fd(2, "minishell error :'%s' permision denied\n", file);
+		ft_printf_fd(2, "[%s%d\x1b[5;0m] : %s << %s >> %s\n","\x1b[5;31m",
+					flag, "\x1b[1;35mminishell error\x1b[0m :", file,
+					" permision denied");
 	return (flag);
 }

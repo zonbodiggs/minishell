@@ -6,11 +6,11 @@
 /*   By: endoliam <endoliam@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/13 22:57:47 by endoliam          #+#    #+#             */
-/*   Updated: 2024/08/16 16:56:01 by endoliam         ###   ########lyon.fr   */
+/*   Updated: 2024/08/17 01:53:23 by endoliam         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "../minishell.h"
 
 t_lexer	*lexer_error_exit(int i, t_lexer *lexer, t_minishell *mini)
 {
@@ -39,36 +39,7 @@ void	kill_shell(t_minishell *shell)
 	free(shell);
 	rl_clear_history();
 }
-int	get_exit_code(t_minishell *mini, int value)
-{
-	char	*str;
 
-	if (value == 0 && errno != 0)
-	{
-		value = errno;
-		str = strerror(value);
-		if (mini->input &&mini->input->cmd)
-			ft_printf_fd(2, "minishell error : '%s' ", mini->input->cmd[0]);
-		ft_printf_fd(2, "%s\n", str);
-		if (value == 13)
-			value = 126;
-		return (value);
-	}
-	else if ((mini->input && mini->input->cmd && value == 127 && is_last_cmd(mini->input)))
-	{
-		if (!ft_strcmp(mini->input->cmd[0], "./")
-				&& is_directory(mini->input->cmd[0] + 2))
-		{	
-			ft_printf_fd(2, "minishell error :'%s' is a directory\n",
-				mini->input->cmd[0] + 2);
-				return (126);
-		}
-		else
-			ft_printf_fd(2, "minishell error : command '%s' not found\n",
-				mini->input->cmd[0]);
-	}
-	return (value);
-}
 int	exit_error_exec(t_minishell *mini, int value)
 {
 	int exit_code;

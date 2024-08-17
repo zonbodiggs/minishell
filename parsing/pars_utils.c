@@ -6,7 +6,7 @@
 /*   By: endoliam <endoliam@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/17 17:04:15 by endoliam          #+#    #+#             */
-/*   Updated: 2024/08/16 13:26:52 by endoliam         ###   ########lyon.fr   */
+/*   Updated: 2024/08/17 03:02:33 by endoliam         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,9 +14,10 @@
 
 int	exit_failure(char *msg, char c)
 {
-	ft_printf_fd(2, "minishell error: %s ", msg);
+	ft_printf_fd(2, "[%s2\x1b[5;0m] : %s %s","\x1b[5;31m",
+					 "\x1b[1;35mminishell error\x1b[0m :", msg);
 	if (c)
-		ft_printf_fd(2, "%c", c);
+		ft_printf_fd(2, " << %c >>", c);
 	ft_printf_fd(2, "\n");
 	if (!c)
 		return (-2);
@@ -46,7 +47,6 @@ void	free_array(char **array)
 	}
 	free(array);
 }
-
 
 char	**cpy_env(t_minishell *mini, char **env)
 {

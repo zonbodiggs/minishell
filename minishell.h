@@ -6,7 +6,7 @@
 /*   By: endoliam <endoliam@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/14 13:20:55 by endoliam          #+#    #+#             */
-/*   Updated: 2024/08/16 15:53:38 by endoliam         ###   ########lyon.fr   */
+/*   Updated: 2024/08/17 00:56:27 by endoliam         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -212,10 +212,11 @@ int			exit_error_exec(t_minishell *mini, int value);
 void		kill_shell(t_minishell *shell);
 void		exit_cmd(char *msg, t_minishell *mini, int value);
 t_lexer		*lexer_error_exit(int i, t_lexer *lexer, t_minishell *mini);
+int			get_exit_code(t_minishell *mini, int value);
 
 //					signaux
-void		handle_sigquit(int sig);
-void		handle_sigint(int sig);
+void		set_exec_signal(void);
+void		set_input_signal(void);
 
 
 /*******************print*********************/

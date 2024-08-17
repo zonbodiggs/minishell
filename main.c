@@ -6,24 +6,13 @@
 /*   By: endoliam <endoliam@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/14 16:09:41 by endoliam          #+#    #+#             */
-/*   Updated: 2024/08/16 18:24:21 by endoliam         ###   ########lyon.fr   */
+/*   Updated: 2024/08/17 03:37:43 by endoliam         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
 int	g_signal;
-
-void	handle_sigint(int sig)
-{
-	(void)sig;
-	write(1, "\n~", 2);
-}
-
-void	handle_sigquit(int sig)
-{
-	(void)sig;
-}
 
 char	*mygetenv(char *s, t_minishell mini)
 {
@@ -40,7 +29,7 @@ char	*mygetenv(char *s, t_minishell mini)
 	while (mini.env[i])
 	{
 		len = ft_strlen(mini.env[i]) - ft_strlen(ft_strchr(mini.env[i], '='));
-		if (!ft_strncmp(s, mini.env[i], len))
+		if (!ft_strncmp(s, mini.env[i], len) && (int)ft_strlen(s) == len)
 		{
 			res = ft_strchr(mini.env[i], '=') + 1;
 			return (res);
@@ -86,7 +75,10 @@ int	sort_builtin(t_minishell *mini)
 	int		exit_code;
 
 	cmd = mini->input;
-	while (cmd && cmd->cmd)
+	exit_code = 0;
+	//if (!cmd->next && !cmd->cmd)
+	//	return (-1);
+	while (cmd)
 	{
 		exit_code = run_builtin(cmd->cmd, mini);
 		cmd = cmd->next;
@@ -118,8 +110,9 @@ void	update_shlvl(t_minishell *minishell)
 {
 	char	*lvl;
 	char	*tmp;
-	int		i = 0;
+	int		i;
 
+	i  = 0;
 	lvl = ft_itoa(ft_atoi(mygetenv("SHLVL", *minishell)) + 1);
 	tmp = ft_strjoin("SHLVL=", lvl);
 	if (tmp)
@@ -128,7 +121,6 @@ void	update_shlvl(t_minishell *minishell)
 		i++;
 	free(minishell->env[i]);
 	minishell->env[i] = tmp;
-	printf("%s\n", mygetenv("SHLVL", *minishell));
 	free(lvl);
 }
 
@@ -177,8 +169,7 @@ int		main(int ac, char **av, char **env)
 	while(1)
 	{
 		g_signal = 0;
-		signal(SIGINT, handle_sigint);
-		signal(SIGQUIT, SIG_IGN);
+		set_input_signal();
 		prompt(minishell);
 		buffer = readline("~ ");
 		if (!buffer)
@@ -199,6 +190,11 @@ int		main(int ac, char **av, char **env)
 			free(minishell->exit_code);
 			if (sort_builtin(minishell) == -1)
 				minishell->exit_code = run_commands(minishell);
+		}
+		if (g_signal == 130)
+		{
+			free(minishell->exit_code);	
+			minishell->exit_code = ft_itoa(130);
 		}
 		free_input(&minishell->input);
 		free(minishell->input);

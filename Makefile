@@ -34,8 +34,10 @@ SRCS		= parsing/tokenize/bool_lexer.c\
 			  builtin/export_utile.c\
 			  builtin/unset.c\
 			  builtin/exit.c\
+			  exit/exit_shell.c\
+			  exit/exit_code.c\
 			  print_data.c\
-			  exit_shell.c\
+			  signal.c\
 			  free.c\
 			  main.c
 

@@ -6,7 +6,7 @@
 /*   By: endoliam <endoliam@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/17 16:56:51 by endoliam          #+#    #+#             */
-/*   Updated: 2024/08/14 18:43:36 by endoliam         ###   ########lyon.fr   */
+/*   Updated: 2024/08/16 22:35:50 by endoliam         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,6 +53,90 @@ int	create_operator(t_lexer **lexer, char *s, int i, t_minishell mini)
 		i++;
 	return (i);
 }
+int	lst_init_env(t_lexer **lexer, char *s, int start)
+{
+	t_lexer		*data;
+	int			len;
+
+	len = 0;
+	data = NULL;
+	while (s[start + len] && !isispace(s[start + len])&& s[start + len] != '"')
+		len++;
+	if (len <= 0)
+		return (-1);
+	data = ft_calloc(1, sizeof(t_lexer));
+	if (!data)
+		return (exit_failure("malloc allocation failed", 0));
+	ft_memset(data, 0, sizeof(t_lexer));
+	data->spaces = true;
+	data->contain = ft_substr(s, start, len);
+	if (!data->contain)
+	{
+		free(data);
+		return (exit_failure("malloc allocation failed", 0));
+	}
+	data->lex = WORD;
+	add_lexer(lexer, data);
+	return (start + len);
+}
+int	change_first_expand(char *contain, int i, t_lexer *lexer)
+{
+	int		len_exp;
+
+	len_exp = 0;
+	while (contain[len_exp] && !isispace(contain[len_exp]))
+			len_exp++;
+	lexer->contain = NULL;
+	lexer->spaces = true;
+	if (lexer->lex == DOUBLE_ENV)
+		len_exp--;
+	if (ft_strlen(contain) == 2 && lexer->lex == DOUBLE_ENV && contain[0] =='"')
+		lexer->contain = ft_qstrdup(contain);
+	else
+		lexer->contain = ft_substr(contain, i, len_exp);
+	i = i + len_exp;
+	return (i);
+}
+
+void	parsing_expand(t_lexer *lexer)
+{
+	int		i;
+	int 	start;
+	char	*contain;
+	int		len;
+
+	i = 0;
+	start = 0;
+	if (lexer && (lexer->lex == ENV_VAR || lexer->lex == DOUBLE_ENV))
+	{
+		contain = ft_strdup(lexer->contain);
+		len = ft_strlen(contain);
+		if (lexer->lex == DOUBLE_ENV)
+		{
+			i++;
+			len--;
+		}
+		while (i <= len && contain[i])
+		{
+			if ((i == 0 && !isispace(contain[i]))
+				|| (i > 0 && !isispace(contain[i] && isispace(contain[i - 1])))
+				|| (i == 1 && !isispace(contain[i]) && contain[0] == '"'))
+			{
+				if (start == 0)
+				{
+					free(lexer->contain);
+					i = change_first_expand(contain, i, lexer);
+					start++;
+				}
+				else
+					i = lst_init_env(&lexer, contain, i);
+			}
+			i++;
+		}
+		free(contain);
+	}
+	return ;
+}
 
 t_lexer	*create_lexer(char *s, t_minishell *mini)
 {
@@ -73,6 +157,7 @@ t_lexer	*create_lexer(char *s, t_minishell *mini)
 			if (i < 0)
 				return (lexer_error_exit(i, lexer, mini));
 		}
+		parsing_expand(lexer);
 		if (s[i])
 			i++;
 	}

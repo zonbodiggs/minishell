@@ -6,7 +6,7 @@
 /*   By: endoliam <endoliam@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/18 17:02:49 by endoliam          #+#    #+#             */
-/*   Updated: 2024/08/15 21:05:26 by endoliam         ###   ########lyon.fr   */
+/*   Updated: 2024/08/16 19:15:50 by endoliam         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,7 +85,7 @@ int	init_operator(t_lexer **lexer, char *s, int start, t_minishell mini)
 		start = find_redirection(lexer, s, start, mini);
 	else
 		start = lst_init_lexer(lexer, s, start, mini) - 1;
-	if (start < 0 && c == 39)
+	if ((start < 0 && c == 39) ||( start < 0 && c == '"'))
 		return (exit_failure("quote don't closed", c));
 	return (start);
 }
