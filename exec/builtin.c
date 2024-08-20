@@ -6,7 +6,7 @@
 /*   By: endoliam <endoliam@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/23 14:43:05 by rtehar            #+#    #+#             */
-/*   Updated: 2024/08/16 15:46:42 by endoliam         ###   ########lyon.fr   */
+/*   Updated: 2024/08/20 17:23:02 by endoliam         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,39 @@ int	sort_cmd(char **cmd, char **env)
 		return (pwd());
 	else if (ft_strcmp(cmd[0], "env") == 0 && ft_strlen(cmd[0]) == 3)
 		return (env_shell(env));
-	//else if (ft_strcmp(cmd[0], "export") == 0 && ft_strlen(cmd[0]) == 6)
-	//	return (export_variable(cmd, &env));
 	return (127);
+}
+
+int	run_builtin(char **cmd, t_minishell *mini)
+{
+	if (cmd && !ft_strcmp(cmd[0], "exit"))
+		exit_shell(mini, cmd);
+	if (cmd && !ft_strcmp(cmd[0], "cd"))
+	{
+		if (!mygetenv("PWD", *mini))
+			add_pwd(mini);
+		return (cd(cmd, &mini->env));
+	}
+	if (cmd && !ft_strcmp(cmd[0], "export"))
+		return (export_variable(cmd, &mini->env));
+	if (cmd && !ft_strcmp(cmd[0], "unset"))
+		return (unset_variable(cmd, &mini->env));
+	return (-1);
+}
+
+int	sort_builtin(t_minishell *mini)
+{
+	t_cmd	*cmd;
+	int		exit_code;
+
+	cmd = mini->input;
+	exit_code = 0;
+	while (cmd)
+	{
+		exit_code = run_builtin(cmd->cmd, mini);
+		cmd = cmd->next;
+	}
+	if (exit_code != -1)
+		mini->exit_code = ft_itoa(exit_code);
+	return (exit_code);
 }

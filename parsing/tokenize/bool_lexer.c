@@ -6,7 +6,7 @@
 /*   By: endoliam <endoliam@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/17 17:20:55 by endoliam          #+#    #+#             */
-/*   Updated: 2024/08/16 20:07:28 by endoliam         ###   ########lyon.fr   */
+/*   Updated: 2024/08/20 15:24:12 by endoliam         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,23 +54,10 @@ bool	isoperator(char c)
 		return (true);
 	return (false);
 }
+
 bool	is_quote(char c)
 {
 	if ((c == 39) || (c == '"'))
 		return (true);
-	return (false);
-}
-
-bool	is_env_var(char *s)
-{
-	int	i;
-
-	i = 0;
-	while (s[i])
-	{
-		if (s[i] == '$')
-			return (true);
-		i++;
-	}
 	return (false);
 }

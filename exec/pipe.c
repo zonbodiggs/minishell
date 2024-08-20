@@ -6,7 +6,7 @@
 /*   By: endoliam <endoliam@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/13 22:48:23 by endoliam          #+#    #+#             */
-/*   Updated: 2024/08/17 04:14:53 by endoliam         ###   ########lyon.fr   */
+/*   Updated: 2024/08/20 17:57:34 by endoliam         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,36 +14,10 @@
 #include <sys/types.h>
 #include <sys/wait.h>
 
-void	update_pipeline(int *oldfd, int *newfd)
-{
-	if (oldfd[0] >= 0)
-		close(oldfd[0]);
-	oldfd[0] = newfd[0];
-	oldfd[1] = newfd[1];
-	close(newfd[1]);
-}
-
-void	close_all(int *newfd, int *oldfd)
-{
-	if (oldfd)
-	{
-		close(oldfd[0]);
-		close(oldfd[1]);
-	}
-	if (newfd)
-	{
-		close(newfd[0]);
-		close(newfd[1]);
-	}
-}
-// cat Makefile | cat <free.c
 void	child(t_minishell *mini, int oldfd[2], int newfd[2])
 {
 	t_cmd	*cmd;
 
-	//sigint 
-	//sigquit vers mm fonction
-	set_exec_signal();
 	cmd = mini->input;
 	if (oldfd[0] == -1 && oldfd[1] == -1)
 		dup2(newfd[1], STDOUT_FILENO);
@@ -59,10 +33,11 @@ void	child(t_minishell *mini, int oldfd[2], int newfd[2])
 		close(oldfd[0]);
 	my_execve(mini);
 }
+
 int	my_wait(int status, int pid)
 {
-	int exit_code;
-	int	i;
+	int		exit_code;
+	int		i;
 
 	i = 0;
 	exit_code = 0;
@@ -76,6 +51,7 @@ int	my_wait(int status, int pid)
 	}
 	return (exit_code);
 }
+
 int	execute_pipeline(t_minishell *mini)
 {
 	pid_t	pid;
@@ -87,7 +63,6 @@ int	execute_pipeline(t_minishell *mini)
 	status = 0;
 	init_fds(oldfd, newfd);
 	pipe(newfd);
-	set_input_signal();
 	while (mini->input)
 	{
 		set_exec_signal();
@@ -101,7 +76,6 @@ int	execute_pipeline(t_minishell *mini)
 		mini->input = for_free;
 	}
 	status = my_wait(status, pid);
-	// init_signal ignoe sigquit redirige sigint 
 	close_all(newfd, oldfd);
 	return (WEXITSTATUS(status));
 }
@@ -114,15 +88,16 @@ int	execute_simple_command(t_minishell *mini)
 
 	pid = fork();
 	pipe(fd);
-	set_input_signal();
+	set_exec_signal();
 	if (pid == 0)
 	{
-		set_exec_signal();
 		close_all(fd, NULL);
 		my_execve(mini);
 	}
 	close_all(fd, NULL);
 	while (wait(&status) > 0)
 		;
+	if (WIFSIGNALED(status))
+		return (g_signal);
 	return (WEXITSTATUS(status));
 }

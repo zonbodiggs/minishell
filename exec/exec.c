@@ -6,7 +6,7 @@
 /*   By: endoliam <endoliam@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/24 13:20:21 by rtehar            #+#    #+#             */
-/*   Updated: 2024/08/17 03:55:39 by endoliam         ###   ########lyon.fr   */
+/*   Updated: 2024/08/20 12:40:01 by endoliam         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,8 +86,7 @@ char	*run_commands(t_minishell *mini)
 		exit_code = execute_simple_command(mini);
 	else
 		exit_code = execute_pipeline(mini);
-	printf("signal = %d\n", g_signal);
-	if (g_signal == 130)
-		return (ft_itoa(130));
+	if (g_signal != 0)
+		return (ft_itoa(g_signal));
 	return (ft_itoa(exit_code));
 }

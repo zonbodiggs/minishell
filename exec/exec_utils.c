@@ -6,7 +6,7 @@
 /*   By: endoliam <endoliam@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/13 22:54:41 by endoliam          #+#    #+#             */
-/*   Updated: 2024/08/15 23:18:38 by endoliam         ###   ########lyon.fr   */
+/*   Updated: 2024/08/20 18:04:30 by endoliam         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,4 +58,10 @@ void	init_fds(int oldfd[2], int newfd[2])
 {
 	ft_memset(oldfd, -1, 2 * sizeof(int));
 	ft_memset(newfd, -1, 2 * sizeof(int));
+}
+
+void	write_heredoc(int fd, char *line)
+{
+	write(fd, line, ft_strlen(line));
+	write(fd, "\n", 1);
 }

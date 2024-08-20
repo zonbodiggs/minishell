@@ -6,7 +6,7 @@
 /*   By: endoliam <endoliam@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/01 14:13:54 by rtehar            #+#    #+#             */
-/*   Updated: 2024/08/16 17:50:37 by endoliam         ###   ########lyon.fr   */
+/*   Updated: 2024/08/20 17:56:06 by endoliam         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,13 +73,13 @@ int	set_env_var(char ***env, const char *var, const char *value)
 	int		i;
 
 	len = ft_strlen(var);
-	
 	new_var = malloc(len + ft_strlen(value) + 2);
 	if (!new_var)
 		return (-1);
 	ft_strlcpy(new_var, var, ft_strlen(var) + 1);
 	ft_strlcat(new_var, "=", ft_strlen(new_var) + 2);
-	ft_strlcat(new_var, (char *)value, ft_strlen(value) + ft_strlen(new_var) + 1);
+	ft_strlcat(new_var, (char *)value,
+		ft_strlen(value) + ft_strlen(new_var) + 1);
 	i = check_env(env, var, new_var, len);
 	if (i == 0)
 		return (0);

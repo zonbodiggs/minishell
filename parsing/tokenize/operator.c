@@ -6,7 +6,7 @@
 /*   By: endoliam <endoliam@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/18 17:02:49 by endoliam          #+#    #+#             */
-/*   Updated: 2024/08/16 19:15:50 by endoliam         ###   ########lyon.fr   */
+/*   Updated: 2024/08/20 17:00:30 by endoliam         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,18 +30,19 @@ bool	is_before(char *s, int start)
 	while (start >= 0 && s[start])
 	{
 		if (!isispace(s[start]))
-			return(true);
+			return (true);
 		start--;
 	}
 	return (false);
 }
-bool	is_after(char *s,  int start)
+
+bool	is_after(char *s, int start)
 {
 	start++;
 	while (s[start])
 	{
 		if (!isispace(s[start]))
-			return(true);
+			return (true);
 		start++;
 	}
 	return (false);
@@ -51,7 +52,7 @@ int	find_redirection(t_lexer **lexer, char *s, int start, t_minishell mini)
 {
 	if (!is_after(s, start))
 		return (exit_failure("syntax error near unexpected token"
-					, s[start]));
+				, s[start]));
 	if (s[start + 1] && s[start + 1] != s[start])
 		init_redirection(lexer, s[start], 1, mini);
 	else if (s[start + 1] && s[start + 1] == s[start])
@@ -85,7 +86,7 @@ int	init_operator(t_lexer **lexer, char *s, int start, t_minishell mini)
 		start = find_redirection(lexer, s, start, mini);
 	else
 		start = lst_init_lexer(lexer, s, start, mini) - 1;
-	if ((start < 0 && c == 39) ||( start < 0 && c == '"'))
+	if ((start < 0 && c == 39) || (start < 0 && c == '"'))
 		return (exit_failure("quote don't closed", c));
 	return (start);
 }

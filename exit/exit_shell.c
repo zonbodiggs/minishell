@@ -6,7 +6,7 @@
 /*   By: endoliam <endoliam@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/13 22:57:47 by endoliam          #+#    #+#             */
-/*   Updated: 2024/08/17 01:53:23 by endoliam         ###   ########lyon.fr   */
+/*   Updated: 2024/08/20 17:06:03 by endoliam         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,14 +42,14 @@ void	kill_shell(t_minishell *shell)
 
 int	exit_error_exec(t_minishell *mini, int value)
 {
-	int exit_code;
+	int		exit_code;
 
 	exit_code = get_exit_code(mini, value);
 	kill_shell(mini);
 	exit(exit_code);
 }
 
-void		exit_cmd(char *msg, t_minishell *mini, int value)
+void	exit_cmd(char *msg, t_minishell *mini, int value)
 {
 	ft_putstr_fd(msg, 2);
 	if (mini->lex)

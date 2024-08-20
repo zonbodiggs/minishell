@@ -6,7 +6,7 @@
 /*   By: endoliam <endoliam@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/20 11:36:33 by endoliam          #+#    #+#             */
-/*   Updated: 2024/08/14 16:17:46 by endoliam         ###   ########lyon.fr   */
+/*   Updated: 2024/08/20 18:10:32 by endoliam         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ char	**init_tab(t_cmd *command, t_lexer *lex, t_minishell *mini)
 	len = size_tab_cmd(lex);
 	cmd = ft_calloc(len + 1, sizeof(char *));
 	if (!cmd)
-	{	
+	{
 		free_all_input(command);
 		exit_cmd("allocation t_cmd failed\n", mini, 2);
 	}

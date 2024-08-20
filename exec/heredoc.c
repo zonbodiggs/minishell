@@ -6,7 +6,7 @@
 /*   By: endoliam <endoliam@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/12 20:43:01 by endoliam          #+#    #+#             */
-/*   Updated: 2024/08/17 03:38:00 by endoliam         ###   ########lyon.fr   */
+/*   Updated: 2024/08/20 18:03:52 by endoliam         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 bool	is_final_heredoc(t_cmd *command)
 {
-	t_cmd *cmd;
+	t_cmd	*cmd;
 
 	if (!command)
 		return (true);
@@ -34,7 +34,8 @@ int	redirect_heredoc(t_minishell *mini)
 
 	g_signal = 0;
 	if (isfilevalid_in(mini->input->files))
-		return (error_files(isfilevalid_in(mini->input->files), mini->input->files));
+		return (error_files(isfilevalid_in(mini->input->files),
+				mini->input->files));
 	fdhere = open(mini->input->files, O_RDONLY);
 	if (fdhere == -1)
 		exit_error_exec(mini, 0);
@@ -43,16 +44,11 @@ int	redirect_heredoc(t_minishell *mini)
 	unlink(mini->input->files);
 	return (0);
 }
-static void	write_heredoc(int fd, char *line)
-{
-	write(fd, line, ft_strlen(line));
-	write(fd, "\n", 1);
-}
+
 int	heredoc(const char *delimiter, int fd, t_minishell *mini)
 {
 	char	*line;
-	
-	ft_printf_fd(2, "delimiteur = %s\n", delimiter);
+
 	set_input_signal();
 	while (g_signal != 130)
 	{
@@ -61,7 +57,8 @@ int	heredoc(const char *delimiter, int fd, t_minishell *mini)
 		{
 			if (!line)
 			{
-				printf("minishell heredoc : (wanted limiter `%s\')\n", delimiter);
+				printf("minishell heredoc : (wanted limiter `%s\')\n",
+					delimiter);
 				return (-1);
 			}
 			free(line);
@@ -76,13 +73,30 @@ int	heredoc(const char *delimiter, int fd, t_minishell *mini)
 	return (0);
 }
 
+void	pars_heredoc(int i, t_cmd *cmd, t_minishell *mini)
+{
+	char	*herename;
+	char	*index;
+	int		fd;
+
+	index = ft_itoa(i);
+	herename = ft_strjoin(".heredoc_", index);
+	fd = open(herename, O_WRONLY | O_CREAT | O_TRUNC, 0644);
+	heredoc(cmd->files, fd, mini);
+	if (fd != -1)
+		close(fd);
+	if (g_signal == 130)
+		unlink(herename);
+	free(cmd->files);
+	cmd->files = ft_strdup(herename);
+	free(herename);
+	free(index);
+}
+
 void	find_heredoc(t_cmd	*command, t_minishell *mini)
 {
 	t_cmd	*cmd;
-	int		fd;
 	int		i;
-	char	*herename;
-	char	*index;
 
 	cmd = command;
 	i = 1;
@@ -92,24 +106,9 @@ void	find_heredoc(t_cmd	*command, t_minishell *mini)
 	{
 		if (cmd && cmd->redir == HEREDOC)
 		{
-			index = ft_itoa(i);
-			herename = ft_strjoin(".heredoc_", index);
-			fd = open(herename, O_WRONLY | O_CREAT | O_TRUNC, 0644);
-			heredoc(cmd->files, fd, mini);
-			if (fd != -1)
-				close(fd);
-			if (g_signal == 130)
-				unlink(herename);
-			free(cmd->files);
-			cmd->files = ft_strdup(herename);
-			free(herename);
-			free(index);
+			pars_heredoc(i, cmd, mini);
 			i++;
 		}
 		cmd = cmd->next;
 	}
-	
 }
-//quote 
-// ctr + c stop tout
-// ctr + d stop 1 seul here

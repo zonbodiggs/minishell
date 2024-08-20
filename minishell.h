@@ -6,7 +6,7 @@
 /*   By: endoliam <endoliam@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/14 13:20:55 by endoliam          #+#    #+#             */
-/*   Updated: 2024/08/17 00:56:27 by endoliam         ###   ########lyon.fr   */
+/*   Updated: 2024/08/20 18:03:11 by endoliam         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,7 @@
 # include <sys/types.h>
 # include <errno.h>
 # include <limits.h>
+
 extern int			g_signal;
 
 typedef enum e_enum
@@ -79,6 +80,11 @@ typedef struct s_minishell
 
 int			main(int ac, char **av, char **env);
 
+/*						add_env				*/
+void		add_pwd(t_minishell *minishell);
+void		add_env(t_minishell *minishell);
+void		update_shlvl(t_minishell *minishell);
+
 /* 					parsing					*/
 
 // 				init lexer
@@ -108,6 +114,7 @@ bool		is_quote(char c);
 //				expand
 char		*init_env_var(char *s, t_minishell mini);
 char		*join_and_free(char *s1, char *s2);
+void		parsing_expand(t_lexer *lexer);
 
 // 				utils cmd
 int			exit_failure(char *msg, char c);
@@ -132,7 +139,8 @@ int			error_files(int flag, char *file);
 int			size_tab_cmd(t_lexer *lex);
 t_lexer		*zap_redirection(t_lexer *lex);
 t_lexer		*go_next_cmd(t_lexer *lex);
-char		*join_cmd(t_lexer *lex, char *cmd, t_minishell *mini, t_cmd *command);
+char		*join_cmd(t_lexer *lex, char *cmd,
+				t_minishell *mini, t_cmd *command);
 char		*dup_cmd(t_lexer *lex, t_minishell *mini);
 
 //				bool cmd
@@ -163,6 +171,8 @@ void		init_fds(int oldfd[2], int newfd[2]);
 //					pipe
 int			execute_pipeline(t_minishell *mini);
 int			execute_simple_command(t_minishell *mini);
+void		update_pipeline(int *oldfd, int *newfd);
+void		close_all(int *newfd, int *oldfd);
 
 //					redirecion
 int			redirect_input(t_minishell *mini);
@@ -173,6 +183,7 @@ int			redirect(t_minishell *mini);
 //					heredoc
 int			redirect_heredoc(t_minishell *mini);
 void		find_heredoc(t_cmd	*command, t_minishell *mini);
+void		write_heredoc(int fd, char *line);
 
 //					builtins
 void		exec_builtin(t_minishell *mini, t_cmd *cmd);
@@ -182,6 +193,7 @@ int			pwd(void);
 int			env_shell(char **env);
 void		exit_shell(t_minishell *shell, char **cmd);
 int			unset_variable(char **cmd, char ***env);
+int			sort_builtin(t_minishell *mini);
 
 //					cd
 int			cd(char **cmd, char ***env);
@@ -217,16 +229,7 @@ int			get_exit_code(t_minishell *mini, int value);
 //					signaux
 void		set_exec_signal(void);
 void		set_input_signal(void);
-
-
-/*******************print*********************/
-
-void		printfds(t_cmd *cmd, int *old, int *new);
-void		print_cmd(t_cmd *cmd);
-void		print_lexer(t_lexer *lex);
-void		print_minishell(t_minishell *mini);
-void		print_env(char **env);
-void		print_one_cmd(t_cmd *cmd);
-
+void		handle_sigint_input(int sig);
+void		handle_sigint(int sig);
 
 #endif
