@@ -6,7 +6,7 @@
 /*   By: endoliam <endoliam@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/17 17:09:59 by endoliam          #+#    #+#             */
-/*   Updated: 2024/08/16 18:44:45 by endoliam         ###   ########lyon.fr   */
+/*   Updated: 2024/08/22 15:53:29 by endoliam         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,4 +83,29 @@ int	word_len(char *s)
 	while (s[i] && !isispace(s[i]) && isoperator(s[i]) == false)
 		i++;
 	return (i);
+}
+
+void	free_one_lexer(t_lexer **lexer)
+{
+	if ((*lexer)->contain)
+		free((*lexer)->contain);
+	if (*lexer)
+		free(*lexer);
+}
+
+char	*join_and_free(char *s1, char *s2)
+{
+	char	*res;
+
+	if (!s2)
+		return (s1);
+	res = ft_strjoin(s1, s2);
+	if (!res)
+	{
+		free(s1);
+		free(s2);
+		return (NULL);
+	}
+	free(s1);
+	return (res);
 }

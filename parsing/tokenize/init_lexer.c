@@ -6,7 +6,7 @@
 /*   By: endoliam <endoliam@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/17 16:56:51 by endoliam          #+#    #+#             */
-/*   Updated: 2024/08/20 15:24:30 by endoliam         ###   ########lyon.fr   */
+/*   Updated: 2024/08/22 14:59:34 by endoliam         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,7 +73,7 @@ t_lexer	*create_lexer(char *s, t_minishell *mini)
 			if (i < 0)
 				return (lexer_error_exit(i, lexer, mini));
 		}
-		parsing_expand(lexer);
+		lexer = parsing_expand(&lexer);
 		if (s[i])
 			i++;
 	}

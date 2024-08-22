@@ -6,7 +6,7 @@
 /*   By: endoliam <endoliam@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/29 14:42:36 by endoliam          #+#    #+#             */
-/*   Updated: 2024/08/17 00:47:18 by endoliam         ###   ########lyon.fr   */
+/*   Updated: 2024/08/22 16:35:23 by endoliam         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,16 +39,16 @@ char	*init_files(t_cmd *command, t_lexer *lex, t_minishell *mini)
 		file = ft_qstrdup(lex->contain);
 	else
 		file = ft_strdup(lex->contain);
+	if (lex->spaces == false)
+	{
+		file = join_cmd(lex, file);
+		while (lex && !lex->spaces && !isoperator_cmd(lex->lex))
+			lex = lex->next;
+	}
 	if (!file)
 	{
 		free_all_input(command);
 		exit_cmd("allocation file failed\n", mini, 2);
-	}
-	if (lex->spaces == false)
-	{
-		file = join_cmd(lex, file, mini, command);
-		while (lex && !lex->spaces && !isoperator_cmd(lex->lex))
-			lex = lex->next;
 	}
 	return (file);
 }

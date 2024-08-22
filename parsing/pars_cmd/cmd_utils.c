@@ -6,7 +6,7 @@
 /*   By: endoliam <endoliam@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/29 11:42:24 by endoliam          #+#    #+#             */
-/*   Updated: 2024/08/16 21:12:26 by endoliam         ###   ########lyon.fr   */
+/*   Updated: 2024/08/22 16:43:01 by endoliam         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,7 +55,7 @@ int	size_tab_cmd(t_lexer *lex)
 	return (i);
 }
 
-char	*join_cmd(t_lexer *lex, char *cmd, t_minishell *mini, t_cmd *command)
+char	*join_cmd(t_lexer *lex, char *cmd)
 {
 	char	*tmp;
 
@@ -67,26 +67,19 @@ char	*join_cmd(t_lexer *lex, char *cmd, t_minishell *mini, t_cmd *command)
 				|| lex->lex == DOUBLE_Q || lex->lex == SINGLE_ENV))
 		{
 			tmp = ft_qstrdup(lex->contain);
-			if (!tmp)
-			{
-				free(cmd);
-				free_all_input(command);
-				exit_cmd("allocation join failed\n", mini, 2);
-			}
 			free(lex->contain);
 			lex->contain = tmp;
 		}
 		if (lex && lex->contain && !isoperator_cmd(lex->lex))
 		{
 			tmp = join_and_free(cmd, lex->contain);
-			if (!tmp)
-			{
-				free(cmd);
-				return (NULL);
-			}
-			else
-				cmd = tmp;
+			cmd = tmp;
 		}
+	}
+	if (!cmd)
+	{
+		free(cmd);
+		return (NULL);
 	}
 	return (cmd);
 }

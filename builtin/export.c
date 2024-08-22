@@ -6,7 +6,7 @@
 /*   By: endoliam <endoliam@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/11 13:56:32 by endoliam          #+#    #+#             */
-/*   Updated: 2024/08/16 16:11:54 by endoliam         ###   ########lyon.fr   */
+/*   Updated: 2024/08/22 15:56:15 by endoliam         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,6 +76,7 @@ static void	list_env_vars(char **env)
 		free(env_sort[i]);
 		i++;
 	}
+	free(env_sort[i]);
 	free(env_sort);
 }
 

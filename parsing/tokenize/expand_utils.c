@@ -6,7 +6,7 @@
 /*   By: endoliam <endoliam@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/20 15:23:52 by endoliam          #+#    #+#             */
-/*   Updated: 2024/08/20 17:04:21 by endoliam         ###   ########lyon.fr   */
+/*   Updated: 2024/08/22 15:36:20 by endoliam         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -103,18 +103,29 @@ static	void	add_env_var(t_lexer *lexer, int i, int start)
 	free(contain);
 }
 
-void	parsing_expand(t_lexer *lexer)
+t_lexer	*parsing_expand(t_lexer **lexer)
 {
 	int		i;
 	int		start;
+	t_lexer	*tmp;
 
+	tmp = NULL;
 	i = 0;
 	start = 0;
-	if (lexer && (lexer->lex == ENV_VAR || lexer->lex == DOUBLE_ENV))
+	clean_expand((*lexer)->contain);
+	if (!(*lexer)->contain || !*(*lexer)->contain)
 	{
-		if (lexer->lex == DOUBLE_ENV)
-			i++;
-		add_env_var(lexer, i, start);
+		tmp = (*lexer)->prev;
+		free_one_lexer(lexer);
+		if (tmp)
+			tmp->next = NULL;
+		return (tmp);
 	}
-	return ;
+	if (lexer && ((*lexer)->lex == ENV_VAR || (*lexer)->lex == DOUBLE_ENV))
+	{
+		if ((*lexer)->lex == DOUBLE_ENV)
+			i++;
+		add_env_var(*lexer, i, start);
+	}
+	return ((*lexer));
 }

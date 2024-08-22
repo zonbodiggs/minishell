@@ -6,28 +6,11 @@
 /*   By: endoliam <endoliam@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/11 18:58:41 by endoliam          #+#    #+#             */
-/*   Updated: 2024/08/16 21:27:41 by endoliam         ###   ########lyon.fr   */
+/*   Updated: 2024/08/22 15:53:15 by endoliam         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../minishell.h"
-
-char	*join_and_free(char *s1, char *s2)
-{
-	char	*res;
-
-	if (!s2)
-		return (s1);
-	res = ft_strjoin(s1, s2);
-	if (!res)
-	{
-		free(s1);
-		free(s2);
-		return (NULL);
-	}
-	free(s1);
-	return (res);
-}
 
 static char	*find_expand(char *s)
 {
@@ -37,11 +20,52 @@ static char	*find_expand(char *s)
 
 	i = 0;
 	tmp = ft_strchr(s, '$');
+	if (!tmp[i + 1] || tmp[i + 1] == '"'
+		|| tmp[i + 1] == 39 || tmp[i + 1] == '$')
+	{
+		tmp[i] = '$' * -1;
+		if (tmp[i + 1] == '$')
+			tmp[i + 1] = '$' * -1;
+		res = ft_substr(tmp, 0, i + 1);
+		return (res);
+	}
 	i++;
 	while (tmp[i] && !isispace(tmp[i]) && tmp[i] != '"'
 		&& tmp[i] != 39 && tmp[i] != '$')
 		i++;
 	res = ft_substr(tmp, 0, i);
+	return (res);
+}
+
+bool	is_negative_content(char *s)
+{
+	int		i;
+
+	i = 0;
+	while (s && s[i])
+	{
+		if (s[i] == -36)
+			return (true);
+		i++;
+	}
+	return (false);
+}
+
+char	*free_expand(char *s)
+{
+	s = NULL;
+	free(s);
+	return (NULL);
+}
+
+char	*join_or_dup(char *s, char *var)
+{
+	char	*res;
+
+	if (is_negative_content(var))
+		res = ft_strjoin(s, var);
+	else
+		res = ft_strdup(s);
 	return (res);
 }
 
@@ -55,13 +79,9 @@ char	*init_env_var(char *s, t_minishell mini)
 	var = find_expand(tmp);
 	s[ft_strlen(s) - ft_strlen(ft_strchr(s, '$'))] = '\0';
 	if (!mygetenv(var + 1, mini) && ft_strlen(s) - ft_strlen(var) == 0)
-	{
-		s = NULL;
-		free(s);
-		return (NULL);
-	}
+		return (free_expand(s));
 	if (!mygetenv(var + 1, mini))
-		res = ft_strdup(s);
+		res = join_or_dup(s, var);
 	else
 		res = ft_strjoin(s, mygetenv(var + 1, mini));
 	if (tmp[ft_strlen(s) + ft_strlen(var)])

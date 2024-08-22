@@ -15,6 +15,7 @@ SRCS		= parsing/tokenize/bool_lexer.c\
 			  parsing/tokenize/operator.c\
 			  parsing/pars_cmd/init_cmd.c\
 			  parsing/pars_cmd/cmd_utils.c\
+			  parsing/pars_cmd/tab_utils.c\
 			  parsing/pars_cmd/files_utils.c\
 			  parsing/pars_cmd/lst_cmd_utils.c\
 			  parsing/pars_cmd/parsing_cmd.c\

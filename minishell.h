@@ -6,7 +6,7 @@
 /*   By: endoliam <endoliam@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/14 13:20:55 by endoliam          #+#    #+#             */
-/*   Updated: 2024/08/20 18:03:11 by endoliam         ###   ########lyon.fr   */
+/*   Updated: 2024/08/22 16:38:28 by endoliam         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -102,6 +102,7 @@ int			lst_init_lexer(t_lexer **lexer,
 				char *s, int start, t_minishell mini);
 void		add_lexer(t_lexer **lexer, t_lexer *element);
 int			word_len(char *s);
+void		free_one_lexer(t_lexer **lexer);
 
 // 				bool lexer
 bool		isword(char *s, int start);
@@ -114,7 +115,8 @@ bool		is_quote(char c);
 //				expand
 char		*init_env_var(char *s, t_minishell mini);
 char		*join_and_free(char *s1, char *s2);
-void		parsing_expand(t_lexer *lexer);
+t_lexer		*parsing_expand(t_lexer **lexer);
+void		clean_expand(char *contain);
 
 // 				utils cmd
 int			exit_failure(char *msg, char c);
@@ -139,8 +141,7 @@ int			error_files(int flag, char *file);
 int			size_tab_cmd(t_lexer *lex);
 t_lexer		*zap_redirection(t_lexer *lex);
 t_lexer		*go_next_cmd(t_lexer *lex);
-char		*join_cmd(t_lexer *lex, char *cmd,
-				t_minishell *mini, t_cmd *command);
+char		*join_cmd(t_lexer *lex, char *cmd);
 char		*dup_cmd(t_lexer *lex, t_minishell *mini);
 
 //				bool cmd

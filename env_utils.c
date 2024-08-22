@@ -6,7 +6,7 @@
 /*   By: endoliam <endoliam@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/20 17:21:26 by endoliam          #+#    #+#             */
-/*   Updated: 2024/08/20 17:29:45 by endoliam         ###   ########lyon.fr   */
+/*   Updated: 2024/08/22 14:17:13 by endoliam         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,10 +71,10 @@ char	*mygetenv(char *s, t_minishell mini)
 
 	len = 0;
 	i = 0;
+	if (!s || !s[0] || !mini.env)
+		return (NULL);
 	if (!ft_strncmp(s, "?", ft_strlen(s)))
 		return (mini.exit_code);
-	if (!mini.env)
-		return (NULL);
 	while (mini.env[i])
 	{
 		len = ft_strlen(mini.env[i]) - ft_strlen(ft_strchr(mini.env[i], '='));

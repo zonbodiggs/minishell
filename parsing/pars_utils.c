@@ -6,7 +6,7 @@
 /*   By: endoliam <endoliam@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/17 17:04:15 by endoliam          #+#    #+#             */
-/*   Updated: 2024/08/20 16:56:54 by endoliam         ###   ########lyon.fr   */
+/*   Updated: 2024/08/22 15:57:04 by endoliam         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,4 +70,18 @@ char	**cpy_env(t_minishell *mini, char **env)
 	}
 	dest[len] = NULL;
 	return (dest);
+}
+
+void	clean_expand(char *contain)
+{
+	int	i;
+
+	i = 0;
+	while (contain && contain[i])
+	{
+		if (contain[i] && contain[i] == -36)
+			contain[i] = '$';
+		i++;
+	}
+	return ;
 }
