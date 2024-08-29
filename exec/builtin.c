@@ -6,7 +6,7 @@
 /*   By: endoliam <endoliam@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/23 14:43:05 by rtehar            #+#    #+#             */
-/*   Updated: 2024/08/20 17:23:02 by endoliam         ###   ########lyon.fr   */
+/*   Updated: 2024/08/28 14:24:25 by endoliam         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,10 +26,10 @@ int	sort_cmd(char **cmd, char **env)
 	if (ft_strcmp(cmd[0], "echo") == 0 && ft_strlen(cmd[0]) == 4)
 		return (echo(cmd));
 	else if (ft_strcmp(cmd[0], "pwd") == 0 && ft_strlen(cmd[0]) == 3)
-		return (pwd());
+		return (pwd(cmd));
 	else if (ft_strcmp(cmd[0], "env") == 0 && ft_strlen(cmd[0]) == 3)
-		return (env_shell(env));
-	return (127);
+		return (env_shell(env, cmd));
+	return (1);
 }
 
 int	run_builtin(char **cmd, t_minishell *mini)
@@ -55,12 +55,9 @@ int	sort_builtin(t_minishell *mini)
 	int		exit_code;
 
 	cmd = mini->input;
-	exit_code = 0;
-	while (cmd)
-	{
+	exit_code = -1;
+	if (number_of_command(mini->input) == 0)
 		exit_code = run_builtin(cmd->cmd, mini);
-		cmd = cmd->next;
-	}
 	if (exit_code != -1)
 		mini->exit_code = ft_itoa(exit_code);
 	return (exit_code);

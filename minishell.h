@@ -6,7 +6,7 @@
 /*   By: endoliam <endoliam@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/14 13:20:55 by endoliam          #+#    #+#             */
-/*   Updated: 2024/08/22 16:38:28 by endoliam         ###   ########lyon.fr   */
+/*   Updated: 2024/08/28 18:17:23 by rtehar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -117,7 +117,10 @@ char		*init_env_var(char *s, t_minishell mini);
 char		*join_and_free(char *s1, char *s2);
 t_lexer		*parsing_expand(t_lexer **lexer);
 void		clean_expand(char *contain);
-
+char		*add_contain(t_lexer **lexer);
+void		clean_expand_quote(t_lexer *lexer);
+void		expand_variable(t_lexer *data, t_lexer **lexer,
+				t_minishell mini);
 // 				utils cmd
 int			exit_failure(char *msg, char c);
 int			zap_quote(char *s, char quote, int i);
@@ -190,8 +193,8 @@ void		write_heredoc(int fd, char *line);
 void		exec_builtin(t_minishell *mini, t_cmd *cmd);
 int			sort_cmd(char **cmd, char **env);
 int			echo(char **cmd);
-int			pwd(void);
-int			env_shell(char **env);
+int			pwd(char **cmd);
+int			env_shell(char **env, char **cmd);
 void		exit_shell(t_minishell *shell, char **cmd);
 int			unset_variable(char **cmd, char ***env);
 int			sort_builtin(t_minishell *mini);
@@ -204,12 +207,14 @@ int			update_oldpwd(char ***env);
 int			cheking_cd(char ***env, char *path);
 char		*get_env_value(char **env, const char *var);
 int			set_env_var(char ***env, const char *var, const char *value);
-void		print_error(char *arg);
+int			print_error(char *arg);
+char		*check_path(char *path, char ***env);
 
 //					export
 int			export_variable(char **cmd, char ***env);
 int			update_existing_var(char *new_var, char ***env);
 int			add_new_var(char *new_var, char ***env);
+int			check_var(char *new_var, char **env);
 
 /* 					end exec				*/
 

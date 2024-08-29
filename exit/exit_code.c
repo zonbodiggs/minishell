@@ -6,7 +6,7 @@
 /*   By: endoliam <endoliam@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/17 00:54:46 by endoliam          #+#    #+#             */
-/*   Updated: 2024/08/20 17:05:36 by endoliam         ###   ########lyon.fr   */
+/*   Updated: 2024/08/28 16:34:28 by endoliam         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,7 @@ int	get_strerro(t_minishell *mini, int value)
 		if (mini->input && mini->input->cmd)
 			error = add_param_err(error, mini->input->cmd[0]);
 		error = ft_strjoingnl(error, strerror(value));
-		if (value == 13)
+		if (value == 13 | value == 8)
 			value = 126;
 		ft_printf_fd(2, "[%s%d\x1b[5;0m] %s\x1b[0m\n",
 			"\x1b[5;31m", value, error);
@@ -63,6 +63,8 @@ int	get_strerro(t_minishell *mini, int value)
 
 int	get_exit_code(t_minishell *mini, int value)
 {
+	if (value == 2)
+		value = 1;
 	value = get_strerro(mini, value);
 	return (value);
 }

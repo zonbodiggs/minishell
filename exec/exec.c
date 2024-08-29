@@ -6,7 +6,7 @@
 /*   By: endoliam <endoliam@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/24 13:20:21 by rtehar            #+#    #+#             */
-/*   Updated: 2024/08/20 12:40:01 by endoliam         ###   ########lyon.fr   */
+/*   Updated: 2024/08/28 16:32:55 by endoliam         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,7 @@ int	prepare_execution(t_minishell *mini, t_cmd	*cmd)
 
 	value = 0;
 	value_redir = 0;
-	if (g_signal == 130)
+	if (g_signal != 0)
 		return (g_signal);
 	if (cmd)
 		value = iscmd(cmd->cmd, mini);

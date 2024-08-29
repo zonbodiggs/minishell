@@ -6,7 +6,7 @@
 /*   By: endoliam <endoliam@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/14 16:09:41 by endoliam          #+#    #+#             */
-/*   Updated: 2024/08/20 17:51:16 by endoliam         ###   ########lyon.fr   */
+/*   Updated: 2024/08/26 16:01:02 by endoliam         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,6 +47,7 @@ static void	run_minishell(t_minishell *minishell, char *buffer)
 	if (buffer && buffer[0])
 		add_history(buffer);
 	minishell->lex = create_lexer(buffer, minishell);
+	free(buffer);
 	if (minishell->lex)
 		minishell->input = init_cmd(minishell, &minishell->lex);
 	find_heredoc(minishell->input, minishell);
@@ -56,13 +57,16 @@ static void	run_minishell(t_minishell *minishell, char *buffer)
 		if (sort_builtin(minishell) == -1)
 			minishell->exit_code = run_commands(minishell);
 	}
-	if (g_signal == 130)
+	if (g_signal != 0)
 	{
 		free(minishell->exit_code);
-		minishell->exit_code = ft_itoa(130);
+		minishell->exit_code = ft_itoa(g_signal);
 	}
-	free_input(&minishell->input);
-	free(minishell->input);
+	if (minishell->input)
+	{
+		free_input(&minishell->input);
+		free(minishell->input);
+	}
 }
 
 static void	start_shell(int ac)

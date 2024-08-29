@@ -6,7 +6,7 @@
 /*   By: endoliam <endoliam@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/11 13:56:32 by endoliam          #+#    #+#             */
-/*   Updated: 2024/08/22 15:56:15 by endoliam         ###   ########lyon.fr   */
+/*   Updated: 2024/08/29 11:58:24 by endoliam         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,22 +70,34 @@ static void	list_env_vars(char **env)
 	}
 	env_sort = copy_env(env_sort, env, count);
 	sort_export(env_sort, count);
-	while (env_sort[i + 1] != NULL)
+	count = 0;
+	while (env_sort[i] != NULL)
 	{
-		printf("declare -x %s\n", env_sort[i]);
+		if (ft_strncmp(env_sort[i], "_=", 2))
+			printf("declare -x %s\n", env_sort[i]);
 		free(env_sort[i]);
 		i++;
 	}
-	free(env_sort[i]);
 	free(env_sort);
 }
 
 static int	validate_variable(char *var)
 {
-	char	*equal_sign;
+	int		i;
+	int		j;
 
-	equal_sign = ft_strchr(var, '=');
-	if (equal_sign == NULL)
+	i = 0;
+	j = 0;
+	while (var && var[i] && var[i] != '=')
+	{
+		if (!ft_isalnum(var[i]) && var[i] != '_')
+		{
+			j = 1;
+			break ;
+		}
+		i++;
+	}
+	if (j == 1)
 	{
 		printf("export: `%s`: not a valid identifier\n", var);
 		return (0);
@@ -96,20 +108,27 @@ static int	validate_variable(char *var)
 int	export_variable(char **cmd, char ***env)
 {
 	char	*new_var;
+	int		i;
 
-	new_var = cmd[1];
-	if (!*env)
-		*env = ft_calloc(2, sizeof(char *));
+	i = 0;
 	if (cmd[1] == NULL)
 	{
 		list_env_vars(*env);
 		return (0);
 	}
-	if (!validate_variable(new_var))
-		return (1);
-	if (update_existing_var(new_var, env))
-		return (0);
-	if (!add_new_var(new_var, env))
-		return (1);
+	while (cmd && *cmd && cmd[+i])
+	{
+		new_var = cmd[i];
+		while (check_var(new_var, *env) == 0)
+			new_var = cmd[++i];
+		if (!*env)
+			*env = ft_calloc(2, sizeof(char *));
+		if (!validate_variable(new_var))
+			return (1);
+		if (update_existing_var(new_var, env))
+			return (0);
+		if (!add_new_var(new_var, env))
+			return (1);
+	}
 	return (0);
 }

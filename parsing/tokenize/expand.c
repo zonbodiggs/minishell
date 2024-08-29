@@ -6,7 +6,7 @@
 /*   By: endoliam <endoliam@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/11 18:58:41 by endoliam          #+#    #+#             */
-/*   Updated: 2024/08/22 15:53:15 by endoliam         ###   ########lyon.fr   */
+/*   Updated: 2024/08/29 11:44:16 by endoliam         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,8 +20,7 @@ static char	*find_expand(char *s)
 
 	i = 0;
 	tmp = ft_strchr(s, '$');
-	if (!tmp[i + 1] || tmp[i + 1] == '"'
-		|| tmp[i + 1] == 39 || tmp[i + 1] == '$')
+	if (!tmp[i + 1] || (!ft_isalnum(tmp[i + 1]) && tmp[i + 1] != '?'))
 	{
 		tmp[i] = '$' * -1;
 		if (tmp[i + 1] == '$')
@@ -30,8 +29,8 @@ static char	*find_expand(char *s)
 		return (res);
 	}
 	i++;
-	while (tmp[i] && !isispace(tmp[i]) && tmp[i] != '"'
-		&& tmp[i] != 39 && tmp[i] != '$')
+	while ((tmp[i] && !isispace(tmp[i]) && ft_isalnum(tmp[i]))
+		|| (!ft_isalnum(tmp[i]) && tmp[i] == '?'))
 		i++;
 	res = ft_substr(tmp, 0, i);
 	return (res);
@@ -78,8 +77,6 @@ char	*init_env_var(char *s, t_minishell mini)
 	tmp = ft_strdup(s);
 	var = find_expand(tmp);
 	s[ft_strlen(s) - ft_strlen(ft_strchr(s, '$'))] = '\0';
-	if (!mygetenv(var + 1, mini) && ft_strlen(s) - ft_strlen(var) == 0)
-		return (free_expand(s));
 	if (!mygetenv(var + 1, mini))
 		res = join_or_dup(s, var);
 	else

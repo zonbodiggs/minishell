@@ -6,7 +6,7 @@
 /*   By: endoliam <endoliam@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/12 20:43:01 by endoliam          #+#    #+#             */
-/*   Updated: 2024/08/20 18:03:52 by endoliam         ###   ########lyon.fr   */
+/*   Updated: 2024/08/26 13:30:03 by endoliam         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,7 @@ int	heredoc(const char *delimiter, int fd, t_minishell *mini)
 	char	*line;
 
 	set_input_signal();
-	while (g_signal != 130)
+	while (g_signal == 0)
 	{
 		line = readline("> ");
 		if (!line || !ft_strcmp(line, delimiter))
@@ -85,10 +85,14 @@ void	pars_heredoc(int i, t_cmd *cmd, t_minishell *mini)
 	heredoc(cmd->files, fd, mini);
 	if (fd != -1)
 		close(fd);
-	if (g_signal == 130)
-		unlink(herename);
 	free(cmd->files);
 	cmd->files = ft_strdup(herename);
+	if (g_signal == 130)
+	{
+		unlink(herename);
+		free_input(&mini->input);
+		free(mini->input);
+	}
 	free(herename);
 	free(index);
 }
@@ -107,6 +111,8 @@ void	find_heredoc(t_cmd	*command, t_minishell *mini)
 		if (cmd && cmd->redir == HEREDOC)
 		{
 			pars_heredoc(i, cmd, mini);
+			if (!mini->input)
+				break ;
 			i++;
 		}
 		cmd = cmd->next;

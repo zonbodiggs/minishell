@@ -6,11 +6,35 @@
 /*   By: rtehar <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/14 14:43:15 by rtehar            #+#    #+#             */
-/*   Updated: 2024/08/14 14:45:58 by rtehar           ###   ########.fr       */
+/*   Updated: 2024/08/26 18:05:35 by rtehar           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
+
+char	*check_path(char *path, char ***env)
+{
+	if (!path)
+	{
+		path = get_env_value(*env, "HOME");
+		if (!path)
+		{
+			ft_putendl_fd("cd: HOME not set", STDERR_FILENO);
+			return (NULL);
+		}
+	}
+	else if (ft_strncmp(path, "-", ft_strlen(path) == 0))
+	{
+		path = get_env_value(*env, "OLDPWD");
+		if (!path)
+		{
+			ft_putendl_fd("cd: OLDPWD not set", STDERR_FILENO);
+			return (NULL);
+		}
+		ft_putendl_fd(path, STDOUT_FILENO);
+	}
+	return (path);
+}
 
 int	check_env(char ***env, const char *var, char *new_var, int len)
 {
@@ -51,11 +75,21 @@ int	update_oldpwd(char ***env)
 
 int	cheking_cd(char ***env, char *path)
 {
-	if (chdir(path) != 0)
+	char	*oldpwd;
+
+	if (access(".", X_OK) != 0)
 	{
-		print_error(path);
-		return (1);
+		oldpwd = get_env_value(*env, "OLDPWD");
+		if (oldpwd && chdir(oldpwd) == 0)
+		{
+			ft_putendl_fd(oldpwd, STDOUT_FILENO);
+			update_pwd(env);
+			return (0);
+		}
+		return (print_error("No such file or directory"));
 	}
+	if (chdir(path) != 0)
+		return (print_error(path));
 	if (update_oldpwd(env) != 0 || update_pwd(env) != 0)
 	{
 		ft_putendl_fd("cd: error updating environment variables",

@@ -22,15 +22,3 @@
    ...
    fun:add_history
 }
-{
-   <setlocale>
-   Memcheck:Leak
-   ...
-   fun:setlocale
-}
-{
-   <dcigettext>
-   Memcheck:Leak
-   ...
-   fun:dcigettext
-}

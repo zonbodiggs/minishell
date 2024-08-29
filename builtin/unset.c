@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   unset.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rtehar <marvin@42.fr>                      +#+  +:+       +#+        */
+/*   By: endoliam <endoliam@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/01 14:31:23 by rtehar            #+#    #+#             */
-/*   Updated: 2024/08/14 14:32:54 by rtehar           ###   ########.fr       */
+/*   Updated: 2024/08/29 12:16:40 by endoliam         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,14 +55,22 @@ static void	remove_var(char ***env, int index)
 
 static int	find_var_index(char **env, const char *var)
 {
-	int	i;
-	int	len;
+	int		i;
+	int		len;
 
-	len = ft_strlen(var);
+	len = 0;
 	i = 0;
 	while (env[i])
 	{
-		if (ft_strncmp(env[i], var, len) == 0 && env[i][len] == '=')
+		if (ft_strcmp(env[i], "="))
+		{
+			len = 0;
+			while (env[i][len] && env[i][len] != '=')
+				len++;
+		}
+		else
+			len = ft_strlen(env[i]);
+		if (ft_strncmp(env[i], var, len) == 0)
 			return (i);
 		i++;
 	}

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   export_utile.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rtehar <marvin@42.fr>                      +#+  +:+       +#+        */
+/*   By: endoliam <endoliam@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/14 14:35:30 by rtehar            #+#    #+#             */
-/*   Updated: 2024/08/14 14:37:46 by rtehar           ###   ########.fr       */
+/*   Updated: 2024/08/29 12:03:56 by endoliam         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,19 +18,34 @@ int	update_existing_var(char *new_var, char ***env)
 	int		i;
 
 	i = 0;
+	if (!new_var)
+		return (0);
 	equal_sign = ft_strchr(new_var, '=');
 	while ((*env)[i] != NULL)
 	{
 		if (ft_strncmp((*env)[i], new_var, equal_sign - new_var) == 0 &&
-			(*env)[i][equal_sign - new_var] == '=')
+			(*env)[i][1] == '=' )
 		{
-			free((*env)[i]);
 			(*env)[i] = ft_strdup(new_var);
 			return (1);
 		}
 		i++;
 	}
 	return (0);
+}
+
+int	check_var(char *new_var, char **env)
+{
+	int	i;
+
+	i = 0;
+	while (env[i])
+	{
+		if (ft_strcmp(new_var, env[i]) == 0)
+			return (0);
+		i++;
+	}
+	return (1);
 }
 
 int	add_new_var(char *new_var, char ***env)

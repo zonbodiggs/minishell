@@ -6,7 +6,7 @@
 /*   By: endoliam <endoliam@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/17 17:04:15 by endoliam          #+#    #+#             */
-/*   Updated: 2024/08/22 15:57:04 by endoliam         ###   ########lyon.fr   */
+/*   Updated: 2024/08/26 15:52:47 by endoliam         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,7 +79,7 @@ void	clean_expand(char *contain)
 	i = 0;
 	while (contain && contain[i])
 	{
-		if (contain[i] && contain[i] == -36)
+		if (contain[i] && contain[i] < 0)
 			contain[i] = '$';
 		i++;
 	}

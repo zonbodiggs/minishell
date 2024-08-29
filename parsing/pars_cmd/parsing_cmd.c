@@ -6,7 +6,7 @@
 /*   By: endoliam <endoliam@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/29 12:32:33 by endoliam          #+#    #+#             */
-/*   Updated: 2024/08/20 16:58:55 by endoliam         ###   ########lyon.fr   */
+/*   Updated: 2024/08/28 16:31:59 by endoliam         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,7 +86,7 @@ int	error_files(int flag, char *file)
 {
 	if (flag == 2)
 		ft_printf_fd(2, "[%s%d\x1b[5;0m] : %s << %s >> %s\n", "\x1b[5;31m",
-			flag, "\x1b[1;35mminishell error\x1b[0m :", file,
+			1, "\x1b[1;35mminishell error\x1b[0m :", file,
 			" No such file or directory");
 	else if (flag == 1)
 		ft_printf_fd(2, "[%s%d\x1b[5;0m] : %s << %s >> %s\n", "\x1b[5;31m",
