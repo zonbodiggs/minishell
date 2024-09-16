@@ -43,6 +43,7 @@ SRCS		= parsing/tokenize/bool_lexer.c\
 			  env_utils.c\
 			  signal.c\
 			  free.c\
+			  print_data.c\
 			  main.c
 
 LIB_DIR		= ./libft/

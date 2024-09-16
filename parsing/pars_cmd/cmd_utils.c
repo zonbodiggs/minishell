@@ -6,7 +6,7 @@
 /*   By: endoliam <endoliam@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/29 11:42:24 by endoliam          #+#    #+#             */
-/*   Updated: 2024/08/22 16:43:01 by endoliam         ###   ########lyon.fr   */
+/*   Updated: 2024/09/09 13:53:54 by endoliam         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,8 +14,10 @@
 
 t_lexer	*zap_redirection(t_lexer *lex)
 {
-	while ((lex && lex->prev && isredirection(lex->prev->lex))
-		|| (lex && isredirection(lex->lex)))
+	lex = lex->next;
+	while (lex && !lex->spaces)
+		lex = lex->next;
+	if (lex)
 		lex = lex->next;
 	return (lex);
 }
@@ -41,13 +43,13 @@ int	size_tab_cmd(t_lexer *lex)
 	while (tmp && tmp->lex != PIPES)
 	{
 		i++;
-		if (tmp->spaces == false && !isredirection(tmp->lex))
+		if (!tmp->spaces && !isredirection(tmp->lex))
 		{
-			while (tmp && isoperator_cmd(tmp->lex) == false
-				&& tmp->spaces == false)
+			while (tmp && !isoperator_cmd(tmp->lex)
+				&& !tmp->spaces)
 				tmp = tmp->next;
 		}
-		if (tmp && isoperator_cmd(tmp->lex) == false)
+		if (tmp && !isoperator_cmd(tmp->lex))
 			tmp = tmp->next;
 		if (tmp && tmp->lex && isredirection(tmp->lex))
 			tmp = zap_redirection(tmp);
@@ -60,7 +62,7 @@ char	*join_cmd(t_lexer *lex, char *cmd)
 	char	*tmp;
 
 	tmp = NULL;
-	while (lex && lex->spaces == false && !isoperator_cmd(lex->lex))
+	while (lex && !lex->spaces && !isoperator_cmd(lex->lex))
 	{
 		lex = lex->next;
 		if (lex && !isredirection(lex->lex) && (lex->lex == SINGLE_Q

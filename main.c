@@ -6,7 +6,7 @@
 /*   By: endoliam <endoliam@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/14 16:09:41 by endoliam          #+#    #+#             */
-/*   Updated: 2024/08/26 16:01:02 by endoliam         ###   ########lyon.fr   */
+/*   Updated: 2024/09/09 14:10:46 by endoliam         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,7 +73,7 @@ static void	start_shell(int ac)
 {
 	if (ac != 1)
 	{
-		ft_printf_fd(2, "too many arguments\n");
+		ft_printf_fd(2, "minishell : too many arguments\n");
 		exit (2);
 	}
 	printf("%sWelcome to minishell an interactive 42 shell project\x1b[49m\n",

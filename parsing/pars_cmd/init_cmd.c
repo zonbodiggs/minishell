@@ -6,7 +6,7 @@
 /*   By: endoliam <endoliam@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/20 11:36:33 by endoliam          #+#    #+#             */
-/*   Updated: 2024/08/22 16:46:21 by endoliam         ###   ########lyon.fr   */
+/*   Updated: 2024/09/09 13:35:59 by endoliam         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ t_lexer	*get_cmd(t_cmd *command, t_lexer *lex, t_minishell *mini)
 	if (lex && !isoperator_cmd(lex->lex))
 	{
 		command->cmd = init_tab(command, lex, mini);
-		while (lex && isoperator_cmd(lex->lex) == false)
+		while (lex && !isoperator_cmd(lex->lex))
 			lex = lex->next;
 	}
 	if (lex && isredirection(lex->lex) == true)
@@ -27,7 +27,7 @@ t_lexer	*get_cmd(t_cmd *command, t_lexer *lex, t_minishell *mini)
 		{
 			lex = lex->next;
 			command->files = init_files(command, lex, mini);
-			while (lex && !lex->spaces && !isoperator_cmd(lex->lex))
+			while (lex && !isoperator_cmd(lex->lex))
 				lex = lex->next;
 			if (lex && lex->next && !isoperator_cmd(lex->lex))
 				lex = lex->next;

@@ -6,12 +6,25 @@
 /*   By: endoliam <endoliam@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/11 13:56:11 by endoliam          #+#    #+#             */
-/*   Updated: 2024/08/28 14:27:42 by rtehar           ###   ########.fr       */
+/*   Updated: 2024/09/09 14:44:40 by endoliam         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
+bool	is_numeric_arg(char *cmd)
+{
+	int		i;
+
+	i = 0;
+	while (cmd[i])
+	{
+		if (!ft_isdigit(cmd[i]))
+			return (false);
+		i++;
+	}
+	return (true);
+}
 void	exit_shell(t_minishell *shell, char **cmd)
 {
 	int	exit_code;
@@ -20,7 +33,7 @@ void	exit_shell(t_minishell *shell, char **cmd)
 	if (cmd[1])
 	{
 		exit_code = ft_atoi(cmd[1]);
-		if (exit_code == 0 && cmd[1][0] != '0')
+		if ((exit_code == 0 && cmd[1][0] != '0') || (!is_numeric_arg(cmd[1])))
 		{
 			printf("exit: %s: numeric argument required\n", cmd[1]);
 			exit_code = 2;

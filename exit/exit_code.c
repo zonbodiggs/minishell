@@ -6,7 +6,7 @@
 /*   By: endoliam <endoliam@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/17 00:54:46 by endoliam          #+#    #+#             */
-/*   Updated: 2024/08/28 16:34:28 by endoliam         ###   ########lyon.fr   */
+/*   Updated: 2024/09/09 14:39:20 by endoliam         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,12 @@ static int	find_cmd_err(char *error, int value, t_minishell *mini)
 		error = ft_strjoingnl(error, "is a directory ");
 		value = 126;
 	}
+	if (ft_strchr(mini->input->cmd[0] + ft_strlen(mini->input->cmd[0]) - 1, '/')
+		&& !is_directory(mini->input->cmd[0]))
+	{
+		error = ft_strjoingnl(error, "is not a directory ");
+		value = 126;
+	}
 	else
 		error = ft_strjoingnl(error, "command not found");
 	ft_printf_fd(2, "[%s%d\x1b[5;0m] %s\x1b[0m\n", "\x1b[5;31m", value, error);
@@ -48,7 +54,7 @@ int	get_strerro(t_minishell *mini, int value)
 		if (mini->input && mini->input->cmd)
 			error = add_param_err(error, mini->input->cmd[0]);
 		error = ft_strjoingnl(error, strerror(value));
-		if (value == 13 | value == 8)
+		if (value == 13 || value == 8)
 			value = 126;
 		ft_printf_fd(2, "[%s%d\x1b[5;0m] %s\x1b[0m\n",
 			"\x1b[5;31m", value, error);

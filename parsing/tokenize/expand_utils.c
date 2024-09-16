@@ -6,7 +6,7 @@
 /*   By: endoliam <endoliam@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/20 15:23:52 by endoliam          #+#    #+#             */
-/*   Updated: 2024/08/28 16:45:01 by endoliam         ###   ########lyon.fr   */
+/*   Updated: 2024/09/09 13:02:36 by endoliam         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,11 +51,9 @@ static int	change_first_expand(char *contain, int i, t_lexer *lexer)
 
 static	void	add_env_var(t_lexer *lexer, char *contain, int start)
 {
-	int		len;
 	int		i;
 
 	i = 0;
-	len = ft_strlen(contain);
 	while (i < (int)ft_strlen(contain) && contain[i])
 	{
 		if ((i == 0 && !isispace(contain[i]))
@@ -72,7 +70,6 @@ static	void	add_env_var(t_lexer *lexer, char *contain, int start)
 		}
 		i++;
 	}
-	(void)start;
 	free(contain);
 }
 

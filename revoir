@@ -1,0 +1,9 @@
+Bon tres bon projet dans l'ensemble, quelaue petites erreurs mais c'est normal au premier push
+Voici la petite liste pour vous corriger :
+ctrl - \ -> quit (core dumped) quand y a minishell lancer dans minishell
+echo "$USER""""""""""""""""""""""""""""""""""""""'''"
+endoliam '''
+juste un petit espace en trop
+pas de double quotes dans le export
+Leaks quand il y a un espace dans l'argument du export
+attention de ne pas faire l'expand si il y a des quotes dans le nom du heredoc

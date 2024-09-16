@@ -6,7 +6,7 @@
 /*   By: endoliam <endoliam@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/17 17:04:15 by endoliam          #+#    #+#             */
-/*   Updated: 2024/08/26 15:52:47 by endoliam         ###   ########lyon.fr   */
+/*   Updated: 2024/09/09 14:12:48 by endoliam         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,7 +57,10 @@ char	**cpy_env(t_minishell *mini, char **env)
 	i = 0;
 	len = 0;
 	if (!env || !*env)
-		return (NULL);
+	{
+		dest = ft_calloc(1, sizeof(char *));
+		return (dest);
+	}
 	while (env[len])
 		len++;
 	dest = malloc((len + 1) * sizeof(char *));
