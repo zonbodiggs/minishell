@@ -6,11 +6,31 @@
 /*   By: endoliam <endoliam@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/20 11:36:33 by endoliam          #+#    #+#             */
-/*   Updated: 2024/09/09 13:35:59 by endoliam         ###   ########lyon.fr   */
+/*   Updated: 2024/09/19 11:01:07 by endoliam         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../minishell.h"
+
+t_lexer	*zap_redirect_token(t_lexer *lex, t_cmd *command)
+{
+	if (command->cmd)
+	{
+		while (lex && !isoperator_cmd(lex->lex))
+			lex = lex->next;
+	}
+	else
+	{
+		while (lex && !lex->spaces && !isoperator_cmd(lex->lex))
+			lex = lex->next;
+	}
+	if (lex && lex->next && !isoperator_cmd(lex->lex))
+		lex = lex->next;
+	if ((lex && lex->lex == SINGLE_Q)
+		|| (lex && lex->lex == DOUBLE_Q))
+		lex = lex->next;
+	return (lex);
+}
 
 t_lexer	*get_cmd(t_cmd *command, t_lexer *lex, t_minishell *mini)
 {
@@ -27,13 +47,7 @@ t_lexer	*get_cmd(t_cmd *command, t_lexer *lex, t_minishell *mini)
 		{
 			lex = lex->next;
 			command->files = init_files(command, lex, mini);
-			while (lex && !isoperator_cmd(lex->lex))
-				lex = lex->next;
-			if (lex && lex->next && !isoperator_cmd(lex->lex))
-				lex = lex->next;
-			if ((lex && lex->lex == SINGLE_Q)
-				|| (lex && lex->lex == DOUBLE_Q))
-				lex = lex->next;
+			lex = zap_redirect_token(lex, command);
 		}
 	}
 	if (lex && lex->lex == PIPES)

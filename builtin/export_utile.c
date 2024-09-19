@@ -6,7 +6,7 @@
 /*   By: endoliam <endoliam@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/14 14:35:30 by rtehar            #+#    #+#             */
-/*   Updated: 2024/08/29 12:03:56 by endoliam         ###   ########lyon.fr   */
+/*   Updated: 2024/09/19 16:00:57 by endoliam         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,14 +18,14 @@ int	update_existing_var(char *new_var, char ***env)
 	int		i;
 
 	i = 0;
-	if (!new_var)
-		return (0);
+	printf("Jsuisbien\n");
 	equal_sign = ft_strchr(new_var, '=');
 	while ((*env)[i] != NULL)
 	{
 		if (ft_strncmp((*env)[i], new_var, equal_sign - new_var) == 0 &&
-			(*env)[i][1] == '=' )
+			(*env)[i][equal_sign - new_var] == '=')
 		{
+			free((*env)[i]);
 			(*env)[i] = ft_strdup(new_var);
 			return (1);
 		}
@@ -39,10 +39,28 @@ int	check_var(char *new_var, char **env)
 	int	i;
 
 	i = 0;
+	//printf("\n\n\n\n%c\n\n\n\n\n",new_var[i - 1]);
 	while (env[i])
 	{
-		if (ft_strcmp(new_var, env[i]) == 0)
+		if (ft_strncmp(new_var, env[i], ft_strlen(new_var)) == 0)
+		{
+			env[i][0] = 0;
 			return (0);
+		}
+		i++;
+	}
+	return (1);
+}
+
+int	check_egal(char *var)
+{
+	int	i;
+
+	i = 0;
+	while(var[i])
+	{
+		if(var[i] == '=' && (i == 0 || var[i - 1] == ' '))
+				return (0);
 		i++;
 	}
 	return (1);
@@ -56,6 +74,9 @@ int	add_new_var(char *new_var, char ***env)
 
 	i = 0;
 	env_size = 0;
+	// if(check_var(new_var, *env) == 0)
+	// 	return (1);
+	check_var(new_var, *env);
 	while ((*env)[env_size] != NULL)
 		env_size++;
 	new_env = malloc((env_size + 2) * sizeof(char *));

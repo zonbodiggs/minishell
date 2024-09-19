@@ -6,7 +6,7 @@
 /*   By: endoliam <endoliam@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/28 15:20:33 by endoliam          #+#    #+#             */
-/*   Updated: 2024/08/28 16:39:00 by endoliam         ###   ########lyon.fr   */
+/*   Updated: 2024/09/19 16:07:15 by endoliam         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,6 +76,11 @@ void	expand_variable(t_lexer *data, t_lexer **lexer, t_minishell mini)
 		if ((*lexer && ft_strcmp((*lexer)->contain, "<<")) || !*lexer)
 			data->contain = init_env_var(data->contain, mini);
 		else
-			data->lex = WORD;
+		{
+			if (data->lex == DOUBLE_ENV)
+				data->lex = DOUBLE_Q;
+			else
+				data->lex = WORD;
+		}
 	}
 }

@@ -6,7 +6,7 @@
 /*   By: endoliam <endoliam@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/29 11:42:24 by endoliam          #+#    #+#             */
-/*   Updated: 2024/09/09 13:53:54 by endoliam         ###   ########lyon.fr   */
+/*   Updated: 2024/09/19 10:55:50 by endoliam         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,8 @@ int	size_tab_cmd(t_lexer *lex)
 		return (1);
 	while (tmp && tmp->lex != PIPES)
 	{
-		i++;
+		if (!tmp || !isredirection(tmp->lex))
+			i++;
 		if (!tmp->spaces && !isredirection(tmp->lex))
 		{
 			while (tmp && !isoperator_cmd(tmp->lex)

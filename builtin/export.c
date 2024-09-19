@@ -6,7 +6,7 @@
 /*   By: endoliam <endoliam@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/11 13:56:32 by endoliam          #+#    #+#             */
-/*   Updated: 2024/08/29 11:58:24 by endoliam         ###   ########lyon.fr   */
+/*   Updated: 2024/09/19 15:59:54 by endoliam         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,6 +88,11 @@ static int	validate_variable(char *var)
 
 	i = 0;
 	j = 0;
+	if(check_egal(var) == 0)
+	{
+		printf("export: `%s`: not a valid identifier\n", var);
+		return 0;
+	}
 	while (var && var[i] && var[i] != '=')
 	{
 		if (!ft_isalnum(var[i]) && var[i] != '_')
@@ -110,25 +115,30 @@ int	export_variable(char **cmd, char ***env)
 	char	*new_var;
 	int		i;
 
-	i = 0;
+	i = 1;
 	if (cmd[1] == NULL)
 	{
 		list_env_vars(*env);
 		return (0);
 	}
-	while (cmd && *cmd && cmd[+i])
+	while (cmd && *cmd && cmd[i])
 	{
 		new_var = cmd[i];
-		while (check_var(new_var, *env) == 0)
-			new_var = cmd[++i];
+		// while (check_var(new_var, *env) == 0)
+		// {
+		// 	if(cmd[i + 1] == NULL)
+		// 		return 0;
+		// 	new_var = cmd[++i];
+		// }
 		if (!*env)
 			*env = ft_calloc(2, sizeof(char *));
 		if (!validate_variable(new_var))
-			return (1);
-		if (update_existing_var(new_var, env))
 			return (0);
+		update_existing_var(new_var, env);
 		if (!add_new_var(new_var, env))
 			return (1);
+		if(cmd[i])
+			i++;
 	}
 	return (0);
 }

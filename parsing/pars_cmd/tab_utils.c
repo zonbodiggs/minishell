@@ -6,7 +6,7 @@
 /*   By: endoliam <endoliam@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/22 15:57:36 by endoliam          #+#    #+#             */
-/*   Updated: 2024/09/09 13:55:48 by endoliam         ###   ########lyon.fr   */
+/*   Updated: 2024/09/19 10:56:03 by endoliam         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,11 +35,14 @@ char	**init_tab(t_cmd *command, t_lexer *lex, t_minishell *mini)
 
 	i = 0;
 	len = size_tab_cmd(lex);
+	if (len == 0)
+		return (NULL);
 	cmd = ft_calloc(len + 1, sizeof(char *));
 	free_cmd_malloc(cmd, command, mini, -6);
 	while (lex && i < len)
 	{
-		cmd[i] = dup_cmd(lex, mini);
+		if (lex && lex->lex && !isoperator_cmd(lex->lex))
+			cmd[i] = dup_cmd(lex, mini);
 		if (lex && !lex->spaces && lex->lex && !isoperator_cmd(lex->lex))
 		{
 			cmd[i] = join_cmd(lex, cmd[i]);

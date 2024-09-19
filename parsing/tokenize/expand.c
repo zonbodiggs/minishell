@@ -29,10 +29,14 @@ static char	*find_expand(char *s)
 		return (res);
 	}
 	i++;
-	while ((tmp[i] && !isispace(tmp[i]) && ft_isalnum(tmp[i]))
-		|| (!ft_isalnum(tmp[i]) && tmp[i] == '?'))
-		i++;
-	res = ft_substr(tmp, 0, i);
+	if (tmp[i] == '?')
+		res = ft_substr(tmp, 0, i + 1);
+	else
+	{
+		while ((tmp[i] && !isispace(tmp[i]) && ft_isalnum(tmp[i])))
+			i++;
+		res = ft_substr(tmp, 0, i);
+	}
 	return (res);
 }
 

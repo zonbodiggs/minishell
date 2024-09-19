@@ -6,7 +6,7 @@
 /*   By: endoliam <endoliam@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/14 16:09:41 by endoliam          #+#    #+#             */
-/*   Updated: 2024/09/09 14:10:46 by endoliam         ###   ########lyon.fr   */
+/*   Updated: 2024/09/19 15:33:02 by endoliam         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,14 +31,18 @@ static void	prompt(t_minishell	*minishell)
 {
 	char	*user;
 	char	cwd[PATH_MAX];
+	char	*pwd;
 
-	getcwd(cwd, sizeof(cwd));
+	if (getcwd(cwd, sizeof(cwd)) == NULL)
+		pwd = "lost_path";
+	else
+		pwd = cwd;
 	user = mygetenv("USER", *minishell);
 	if (!user)
 		user = "ghost_user";
 	printf("%s%s%s@%sshell-rtehar+endoliam:%s~%s %s[%s%s%s]\x1b[0m\x1b[02;0m\n",
 		"\x1b[1;35m", user, "\x1b[93m", "\x1b[32m",
-		"\x1b[95m", cwd, "\x1b[93m", "\x1b[31m",
+		"\x1b[95m", pwd, "\x1b[93m", "\x1b[31m",
 		minishell->exit_code, "\x1b[93m");
 }
 
@@ -89,6 +93,7 @@ int	main(int ac, char **av, char **env)
 	(void)av;
 	minishell = NULL;
 	start_shell(ac);
+	(void )ac;
 	minishell = init_shell(minishell, env);
 	while (1)
 	{

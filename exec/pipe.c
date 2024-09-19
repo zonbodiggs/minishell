@@ -6,7 +6,7 @@
 /*   By: endoliam <endoliam@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/13 22:48:23 by endoliam          #+#    #+#             */
-/*   Updated: 2024/08/20 17:57:34 by endoliam         ###   ########lyon.fr   */
+/*   Updated: 2024/09/19 11:13:56 by endoliam         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,11 +52,26 @@ int	my_wait(int status, int pid)
 	return (exit_code);
 }
 
+bool	there_is_cmd(t_cmd *command)
+{
+	t_cmd	*cmd;
+
+	cmd = command;
+	while (cmd && !cmd->pipe)
+	{
+		if (cmd && cmd->cmd)
+			return (true);
+		cmd = cmd->next;
+	}
+	if (cmd && cmd->cmd)
+		return (true);
+	return (false);
+}
+
 int	execute_pipeline(t_minishell *mini)
 {
 	pid_t	pid;
 	int		status;
-	t_cmd	*for_free;
 	int		oldfd[2];
 	int		newfd[2];
 
@@ -66,14 +81,15 @@ int	execute_pipeline(t_minishell *mini)
 	while (mini->input)
 	{
 		set_exec_signal();
-		for_free = mini->input->next;
-		pid = fork();
-		if (pid == 0)
-			child(mini, oldfd, newfd);
-		update_pipeline(oldfd, newfd);
-		pipe(newfd);
-		free_one_input(mini->input);
-		mini->input = for_free;
+		if (there_is_cmd(mini->input))
+		{
+			pid = fork();
+			if (pid == 0)
+				child(mini, oldfd, newfd);
+			update_pipeline(oldfd, newfd);
+			pipe(newfd);
+		}
+		free_pipeline(mini);
 	}
 	status = my_wait(status, pid);
 	close_all(newfd, oldfd);

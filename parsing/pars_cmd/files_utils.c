@@ -6,7 +6,7 @@
 /*   By: endoliam <endoliam@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/29 14:42:36 by endoliam          #+#    #+#             */
-/*   Updated: 2024/08/22 16:35:23 by endoliam         ###   ########lyon.fr   */
+/*   Updated: 2024/09/18 14:33:17 by endoliam         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,8 +62,30 @@ int	isfilevalid_in(char *file)
 	return (0);
 }
 
+int	can_access_dir(char *file)
+{
+	int		i;
+	char	*tmp;
+	int		res;
+
+	tmp = ft_strdup(file);
+	i = ft_strlen(file);
+	while (i >= 0 && file[i] != '/')
+		i--;
+	res = 0;
+	tmp[i] = '\0';
+	if (is_directory(tmp) == false)
+		res = 2;
+	else if (access(file, F_OK) == 0 && access(file, W_OK) == -1)
+		res = 1;
+	free (tmp);
+	return (res);
+}
+
 int	isfilevalid_out(char *file)
 {
+	if (ft_strchr(file, '/'))
+		return (can_access_dir(file));
 	if (access(file, F_OK) == 0 && access(file, W_OK) == -1)
 		return (2);
 	return (0);

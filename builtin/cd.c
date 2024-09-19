@@ -93,7 +93,7 @@ int	cd(char **cmd, char ***env)
 	path = cmd[1];
 	if (cmd && cmd[1] && cmd[2])
 	{
-		printf("%s\n", "cd : too many argument");
+		ft_printf_fd(2, "%s\n", "cd : too many argument");
 		return (1);
 	}
 	path = check_path(path, env);
@@ -103,3 +103,5 @@ int	cd(char **cmd, char ***env)
 		return (1);
 	return (0);
 }
+
+//ls >./outfiles/outfile01 >./outfiles/outfile02 

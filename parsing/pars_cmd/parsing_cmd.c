@@ -6,7 +6,7 @@
 /*   By: endoliam <endoliam@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/29 12:32:33 by endoliam          #+#    #+#             */
-/*   Updated: 2024/08/28 16:31:59 by endoliam         ###   ########lyon.fr   */
+/*   Updated: 2024/09/18 12:57:35 by endoliam         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,6 +54,15 @@ bool	is_directory(char *cmd)
 	return (false);
 }
 
+static bool	is_valid_file(char *cmd)
+{
+	if (is_directory(cmd))
+		return (false);
+	else if (access(cmd, F_OK) != 0)
+		return (false);
+	return (true);
+}
+
 int	iscmd(char **cmd, t_minishell *mini)
 {
 	if (!cmd || !*cmd || !cmd[0][0])
@@ -65,7 +74,7 @@ int	iscmd(char **cmd, t_minishell *mini)
 	}
 	if (!ft_strncmp(cmd[0], "./", 2))
 	{
-		if (!is_directory(cmd[0] + 2))
+		if (is_valid_file(cmd[0] + 2))
 			return (0);
 		return (127);
 	}

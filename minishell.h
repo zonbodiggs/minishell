@@ -6,7 +6,7 @@
 /*   By: endoliam <endoliam@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/14 13:20:55 by endoliam          #+#    #+#             */
-/*   Updated: 2024/09/09 13:08:11 by endoliam         ###   ########lyon.fr   */
+/*   Updated: 2024/09/19 13:06:37 by endoliam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -121,6 +121,7 @@ char		*add_contain(t_lexer **lexer);
 void		clean_expand_quote(t_lexer *lexer);
 void		expand_variable(t_lexer *data, t_lexer **lexer,
 				t_minishell mini);
+
 // 				utils cmd
 int			exit_failure(char *msg, char c);
 int			zap_quote(char *s, char quote, int i);
@@ -177,6 +178,7 @@ int			execute_pipeline(t_minishell *mini);
 int			execute_simple_command(t_minishell *mini);
 void		update_pipeline(int *oldfd, int *newfd);
 void		close_all(int *newfd, int *oldfd);
+void		free_pipeline(t_minishell *mini);
 
 //					redirecion
 int			redirect_input(t_minishell *mini);
@@ -215,7 +217,7 @@ int			export_variable(char **cmd, char ***env);
 int			update_existing_var(char *new_var, char ***env);
 int			add_new_var(char *new_var, char ***env);
 int			check_var(char *new_var, char **env);
-
+int			check_egal(char *var);
 /* 					end exec				*/
 
 // 					free
@@ -237,11 +239,5 @@ void		set_exec_signal(void);
 void		set_input_signal(void);
 void		handle_sigint_input(int sig);
 void		handle_sigint(int sig);
-
-
-void	print_cmd(t_cmd *cmd);
-void	printfds(t_cmd *cmd, int *old, int *new);
-void	print_lexer(t_lexer *lex);
-void	print_minishell(t_minishell *mini);
 
 #endif

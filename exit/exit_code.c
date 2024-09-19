@@ -6,7 +6,7 @@
 /*   By: endoliam <endoliam@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/17 00:54:46 by endoliam          #+#    #+#             */
-/*   Updated: 2024/09/09 14:39:20 by endoliam         ###   ########lyon.fr   */
+/*   Updated: 2024/09/18 09:50:07 by endoliam         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,15 +22,21 @@ static char	*add_param_err(char *error, char *param)
 
 static int	find_cmd_err(char *error, int value, t_minishell *mini)
 {
+	char	*ptr;
+
 	error = add_param_err(error, mini->input->cmd[0]);
-	if (!ft_strncmp(mini->input->cmd[0], "./", 2)
-		&& is_directory(mini->input->cmd[0] + 2))
+	ptr = mini->input->cmd[0] + ft_strlen(mini->input->cmd[0]) - 1;
+	if (!ft_strncmp(mini->input->cmd[0], "./", 2))
 	{
-		error = ft_strjoingnl(error, "is a directory ");
-		value = 126;
+		if (is_directory(mini->input->cmd[0] + 2))
+		{
+			error = ft_strjoingnl(error, "is a directory ");
+			value = 126;
+		}
+		else
+			error = ft_strjoingnl(error, "no such file or directory");
 	}
-	if (ft_strchr(mini->input->cmd[0] + ft_strlen(mini->input->cmd[0]) - 1, '/')
-		&& !is_directory(mini->input->cmd[0]))
+	else if (!is_directory(mini->input->cmd[0]) && ft_strchr(ptr, '/'))
 	{
 		error = ft_strjoingnl(error, "is not a directory ");
 		value = 126;

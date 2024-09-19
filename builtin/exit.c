@@ -6,7 +6,7 @@
 /*   By: endoliam <endoliam@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/11 13:56:11 by endoliam          #+#    #+#             */
-/*   Updated: 2024/09/09 14:44:40 by endoliam         ###   ########lyon.fr   */
+/*   Updated: 2024/09/18 15:02:03 by endoliam         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,8 @@ bool	is_numeric_arg(char *cmd)
 	int		i;
 
 	i = 0;
+	while (cmd[i] == '+' | cmd[i] == '-')
+		i++;
 	while (cmd[i])
 	{
 		if (!ft_isdigit(cmd[i]))
@@ -25,6 +27,7 @@ bool	is_numeric_arg(char *cmd)
 	}
 	return (true);
 }
+
 void	exit_shell(t_minishell *shell, char **cmd)
 {
 	int	exit_code;
@@ -35,12 +38,12 @@ void	exit_shell(t_minishell *shell, char **cmd)
 		exit_code = ft_atoi(cmd[1]);
 		if ((exit_code == 0 && cmd[1][0] != '0') || (!is_numeric_arg(cmd[1])))
 		{
-			printf("exit: %s: numeric argument required\n", cmd[1]);
+			ft_printf_fd(2, "exit: %s: numeric argument required\n", cmd[1]);
 			exit_code = 2;
 		}
 		else if (cmd[2])
 		{
-			printf("%s", "exit: too many arguments\n");
+			ft_printf_fd(2, "%s", "exit: too many arguments\n");
 			return ;
 		}
 	}

@@ -6,7 +6,7 @@
 /*   By: endoliam <endoliam@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/05/24 13:20:21 by rtehar            #+#    #+#             */
-/*   Updated: 2024/08/28 16:32:55 by endoliam         ###   ########lyon.fr   */
+/*   Updated: 2024/09/19 10:16:05 by endoliam         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,14 +26,15 @@ int	redirect_pipe(t_minishell *mini)
 		tmp = mini->input->next;
 		if (mini->input->cmd)
 			free = false;
-		exit = redirect(mini);
+		if (value == 0)
+			exit = redirect(mini);
 		if (free)
 			free_one_input(mini->input);
 		mini->input = tmp;
 		if (exit != 0)
 			value = exit;
 	}
-	if (mini->input && mini->input->pipe)
+	if (mini->input && mini->input->pipe && value == 0)
 		exit = redirect(mini);
 	if (exit != 0)
 		value = exit;
@@ -51,7 +52,8 @@ int	prepare_execution(t_minishell *mini, t_cmd	*cmd)
 		return (g_signal);
 	if (cmd)
 		value = iscmd(cmd->cmd, mini);
-	value_redir = redirect_pipe(mini);
+	if (value_redir == 0)
+		value_redir = redirect_pipe(mini);
 	if (value_redir != 0)
 		value = value_redir;
 	return (value);
